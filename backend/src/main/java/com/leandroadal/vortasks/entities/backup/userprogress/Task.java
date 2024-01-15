@@ -1,5 +1,6 @@
 package com.leandroadal.vortasks.entities.backup.userprogress;
 
+import com.leandroadal.vortasks.dto.TaskDTO;
 import com.leandroadal.vortasks.entities.backup.UserBackup;
 
 import jakarta.persistence.Entity;
@@ -10,13 +11,28 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import lombok.AccessLevel;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Getter
 @Setter
 @Entity
+@NoArgsConstructor
 public class Task {
 
+    public Task(TaskDTO data) {
+        this.status = data.status();
+        this.name = data.name();
+        this.description = data.description();
+        this.xp = data.xp();
+        this.coins = data.coins();
+        this.type = data.type();
+        this.repetition = data.repetition();
+        this.reminder = data.reminder();
+        this.skillIncrease = data.skillIncrease();
+        this.skillDecrease = data.skillDecrease();
+    }
+    
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Setter(AccessLevel.NONE)
@@ -33,7 +49,7 @@ public class Task {
     private String name;
     private String description;
     private int xp;
-    private String reward; // moeda
+    private float coins; // moeda
     private String type; // Lazer ou Atividade
     private int repetition; // Diária(1), semanal(7) ou mensal(30)
     private String reminder;
