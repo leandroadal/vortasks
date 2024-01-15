@@ -17,13 +17,21 @@ import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import lombok.AccessLevel;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Getter
 @Setter
 @Entity
 @Table(name = "users")
+@NoArgsConstructor
 public class User {
+
+    public User(String name, float coins, float gems) {
+        this.name = name;
+        this.coins = coins;
+        this.gems = gems;
+    }
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

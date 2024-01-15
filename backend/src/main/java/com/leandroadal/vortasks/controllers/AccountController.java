@@ -24,11 +24,10 @@ public class AccountController {
     @Autowired
     private AccountRepository accountRepository;
 
-
     @GetMapping(value = "/login")
     public ResponseEntity<String> login(@RequestBody AccountCreateDTO accountDTO) {
-        Account account = accountRepository.findByUsername(accountDTO.getUsername());
-        if (account.getPassword().equals(accountDTO.getPassword())) {
+        Account account = accountRepository.findByUsername(accountDTO.username());
+        if (account.getPassword().equals(accountDTO.password())) {
             return ResponseEntity.ok("Requisição bem-sucedida!");
         }
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
@@ -41,26 +40,19 @@ public class AccountController {
 
     @PostMapping("/register")
     public ResponseEntity<Account> register(@RequestBody AccountCreateDTO accountDTO) {
-        Account newAccount = new Account();
-        newAccount.setUsername(accountDTO.getUsername());
-        newAccount.setEmail(accountDTO.getEmail());
-        newAccount.setPassword(accountDTO.getPassword());
+        Account newAccount = new Account(accountDTO);
 
-        User newUser = new User();
-        newUser.setName(accountDTO.getName());
-        newUser.setCoins(0.0f);
-        newUser.setGems(0.0f);
+        User newUser = new User(accountDTO.name(), 0.0f, 0.0f);
 
         newAccount.setUser(newUser);
 
         accountRepository.save(newAccount);
         return ResponseEntity.ok(newAccount);
     }
-    
+
     @GetMapping("/getAccounts")
     public List<Account> getAllAccounts() {
         return accountRepository.findAll();
     }
 
 }
-
