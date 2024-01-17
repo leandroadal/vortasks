@@ -1,5 +1,6 @@
 package com.leandroadal.vortasks.entities.backup;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 import com.leandroadal.vortasks.entities.backup.userprogress.Achievement;
@@ -41,7 +42,7 @@ public class UserBackup {
 
     private int level;
     private float xp;
-    private String lastModified;
+    private LocalDateTime lastModified;
 
     @OneToOne(mappedBy = "userBackup", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private CheckInDays checkInDays;

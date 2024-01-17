@@ -3,8 +3,7 @@ package com.leandroadal.vortasks.dto;
 import java.time.LocalDateTime;
 import java.util.List;
 
-public record UserBackupDTO(
-        String username,
+public record LatestBackupResponseDTO(
         int level,
         float xp,
         CheckInDaysDTO checkInDays,
@@ -14,5 +13,4 @@ public record UserBackupDTO(
         List<TaskDTO> tasks,
         List<MissionDTO> missions,
         List<SkillDTO> skills) {
-
 }

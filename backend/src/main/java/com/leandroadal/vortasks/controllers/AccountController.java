@@ -43,7 +43,7 @@ public class AccountController {
         Account newAccount = new Account(accountDTO);
 
         User newUser = new User(accountDTO.name(), 0.0f, 0.0f);
-
+        newUser.setAccount(newAccount);
         newAccount.setUser(newUser);
 
         accountRepository.save(newAccount);
