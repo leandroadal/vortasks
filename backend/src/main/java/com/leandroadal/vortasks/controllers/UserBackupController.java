@@ -61,11 +61,10 @@ public class UserBackupController {
             } else {
                 return ResponseEntity.status(HttpStatus.CONFLICT).body(null);
             }
-            
+
         } else {
             return ResponseEntity.notFound().build();
         }
-
     }
 
     @GetMapping("/getBackup")
