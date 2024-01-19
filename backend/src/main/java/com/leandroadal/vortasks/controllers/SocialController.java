@@ -14,12 +14,15 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.leandroadal.vortasks.dto.FriendDTO;
+import com.leandroadal.vortasks.dto.OnlineMissionDTO;
 import com.leandroadal.vortasks.entities.social.Friend;
+import com.leandroadal.vortasks.entities.social.OnlineMission;
 import com.leandroadal.vortasks.entities.user.Account;
 import com.leandroadal.vortasks.repositories.AccountRepository;
 import com.leandroadal.vortasks.services.SocialService;
 
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.Positive;
 
 @RestController
 @RequestMapping(value = "/social")
@@ -50,9 +53,18 @@ public class SocialController {
         return ResponseEntity.ok("Requisição bem-sucedida!");
     }
 
-    @GetMapping(value = "/onlineMissions")
-    public ResponseEntity<String> onlineMissions() {
-        return ResponseEntity.ok("Requisição bem-sucedida!");
+    @GetMapping(value = "/onlineMissions/{accountId}")
+    public ResponseEntity<List<OnlineMissionDTO>> onlineMissions(@PathVariable @Positive Long accountId) {
+        if (accountId == null) {
+            return ResponseEntity.badRequest().build();
+        }
+
+        Optional<Account> optionalAccount = accountRepository.findById(accountId);
+        if (optionalAccount.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
+
+        return ResponseEntity.ok(socialService.getOnlineMissionListDTOs(optionalAccount));
     }
 
     @PostMapping(value = "/addFriends/{accountId}")
@@ -81,8 +93,25 @@ public class SocialController {
         return ResponseEntity.ok("Requisição bem-sucedida!");
     }
 
-    @PostMapping(value = "/addOnlineMissions")
-    public ResponseEntity<String> addOnlineMissions() {
-        return ResponseEntity.ok("Requisição bem-sucedida!");
+    @PostMapping(value = "/addOnlineMissions/{accountId}")
+    public ResponseEntity<String> addOnlineMissions(@PathVariable @Positive Long accountId, @RequestBody OnlineMissionDTO onlineMissionDTO) {
+        if (accountId == null) {
+            return ResponseEntity.badRequest().build();
+        }
+
+        Optional<Account> optionalAccount = accountRepository.findById(accountId);
+        if (optionalAccount.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("A conta com o ID especificado não foi encontrada no sistema.");
+        }
+
+        Account account = optionalAccount.get();
+
+        OnlineMission onlineMission = socialService.addOnlineMission(onlineMissionDTO, account);
+
+        if (onlineMission != null) {
+            return ResponseEntity.ok("Missão online criada com sucesso");
+        } else {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Falha ao criar a missão");
+        }
     }
 }

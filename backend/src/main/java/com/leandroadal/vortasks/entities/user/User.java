@@ -5,6 +5,7 @@ import java.util.List;
 import com.leandroadal.vortasks.entities.backup.UserBackup;
 import com.leandroadal.vortasks.entities.shop.Product;
 import com.leandroadal.vortasks.entities.social.Friend;
+import com.leandroadal.vortasks.entities.social.OnlineMission;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
@@ -55,4 +56,7 @@ public class User {
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Friend> friends;
+
+    @OneToMany(mappedBy = "author", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<OnlineMission> onlineMissions;
 }
