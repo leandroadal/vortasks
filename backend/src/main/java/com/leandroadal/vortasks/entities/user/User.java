@@ -5,6 +5,7 @@ import java.util.List;
 import com.leandroadal.vortasks.entities.backup.UserBackup;
 import com.leandroadal.vortasks.entities.shop.Product;
 import com.leandroadal.vortasks.entities.social.Friend;
+import com.leandroadal.vortasks.entities.social.GroupTask;
 import com.leandroadal.vortasks.entities.social.OnlineMission;
 
 import jakarta.persistence.CascadeType;
@@ -14,6 +15,8 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
+import jakarta.persistence.ManyToMany;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
@@ -57,6 +60,13 @@ public class User {
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Friend> friends;
 
-    @OneToMany(mappedBy = "author", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JoinTable(
+      name = "user_group_task", 
+      joinColumns = @JoinColumn(name = "user_id"), 
+      inverseJoinColumns = @JoinColumn(name = "group_task_id"))
+    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<GroupTask> groupTasks;
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<OnlineMission> onlineMissions;
 }

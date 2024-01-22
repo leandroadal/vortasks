@@ -48,11 +48,6 @@ public class SocialController {
         return ResponseEntity.ok(socialService.getFriendListDTOs(account));
     }
 
-    @GetMapping(value = "/groupTasks")
-    public ResponseEntity<String> groupTasks() {
-        return ResponseEntity.ok("Requisição bem-sucedida!");
-    }
-
     @GetMapping(value = "/onlineMissions/{accountId}")
     public ResponseEntity<List<OnlineMissionDTO>> onlineMissions(@PathVariable @Positive Long accountId) {
         if (accountId == null) {
@@ -86,11 +81,6 @@ public class SocialController {
         } else {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Falha ao criar o backup");
         }
-    }
-
-    @PostMapping(value = "/addGroupTasks")
-    public ResponseEntity<String> addGroupTasks() {
-        return ResponseEntity.ok("Requisição bem-sucedida!");
     }
 
     @PostMapping(value = "/addOnlineMissions/{accountId}")
