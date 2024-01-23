@@ -1,6 +1,6 @@
 package com.leandroadal.vortasks.entities.backup.userprogress;
 
-import com.leandroadal.vortasks.dto.CheckInDaysDTO;
+import com.leandroadal.vortasks.dto.shop.CheckInDaysDTO;
 import com.leandroadal.vortasks.entities.backup.UserBackup;
 
 import jakarta.persistence.Entity;

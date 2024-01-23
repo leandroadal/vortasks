@@ -8,9 +8,9 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.leandroadal.vortasks.dto.MissionDTO;
-import com.leandroadal.vortasks.dto.OnlineMissionDTO;
-import com.leandroadal.vortasks.dto.TaskDTO;
+import com.leandroadal.vortasks.dto.social.OnlineMissionDTO;
+import com.leandroadal.vortasks.dto.userprogress.MissionDTO;
+import com.leandroadal.vortasks.dto.userprogress.TaskDTO;
 import com.leandroadal.vortasks.entities.backup.userprogress.Task;
 import com.leandroadal.vortasks.entities.social.OnlineMission;
 import com.leandroadal.vortasks.entities.user.Account;

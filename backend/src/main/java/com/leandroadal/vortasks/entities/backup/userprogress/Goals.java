@@ -1,6 +1,6 @@
 package com.leandroadal.vortasks.entities.backup.userprogress;
 
-import com.leandroadal.vortasks.dto.GoalsDTO;
+import com.leandroadal.vortasks.dto.userprogress.GoalsDTO;
 import com.leandroadal.vortasks.entities.backup.UserBackup;
 
 import jakarta.persistence.Entity;

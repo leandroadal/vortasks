@@ -1,4 +1,4 @@
-package com.leandroadal.vortasks.dto;
+package com.leandroadal.vortasks.dto.social;
 
 import jakarta.validation.constraints.NotBlank;
 

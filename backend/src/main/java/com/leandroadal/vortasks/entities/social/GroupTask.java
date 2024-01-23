@@ -3,7 +3,7 @@ package com.leandroadal.vortasks.entities.social;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.leandroadal.vortasks.dto.TaskDTO;
+import com.leandroadal.vortasks.dto.userprogress.TaskDTO;
 import com.leandroadal.vortasks.entities.backup.userprogress.Task;
 import com.leandroadal.vortasks.entities.user.User;
 

@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.leandroadal.vortasks.dto.OnlineMissionDTO;
+import com.leandroadal.vortasks.dto.social.OnlineMissionDTO;
 import com.leandroadal.vortasks.entities.social.OnlineMission;
 import com.leandroadal.vortasks.entities.user.Account;
 import com.leandroadal.vortasks.repositories.AccountRepository;

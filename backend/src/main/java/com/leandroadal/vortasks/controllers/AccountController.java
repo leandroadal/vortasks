@@ -8,7 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.leandroadal.vortasks.dto.AccountCreateDTO;
+import com.leandroadal.vortasks.dto.auth.AccountCreateDTO;
 import com.leandroadal.vortasks.entities.user.Account;
 import com.leandroadal.vortasks.entities.user.User;
 import com.leandroadal.vortasks.repositories.AccountRepository;

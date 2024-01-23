@@ -2,7 +2,7 @@ package com.leandroadal.vortasks.entities.backup.userprogress;
 
 import java.util.List;
 
-import com.leandroadal.vortasks.dto.MissionDTO;
+import com.leandroadal.vortasks.dto.userprogress.MissionDTO;
 import com.leandroadal.vortasks.entities.backup.UserBackup;
 
 import jakarta.persistence.CascadeType;

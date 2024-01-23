@@ -8,8 +8,9 @@ import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import com.leandroadal.vortasks.dto.GroupTaskDTO;
-import com.leandroadal.vortasks.dto.TaskDTO;
+
+import com.leandroadal.vortasks.dto.social.GroupTaskDTO;
+import com.leandroadal.vortasks.dto.userprogress.TaskDTO;
 import com.leandroadal.vortasks.entities.social.GroupTask;
 import com.leandroadal.vortasks.entities.user.Account;
 import com.leandroadal.vortasks.entities.user.User;

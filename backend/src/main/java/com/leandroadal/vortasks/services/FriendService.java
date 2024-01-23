@@ -6,7 +6,7 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.leandroadal.vortasks.dto.FriendDTO;
+import com.leandroadal.vortasks.dto.social.FriendDTO;
 import com.leandroadal.vortasks.entities.social.Friend;
 import com.leandroadal.vortasks.entities.user.Account;
 import com.leandroadal.vortasks.repositories.FriendRepository;

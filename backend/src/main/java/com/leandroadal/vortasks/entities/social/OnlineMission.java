@@ -1,6 +1,6 @@
 package com.leandroadal.vortasks.entities.social;
 
-import com.leandroadal.vortasks.dto.MissionDTO;
+import com.leandroadal.vortasks.dto.userprogress.MissionDTO;
 import com.leandroadal.vortasks.entities.backup.userprogress.Mission;
 import com.leandroadal.vortasks.entities.user.User;
 

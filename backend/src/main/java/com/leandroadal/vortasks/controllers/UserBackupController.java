@@ -13,8 +13,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.leandroadal.vortasks.dto.LatestBackupResponseDTO;
-import com.leandroadal.vortasks.dto.UserBackupDTO;
+import com.leandroadal.vortasks.dto.backup.LatestBackupResponseDTO;
+import com.leandroadal.vortasks.dto.backup.UserBackupDTO;
 import com.leandroadal.vortasks.entities.backup.UserBackup;
 import com.leandroadal.vortasks.entities.user.Account;
 import com.leandroadal.vortasks.repositories.AccountRepository;

@@ -1,6 +1,6 @@
 package com.leandroadal.vortasks.entities.user;
 
-import com.leandroadal.vortasks.dto.AccountCreateDTO;
+import com.leandroadal.vortasks.dto.auth.AccountCreateDTO;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;

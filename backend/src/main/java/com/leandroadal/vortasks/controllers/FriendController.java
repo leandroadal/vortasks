@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.leandroadal.vortasks.dto.FriendDTO;
+import com.leandroadal.vortasks.dto.social.FriendDTO;
 import com.leandroadal.vortasks.entities.social.Friend;
 import com.leandroadal.vortasks.entities.user.Account;
 import com.leandroadal.vortasks.repositories.AccountRepository;
