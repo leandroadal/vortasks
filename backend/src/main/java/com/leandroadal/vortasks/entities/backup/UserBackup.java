@@ -9,7 +9,7 @@ import com.leandroadal.vortasks.entities.backup.userprogress.Goals;
 import com.leandroadal.vortasks.entities.backup.userprogress.Mission;
 import com.leandroadal.vortasks.entities.backup.userprogress.Skill;
 import com.leandroadal.vortasks.entities.backup.userprogress.Task;
-import com.leandroadal.vortasks.entities.user.User;
+import com.leandroadal.vortasks.entities.user.UserProgressData;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
@@ -31,17 +31,19 @@ import lombok.Setter;
 @NoArgsConstructor
 public class UserBackup {
 
+    public UserBackup(LocalDateTime lastModified) {
+        this.lastModified = lastModified;
+    }
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Setter(AccessLevel.NONE)
     private Long id;
 
     @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id")
-    private User user; // Referência para a conta associada
+    @JoinColumn(name = "progress_data_id")
+    private UserProgressData progressData;
 
-    private int level;
-    private float xp;
     private LocalDateTime lastModified;
 
     @OneToOne(mappedBy = "userBackup", cascade = CascadeType.ALL, fetch = FetchType.LAZY)

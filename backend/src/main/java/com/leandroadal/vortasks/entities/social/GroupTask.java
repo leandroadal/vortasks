@@ -5,7 +5,7 @@ import java.util.List;
 
 import com.leandroadal.vortasks.dto.userprogress.TaskDTO;
 import com.leandroadal.vortasks.entities.backup.userprogress.Task;
-import com.leandroadal.vortasks.entities.user.User;
+import com.leandroadal.vortasks.entities.user.UserProgressData;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
@@ -30,7 +30,7 @@ public class GroupTask extends Task {
         this.author = author;
         this.editor = editor;
         this.category = category;
-        this.users = new ArrayList<>();
+        this.progressData = new ArrayList<>();
     }
 
     @Id
@@ -43,8 +43,6 @@ public class GroupTask extends Task {
     private String category; // Missão ou tarefa
 
     @ManyToMany(mappedBy = "groupTasks", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private List<User> users; // Participantes
+    private List<UserProgressData> progressData; // Participantes
     
 }
-//apagar as tabelas e
-//verificar se so precisa salvar no lado mappedBy

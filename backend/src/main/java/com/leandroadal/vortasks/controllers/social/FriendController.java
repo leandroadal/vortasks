@@ -1,4 +1,4 @@
-package com.leandroadal.vortasks.controllers;
+package com.leandroadal.vortasks.controllers.social;
 
 import java.util.List;
 import java.util.Optional;
@@ -15,11 +15,12 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.leandroadal.vortasks.dto.social.FriendDTO;
 import com.leandroadal.vortasks.entities.social.Friend;
-import com.leandroadal.vortasks.entities.user.Account;
-import com.leandroadal.vortasks.repositories.AccountRepository;
-import com.leandroadal.vortasks.services.FriendService;
+import com.leandroadal.vortasks.entities.user.User;
+import com.leandroadal.vortasks.repositories.UserRepository;
+import com.leandroadal.vortasks.services.social.FriendService;
 
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 
 @RestController
@@ -27,40 +28,40 @@ import jakarta.validation.constraints.Positive;
 public class FriendController {
 
     @Autowired
-    private AccountRepository accountRepository;
+    private UserRepository userRepository;
 
     @Autowired
     private FriendService socialService;
 
-    @GetMapping(value = "/friends/{accountId}")
-    public ResponseEntity<List<FriendDTO>> getFriends(@PathVariable Long accountId) {
-        if (accountId == null) {
+    @GetMapping(value = "/friends/{userId}")
+    public ResponseEntity<List<FriendDTO>> getFriends(@PathVariable Long userId) {
+        if (userId == null) {
             return ResponseEntity.badRequest().build();
         }
 
-        Optional<Account> account = accountRepository.findById(accountId);
-        if (account.isEmpty()) {
+        Optional<User> user = userRepository.findById(userId);
+        if (user.isEmpty()) {
             return ResponseEntity.badRequest().build();
         }
 
-        return ResponseEntity.ok(socialService.getFriendListDTOs(account));
+        return ResponseEntity.ok(socialService.getFriendListDTOs(user));
     }
 
-    @PostMapping(value = "/addFriends/{accountId}")
-    public ResponseEntity<String> addFriends(@PathVariable @Positive Long accountId,
+    @PostMapping(value = "/addFriends/{userId}")
+    public ResponseEntity<String> addFriends(@PathVariable @NotNull @Positive Long userId,
             @Valid @RequestBody FriendDTO friendDTO) {
-        if (accountId == null) {
+        if (userId == null) {
             return ResponseEntity.badRequest().build();
         }
 
-        Optional<Account> optionalAccount = accountRepository.findById(accountId);
-        if (optionalAccount.isEmpty()) {
+        Optional<User> optionalUser = userRepository.findById(userId);
+        if (optionalUser.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
                     .body("A conta com o ID especificado não foi encontrada no sistema.");
         }
-        Account account = optionalAccount.get();
+        User user = optionalUser.get();
 
-        Friend friend = socialService.addFriend(friendDTO, account);
+        Friend friend = socialService.addFriend(friendDTO, user);
 
         if (friend != null) {
             return ResponseEntity.ok("amigo criado com sucesso");

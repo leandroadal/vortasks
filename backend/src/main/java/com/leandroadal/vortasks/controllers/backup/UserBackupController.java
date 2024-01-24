@@ -1,4 +1,4 @@
-package com.leandroadal.vortasks.controllers;
+package com.leandroadal.vortasks.controllers.backup;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -16,25 +16,25 @@ import org.springframework.web.bind.annotation.RestController;
 import com.leandroadal.vortasks.dto.backup.LatestBackupResponseDTO;
 import com.leandroadal.vortasks.dto.backup.UserBackupDTO;
 import com.leandroadal.vortasks.entities.backup.UserBackup;
-import com.leandroadal.vortasks.entities.user.Account;
-import com.leandroadal.vortasks.repositories.AccountRepository;
-import com.leandroadal.vortasks.services.UserBackupService;
+import com.leandroadal.vortasks.entities.user.User;
+import com.leandroadal.vortasks.repositories.UserRepository;
+import com.leandroadal.vortasks.services.backup.UserBackupService;
 
 @RestController
 @RequestMapping(value = "/account/backup")
 public class UserBackupController {
 
     @Autowired
-    private AccountRepository accountRepository;
+    private UserRepository userRepository;
 
     @Autowired
     private UserBackupService userBackupService;
 
     @PostMapping("/create")
     public ResponseEntity<String> createAccountBackup(@RequestBody UserBackupDTO backup) {
-        Account account = accountRepository.findByUsername(backup.username());
-        if (account != null) {
-            UserBackup createdBackup = userBackupService.createBackup(backup, account);
+        User user = userRepository.findByUsername(backup.username());
+        if (user != null) {
+            UserBackup createdBackup = userBackupService.createBackup(backup, user);
 
             if (createdBackup != null) {
                 return ResponseEntity.ok("Backup criado com sucesso");
@@ -46,9 +46,9 @@ public class UserBackupController {
         }
     }
 
-    @GetMapping("/latestBackup/{accountId}")
-    public ResponseEntity<LatestBackupResponseDTO> latestBackup(@PathVariable Long accountId, LocalDateTime lastModified) {
-        UserBackup backup = userBackupService.getBackupByAccountId(accountId);
+    @GetMapping("/latestBackup/{userId}")
+    public ResponseEntity<LatestBackupResponseDTO> latestBackup(@PathVariable Long userId, LocalDateTime lastModified) {
+        UserBackup backup = userBackupService.getBackupByUserId(userId);
         if (backup != null) {
             if (backup.getLastModified().isAfter(lastModified)) {
                 LatestBackupResponseDTO latestBackupResponseDTO = userBackupService.latestBackup(backup);

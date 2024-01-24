@@ -1,4 +1,4 @@
-package com.leandroadal.vortasks.controllers;
+package com.leandroadal.vortasks.controllers.social;
 
 import java.util.List;
 import java.util.Optional;
@@ -16,9 +16,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.leandroadal.vortasks.dto.social.GroupTaskDTO;
 import com.leandroadal.vortasks.entities.social.GroupTask;
-import com.leandroadal.vortasks.entities.user.Account;
-import com.leandroadal.vortasks.repositories.AccountRepository;
-import com.leandroadal.vortasks.services.GroupTaskService;
+import com.leandroadal.vortasks.entities.user.User;
+import com.leandroadal.vortasks.repositories.UserRepository;
+import com.leandroadal.vortasks.services.social.GroupTaskService;
+
 import jakarta.validation.constraints.Positive;
 
 @RestController
@@ -26,20 +27,20 @@ import jakarta.validation.constraints.Positive;
 public class GroupTaskController {
 
     @Autowired
-    private AccountRepository accountRepository;
+    private UserRepository accountRepository;
 
     @Autowired
     private GroupTaskService groupTaskService;
 
-    @GetMapping(value = "/groupTasks/{accountId}")
-    public ResponseEntity<List<GroupTaskDTO>> groupTasks(@PathVariable @Positive Long accountId) {
-        if (accountId == null) {
+    @GetMapping(value = "/groupTasks/{userId}")
+    public ResponseEntity<List<GroupTaskDTO>> groupTasks(@PathVariable @Positive Long userId) {
+        if (userId == null) {
             return ResponseEntity.badRequest().build();
         }
 
-        Optional<Account> account = accountRepository.findById(accountId);
-        if (account.isPresent()) {
-            List<GroupTask> groupTask = groupTaskService.getGroupTaskList(account);
+        Optional<User> user = accountRepository.findById(userId);
+        if (user.isPresent()) {
+            List<GroupTask> groupTask = groupTaskService.getGroupTaskList(user);
             List<GroupTaskDTO> groupTaskDTOs = groupTaskService.mapToGroupTaskDTO(groupTask);
             return ResponseEntity.ok(groupTaskDTOs);
         } else {
@@ -47,9 +48,8 @@ public class GroupTaskController {
         }
     }
 
-    @PostMapping(value = "/addGroupTasks/{accountId}")
-    public ResponseEntity<String> addGroupTasks(@PathVariable @Positive Long accountId, @RequestBody GroupTaskDTO groupTaskDTO) {
-        
+    @PostMapping(value = "/addGroupTasks")
+    public ResponseEntity<String> addGroupTasks(@RequestBody GroupTaskDTO groupTaskDTO) {
         GroupTask groupTask = groupTaskService.addGroupTask(groupTaskDTO);
 
         if (groupTask != null) {

@@ -1,7 +1,7 @@
 package com.leandroadal.vortasks.entities.social;
 
 import com.leandroadal.vortasks.dto.social.FriendDTO;
-import com.leandroadal.vortasks.entities.user.User;
+import com.leandroadal.vortasks.entities.user.UserProgressData;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
@@ -35,6 +35,6 @@ public class Friend {
     private int level;
 
     @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private User user;
+    private UserProgressData progressData;
 
 }

@@ -1,4 +1,4 @@
-package com.leandroadal.vortasks.controllers;
+package com.leandroadal.vortasks.controllers.social;
 
 import java.util.List;
 import java.util.Optional;
@@ -15,9 +15,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.leandroadal.vortasks.dto.social.OnlineMissionDTO;
 import com.leandroadal.vortasks.entities.social.OnlineMission;
-import com.leandroadal.vortasks.entities.user.Account;
-import com.leandroadal.vortasks.repositories.AccountRepository;
-import com.leandroadal.vortasks.services.OnlineMissionService;
+import com.leandroadal.vortasks.entities.user.User;
+import com.leandroadal.vortasks.repositories.UserRepository;
+import com.leandroadal.vortasks.services.social.OnlineMissionService;
 
 import jakarta.validation.constraints.Positive;
 
@@ -26,39 +26,39 @@ import jakarta.validation.constraints.Positive;
 public class OnlineMissionController {
 
     @Autowired
-    private AccountRepository accountRepository;
+    private UserRepository userRepository;
 
     @Autowired
     private OnlineMissionService onlineMissionService;
 
-    @GetMapping(value = "/onlineMissions/{accountId}")
-    public ResponseEntity<List<OnlineMissionDTO>> onlineMissions(@PathVariable @Positive Long accountId) {
-        if (accountId == null) {
+    @GetMapping(value = "/onlineMissions/{userId}")
+    public ResponseEntity<List<OnlineMissionDTO>> onlineMissions(@PathVariable @Positive Long userId) {
+        if (userId == null) {
             return ResponseEntity.badRequest().build();
         }
 
-        Optional<Account> optionalAccount = accountRepository.findById(accountId);
-        if (optionalAccount.isEmpty()) {
+        Optional<User> optionalUser = userRepository.findById(userId);
+        if (optionalUser.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
 
-        return ResponseEntity.ok(onlineMissionService.getOnlineMissionListDTOs(optionalAccount));
+        return ResponseEntity.ok(onlineMissionService.getOnlineMissionListDTOs(optionalUser));
     }
 
-    @PostMapping(value = "/addOnlineMissions/{accountId}")
-    public ResponseEntity<String> addOnlineMissions(@PathVariable @Positive Long accountId,
+    @PostMapping(value = "/addOnlineMissions/{userId}")
+    public ResponseEntity<String> addOnlineMissions(@PathVariable @Positive Long userId,
             @RequestBody OnlineMissionDTO onlineMissionDTO) {
-        if (accountId == null) {
+        if (userId == null) {
             return ResponseEntity.badRequest().build();
         }
 
-        Optional<Account> optionalAccount = accountRepository.findById(accountId);
-        if (optionalAccount.isEmpty()) {
+        Optional<User> optionalUser = userRepository.findById(userId);
+        if (optionalUser.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
                     .body("A conta com o ID especificado não foi encontrada no sistema.");
         }
 
-        Account account = optionalAccount.get();
+        User account = optionalUser.get();
 
         OnlineMission onlineMission = onlineMissionService.addOnlineMission(onlineMissionDTO, account);
 

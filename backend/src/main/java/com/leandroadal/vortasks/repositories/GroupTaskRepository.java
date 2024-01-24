@@ -8,5 +8,5 @@ import com.leandroadal.vortasks.entities.social.GroupTask;
 
 public interface GroupTaskRepository extends JpaRepository<GroupTask, Long> {
 
-    List<GroupTask> findByUsersId(Long userId);
+    List<GroupTask> findByProgressDataId(Long userId);
 }

@@ -2,7 +2,7 @@ package com.leandroadal.vortasks.entities.social;
 
 import com.leandroadal.vortasks.dto.userprogress.MissionDTO;
 import com.leandroadal.vortasks.entities.backup.userprogress.Mission;
-import com.leandroadal.vortasks.entities.user.User;
+import com.leandroadal.vortasks.entities.user.UserProgressData;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.ManyToOne;
@@ -24,5 +24,5 @@ public class OnlineMission extends Mission {
     private int likes;
     
     @ManyToOne
-    private User user;
+    private UserProgressData progressData;
 }

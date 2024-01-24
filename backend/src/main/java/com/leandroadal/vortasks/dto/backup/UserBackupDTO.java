@@ -12,8 +12,6 @@ import com.leandroadal.vortasks.dto.userprogress.TaskDTO;
 
 public record UserBackupDTO(
         String username,
-        int level,
-        float xp,
         CheckInDaysDTO checkInDays,
         GoalsDTO goals,
         LocalDateTime lastModified,

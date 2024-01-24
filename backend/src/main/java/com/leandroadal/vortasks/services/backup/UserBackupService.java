@@ -1,4 +1,4 @@
-package com.leandroadal.vortasks.services;
+package com.leandroadal.vortasks.services.backup;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,8 +22,8 @@ import com.leandroadal.vortasks.entities.backup.userprogress.Goals;
 import com.leandroadal.vortasks.entities.backup.userprogress.Mission;
 import com.leandroadal.vortasks.entities.backup.userprogress.Skill;
 import com.leandroadal.vortasks.entities.backup.userprogress.Task;
-import com.leandroadal.vortasks.entities.user.Account;
 import com.leandroadal.vortasks.entities.user.User;
+import com.leandroadal.vortasks.entities.user.UserProgressData;
 import com.leandroadal.vortasks.repositories.UserBackupRepository;
 
 import jakarta.transaction.Transactional;
@@ -35,10 +35,8 @@ public class UserBackupService {
     private UserBackupRepository userBackupRepository;
 
     @Transactional
-    public UserBackup createBackup(UserBackupDTO userBackupDTO, Account account) {
+    public UserBackup createBackup(UserBackupDTO userBackupDTO, User account) {
         UserBackup userBackup = new UserBackup();
-        userBackup.setLevel(userBackupDTO.level());
-        userBackup.setXp(userBackupDTO.xp());
         userBackup.setLastModified(userBackupDTO.lastModified());
 
         if (userBackupDTO.checkInDays() != null) {
@@ -104,17 +102,14 @@ public class UserBackupService {
             userBackup.setSkills(skillList);
         }
 
-        User user = account.getUser();
+        UserProgressData user = account.getProgressData();
         user.setBackup(userBackup);
-        userBackup.setUser(user);
+        userBackup.setProgressData(user);
 
         return userBackupRepository.save(userBackup);
     }
 
     public LatestBackupResponseDTO latestBackup(UserBackup backup) {
-        int level = backup.getLevel();
-        float xp = backup.getXp();
-
         CheckInDaysDTO checkInDaysDTO = new CheckInDaysDTO(backup.getCheckInDays().getDays(),
                 backup.getCheckInDays().getMonth());
 
@@ -180,7 +175,7 @@ public class UserBackupService {
             }
         }
 
-        LatestBackupResponseDTO latestBackupResponseDTO = new LatestBackupResponseDTO(level, xp, checkInDaysDTO, goalsDTO,
+        LatestBackupResponseDTO latestBackupResponseDTO = new LatestBackupResponseDTO(checkInDaysDTO, goalsDTO,
                 backup.getLastModified(), achievementsList, taskReqList, missionList,
                 skillList);
 
@@ -211,7 +206,7 @@ public class UserBackupService {
         return null;
     }
 
-    public UserBackup getBackupByAccountId(Long accountId) {
+    public UserBackup getBackupByUserId(Long accountId) {
         if (accountId != null) {
             Optional<UserBackup> optionalBackup = userBackupRepository.findById(accountId);
 

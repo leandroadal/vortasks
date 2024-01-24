@@ -8,5 +8,5 @@ import com.leandroadal.vortasks.entities.social.OnlineMission;
 
 public interface OnlineMissionRepository extends JpaRepository<OnlineMission, Long> {
 
-    List<OnlineMission> findByUserId(Long userId);
+    List<OnlineMission> findByProgressDataId(Long userId);
 }

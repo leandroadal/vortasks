@@ -11,8 +11,6 @@ import com.leandroadal.vortasks.dto.userprogress.SkillDTO;
 import com.leandroadal.vortasks.dto.userprogress.TaskDTO;
 
 public record LatestBackupResponseDTO(
-        int level,
-        float xp,
         CheckInDaysDTO checkInDays,
         GoalsDTO goals,
         LocalDateTime lastModified,

@@ -1,4 +1,4 @@
-package com.leandroadal.vortasks.services;
+package com.leandroadal.vortasks.services.social;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service;
 
 import com.leandroadal.vortasks.dto.social.FriendDTO;
 import com.leandroadal.vortasks.entities.social.Friend;
-import com.leandroadal.vortasks.entities.user.Account;
+import com.leandroadal.vortasks.entities.user.User;
 import com.leandroadal.vortasks.repositories.FriendRepository;
 
 @Service
@@ -17,14 +17,14 @@ public class FriendService {
     @Autowired
     private FriendRepository friendRepository;
 
-    public Friend addFriend(FriendDTO friendDTO, Account account) {
+    public Friend addFriend(FriendDTO friendDTO, User user) {
         Friend friend = new Friend(friendDTO);
-        friend.setUser(account.getUser());
+        friend.setProgressData(user.getProgressData());
         return friendRepository.save(friend);
     }
 
-    public List<FriendDTO> getFriendListDTOs(Optional<Account> account) {
-        List<Friend> friends = friendRepository.findByUserId(account.get().getUser().getId());
+    public List<FriendDTO> getFriendListDTOs(Optional<User> user) {
+        List<Friend> friends = friendRepository.findByProgressDataId(user.get().getProgressData().getId());
 
         List<FriendDTO> friendList = new ArrayList<>();
         if (friends != null) {
