@@ -2,10 +2,17 @@ package com.leandroadal.vortasks.dto.social;
 
 import java.util.List;
 
-import com.leandroadal.vortasks.dto.userprogress.TaskDTO;
-
 public record GroupTaskDTO(
-        TaskDTO taskDTO,
+        String status,
+        String name,
+        String description,
+        int xp,
+        float coins,
+        String type,
+        int repetition,
+        String reminder,
+        int skillIncrease,
+        int skillDecrease,
         String author,
         String editor,
         String category,

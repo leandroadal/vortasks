@@ -7,13 +7,9 @@ import com.leandroadal.vortasks.entities.backup.UserBackup;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
-import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -22,25 +18,21 @@ import lombok.Setter;
 @Setter
 @Entity
 @NoArgsConstructor
-public class Mission {
+public class Mission extends AbstractMission {
 
-    public Mission(MissionDTO data) {
-        this.status = data.status();
-        this.title = data.title();
-        this.description = data.description();
-        this.xp = data.xp();
-        this.coins = data.coins();
-        this.type = data.type();
-        this.repetition = data.repetition();
-        this.reminder = data.reminder();
-        this.skillIncrease = data.skillIncrease();
-        this.skillDecrease = data.skillDecrease();
+    public Mission(MissionDTO data, UserBackup userBackup) {
+        this.setTitle(data.title());
+        this.setDescription(data.description());
+        this.setStatus(data.status());
+        this.setXp(data.xp());
+        this.setCoins(data.coins());
+        this.setType(data.type());
+        this.setRepetition(data.repetition());
+        this.setReminder(data.reminder());
+        this.setSkillIncrease(data.skillIncrease());
+        this.setSkillDecrease(data.skillDecrease());
+        this.userBackup = userBackup;
     }
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Setter(AccessLevel.NONE)
-    private Long id;
 
     @ManyToOne
     @JoinColumn(name = "user_backup_id")
@@ -48,16 +40,5 @@ public class Mission {
 
     @OneToMany(mappedBy = "mission", cascade = CascadeType.ALL)
     private List<Task> requirements; // tarefas necessárias para concluir a missão
-
-    private String status; // Concluído, falha ou em andamento
-    private String title;
-    private String description;
-    private int xp; // xp
-    private float coins;
-    private String type; // Lazer  ou atividade
-    private String repetition;
-    private String reminder;
-    private int skillIncrease; // Aumentar xp da skill 
-    private int skillDecrease; // diminuir xp da skill
  
 }

@@ -10,7 +10,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.leandroadal.vortasks.dto.social.GroupTaskDTO;
-import com.leandroadal.vortasks.dto.userprogress.TaskDTO;
 import com.leandroadal.vortasks.entities.social.GroupTask;
 import com.leandroadal.vortasks.entities.user.User;
 import com.leandroadal.vortasks.entities.user.UserProgressData;
@@ -27,8 +26,7 @@ public class GroupTaskService {
     private GroupTaskRepository groupTaskRepository;
 
     public GroupTask addGroupTask(GroupTaskDTO groupTaskDTO) {
-        GroupTask groupTask = new GroupTask(groupTaskDTO.taskDTO(), groupTaskDTO.author(), groupTaskDTO.editor(),
-                groupTaskDTO.category());
+        GroupTask groupTask = new GroupTask(groupTaskDTO);
         for (String username : groupTaskDTO.usernames()) {
             User user = userRepository.findByUsername(username);
             UserProgressData progressData = user.getProgressData();
@@ -50,16 +48,16 @@ public class GroupTaskService {
         existingGroupTask.setCategory(groupTaskDTO.category());
         existingGroupTask.setEditor(groupTaskDTO.editor());
 
-        TaskDTO taskDTO = groupTaskDTO.taskDTO();
-        existingGroupTask.setName(taskDTO.name());
-        existingGroupTask.setDescription(taskDTO.description());
-        existingGroupTask.setXp(taskDTO.xp());
-        existingGroupTask.setCoins(taskDTO.coins());
-        existingGroupTask.setType(taskDTO.type());
-        existingGroupTask.setRepetition(taskDTO.repetition());
-        existingGroupTask.setReminder(taskDTO.reminder());
-        existingGroupTask.setSkillIncrease(taskDTO.skillIncrease());
-        existingGroupTask.setSkillDecrease(taskDTO.skillDecrease());
+        //TaskDTO taskDTO = groupTaskDTO.taskDTO();
+        existingGroupTask.setName(groupTaskDTO.name());
+        existingGroupTask.setDescription(groupTaskDTO.description());
+        existingGroupTask.setXp(groupTaskDTO.xp());
+        existingGroupTask.setCoins(groupTaskDTO.coins());
+        existingGroupTask.setType(groupTaskDTO.type());
+        existingGroupTask.setRepetition(groupTaskDTO.repetition());
+        existingGroupTask.setReminder(groupTaskDTO.reminder());
+        existingGroupTask.setSkillIncrease(groupTaskDTO.skillIncrease());
+        existingGroupTask.setSkillDecrease(groupTaskDTO.skillDecrease());
     
         // Obtém os usuários
         List<UserProgressData> newProgressData = groupTaskDTO.usernames().stream()
@@ -93,7 +91,7 @@ public class GroupTaskService {
     public List<GroupTaskDTO> mapToGroupTaskDTO(List<GroupTask> groupTasks) {
         List<GroupTaskDTO> groupTaskDTOs = new ArrayList<>();
         for (GroupTask groupTask : groupTasks) {
-            TaskDTO taskDTO = new TaskDTO(
+            GroupTaskDTO groupTaskDTO = new GroupTaskDTO(
                     groupTask.getStatus(),
                     groupTask.getName(),
                     groupTask.getDescription(),
@@ -103,9 +101,7 @@ public class GroupTaskService {
                     groupTask.getRepetition(),
                     groupTask.getReminder(),
                     groupTask.getSkillIncrease(),
-                    groupTask.getSkillDecrease());
-            GroupTaskDTO groupTaskDTO = new GroupTaskDTO(
-                    taskDTO,
+                    groupTask.getSkillDecrease(),
                     groupTask.getAuthor(),
                     groupTask.getEditor(),
                     groupTask.getCategory(),

@@ -27,7 +27,7 @@ import jakarta.validation.constraints.Positive;
 public class GroupTaskController {
 
     @Autowired
-    private UserRepository accountRepository;
+    private UserRepository userRepository;
 
     @Autowired
     private GroupTaskService groupTaskService;
@@ -38,7 +38,7 @@ public class GroupTaskController {
             return ResponseEntity.badRequest().build();
         }
 
-        Optional<User> user = accountRepository.findById(userId);
+        Optional<User> user = userRepository.findById(userId);
         if (user.isPresent()) {
             List<GroupTask> groupTask = groupTaskService.getGroupTaskList(user);
             List<GroupTaskDTO> groupTaskDTOs = groupTaskService.mapToGroupTaskDTO(groupTask);

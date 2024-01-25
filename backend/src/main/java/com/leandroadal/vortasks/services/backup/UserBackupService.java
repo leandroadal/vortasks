@@ -64,8 +64,7 @@ public class UserBackupService {
         if (userBackupDTO.missions() != null) {
             List<Mission> missionList = new ArrayList<>();
             for (MissionDTO missionDTO : userBackupDTO.missions()) {
-                Mission mission = new Mission(missionDTO);
-                mission.setUserBackup(userBackup);
+                Mission mission = new Mission(missionDTO, userBackup);
 
                 if (missionDTO.requirements() != null) {
                     List<Task> taskReqList = new ArrayList<>();
