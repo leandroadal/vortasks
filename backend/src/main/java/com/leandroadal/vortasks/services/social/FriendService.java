@@ -29,7 +29,7 @@ public class FriendService {
         List<FriendDTO> friendList = new ArrayList<>();
         if (friends != null) {
             for (Friend friend : friends) {
-                FriendDTO friendDTO = new FriendDTO(friend.getUsername(), friend.getLevel());
+                FriendDTO friendDTO = new FriendDTO(friend);
                 friendList.add(friendDTO);
             }
         }

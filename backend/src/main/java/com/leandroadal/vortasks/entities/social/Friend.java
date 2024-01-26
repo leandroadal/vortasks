@@ -37,4 +37,8 @@ public class Friend {
     @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private UserProgressData progressData;
 
+    public void edit(FriendDTO data) {
+        this.username = data.username();
+        this.level = data.level();
+    }
 }

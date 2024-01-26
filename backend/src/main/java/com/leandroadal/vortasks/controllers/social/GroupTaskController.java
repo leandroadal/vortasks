@@ -6,6 +6,7 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.lang.NonNull;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -33,11 +34,7 @@ public class GroupTaskController {
     private GroupTaskService groupTaskService;
 
     @GetMapping(value = "/groupTasks/{userId}")
-    public ResponseEntity<List<GroupTaskDTO>> groupTasks(@PathVariable @Positive Long userId) {
-        if (userId == null) {
-            return ResponseEntity.badRequest().build();
-        }
-
+    public ResponseEntity<List<GroupTaskDTO>> groupTasks(@PathVariable @NonNull @Positive Long userId) {
         Optional<User> user = userRepository.findById(userId);
         if (user.isPresent()) {
             List<GroupTask> groupTask = groupTaskService.getGroupTaskList(user);
@@ -60,7 +57,7 @@ public class GroupTaskController {
     }
 
     @PutMapping("editGroupTask/{groupTaskId}")
-    public ResponseEntity<String> editGroupTask(@PathVariable Long groupTaskId, @RequestBody GroupTaskDTO groupTaskDTO) {
+    public ResponseEntity<String> editGroupTask(@PathVariable @NonNull @Positive Long groupTaskId, @RequestBody GroupTaskDTO groupTaskDTO) {
         GroupTask groupTask = groupTaskService.editGroupTask(groupTaskId, groupTaskDTO);
 
         if (groupTask != null) {

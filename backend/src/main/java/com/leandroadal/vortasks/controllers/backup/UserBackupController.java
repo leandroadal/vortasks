@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.leandroadal.vortasks.dto.backup.LatestBackupResponseDTO;
 import com.leandroadal.vortasks.dto.backup.UserBackupDTO;
 import com.leandroadal.vortasks.entities.backup.UserBackup;
 import com.leandroadal.vortasks.entities.user.User;
@@ -30,9 +29,9 @@ public class UserBackupController {
     @Autowired
     private UserBackupService userBackupService;
 
-    @PostMapping("/create")
-    public ResponseEntity<String> createAccountBackup(@RequestBody UserBackupDTO backup) {
-        User user = userRepository.findByUsername(backup.username());
+    @PostMapping("/create/{username}")
+    public ResponseEntity<String> createAccountBackup(@PathVariable String username, @RequestBody UserBackupDTO backup) {
+        User user = userRepository.findByUsername(username);
         if (user != null) {
             UserBackup createdBackup = userBackupService.createBackup(backup, user);
 
@@ -47,11 +46,11 @@ public class UserBackupController {
     }
 
     @GetMapping("/latestBackup/{userId}")
-    public ResponseEntity<LatestBackupResponseDTO> latestBackup(@PathVariable Long userId, LocalDateTime lastModified) {
+    public ResponseEntity<UserBackupDTO> latestBackup(@PathVariable Long userId, LocalDateTime lastModified) {
         UserBackup backup = userBackupService.getBackupByUserId(userId);
         if (backup != null) {
             if (backup.getLastModified().isAfter(lastModified)) {
-                LatestBackupResponseDTO latestBackupResponseDTO = userBackupService.latestBackup(backup);
+                UserBackupDTO latestBackupResponseDTO = userBackupService.latestBackup(backup);
 
                 if (latestBackupResponseDTO != null) {
                     return ResponseEntity.ok(latestBackupResponseDTO);

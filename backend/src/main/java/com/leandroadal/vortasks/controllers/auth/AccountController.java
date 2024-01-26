@@ -43,7 +43,6 @@ public class AccountController {
         User newUser = new User(userDTO);
 
         UserProgressData newProgressData = new UserProgressData(0.0f, 0.0f, 1, 0.0f, newUser);
-        //newProgressData.setUser(newUser);
         newUser.setProgressData(newProgressData);
 
         userRepository.save(newUser);

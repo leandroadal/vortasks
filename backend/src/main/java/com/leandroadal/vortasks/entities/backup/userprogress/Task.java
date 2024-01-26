@@ -40,4 +40,16 @@ public class Task extends AbstractTask {
     @ManyToOne
     private OnlineMission onlineMission; // Pode ou não estar associada a uma missão online
 
+    public void edit(TaskDTO data) {
+        this.setStatus(data.status());
+        this.setName(data.name());
+        this.setDescription(data.description());
+        this.setXp(data.xp());
+        this.setCoins(data.coins());
+        this.setType(data.type());
+        this.setRepetition(data.repetition());
+        this.setReminder(data.reminder());
+        this.setSkillIncrease(data.skillIncrease());
+        this.setSkillDecrease(data.skillDecrease());
+    }
 }

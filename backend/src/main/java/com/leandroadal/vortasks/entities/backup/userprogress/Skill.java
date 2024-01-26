@@ -20,9 +20,10 @@ import lombok.Setter;
 @NoArgsConstructor
 public class Skill {
 
-    public Skill(SkillDTO data) {
+    public Skill(SkillDTO data, UserBackup userBackup) {
         this.name = data.name();
         this.xp = data.xp();
+        this.userBackup = userBackup;
     }
 
     @Id
@@ -30,11 +31,17 @@ public class Skill {
     @Setter(AccessLevel.NONE)
     private Long id;
 
+    private String name;
+    private float xp;
+
     @ManyToOne
     @JoinColumn(name = "user_backup_id")
     private UserBackup userBackup;
 
-    private String name;
-    private float xp;
+    public void edit(SkillDTO skillDTO) {
+        this.name = skillDTO.name();
+        this.xp = skillDTO.xp();
+    }
 
+    
 }

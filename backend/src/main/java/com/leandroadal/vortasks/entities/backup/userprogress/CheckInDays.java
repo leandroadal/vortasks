@@ -30,11 +30,15 @@ public class CheckInDays {
     @Setter(AccessLevel.NONE)
     private Long id;
 
+    private int days;
+    private int month; // Mês da contagem atual
+
     @OneToOne
     @JoinColumn(name = "user_backup_id")
     private UserBackup userBackup;
 
-    private int days;
-    private int month; // Mês da contagem atual
-
+    public void edit(CheckInDaysDTO checkInDaysDTO) {
+        this.days = checkInDaysDTO.days();
+        this.month = checkInDaysDTO.month();
+    }
 }

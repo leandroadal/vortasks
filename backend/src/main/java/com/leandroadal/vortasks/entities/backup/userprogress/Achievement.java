@@ -20,23 +20,30 @@ import lombok.Setter;
 @NoArgsConstructor
 public class Achievement {
 
-    public Achievement(AchievementDTO data) {
+    public Achievement(AchievementDTO data, UserBackup userBackup) {
         this.title = data.title();
         this.description = data.description();
         this.xp = data.xp();
+        this.userBackup = userBackup;
     }
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Setter(AccessLevel.NONE)
-    private Long id;
+    private Long id; 
+
+    private String title;
+    private String description;
+    private int xp;
 
     @ManyToOne
     @JoinColumn(name = "user_backup_id")
     private UserBackup userBackup;
 
-    private String title;
-    private String description;
-    private int xp;
+    public void edit(AchievementDTO achievementDTO) {
+        this.title = achievementDTO.title();
+        this.description = achievementDTO.description();
+        this.xp = achievementDTO.xp();
+    }
 
 }

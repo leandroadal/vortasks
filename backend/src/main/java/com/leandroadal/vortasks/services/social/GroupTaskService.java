@@ -1,20 +1,22 @@
 package com.leandroadal.vortasks.services.social;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
 
 import com.leandroadal.vortasks.dto.social.GroupTaskDTO;
 import com.leandroadal.vortasks.entities.social.GroupTask;
 import com.leandroadal.vortasks.entities.user.User;
 import com.leandroadal.vortasks.entities.user.UserProgressData;
-import com.leandroadal.vortasks.repositories.UserRepository;
 import com.leandroadal.vortasks.repositories.GroupTaskRepository;
+import com.leandroadal.vortasks.repositories.UserRepository;
 
 @Service
 public class GroupTaskService {
@@ -36,29 +38,15 @@ public class GroupTaskService {
         return groupTaskRepository.save(groupTask);
     }
 
-    public GroupTask editGroupTask(Long id, GroupTaskDTO groupTaskDTO) {
+    public GroupTask editGroupTask(@NonNull Long id, GroupTaskDTO groupTaskDTO) {
         Optional<GroupTask> opGroupTask = groupTaskRepository.findById(id);
         if (opGroupTask.isEmpty()) {
             return null;
         }
     
         GroupTask existingGroupTask = opGroupTask.get();
-
-        existingGroupTask.setAuthor(groupTaskDTO.author());
-        existingGroupTask.setCategory(groupTaskDTO.category());
-        existingGroupTask.setEditor(groupTaskDTO.editor());
-
-        //TaskDTO taskDTO = groupTaskDTO.taskDTO();
-        existingGroupTask.setName(groupTaskDTO.name());
-        existingGroupTask.setDescription(groupTaskDTO.description());
-        existingGroupTask.setXp(groupTaskDTO.xp());
-        existingGroupTask.setCoins(groupTaskDTO.coins());
-        existingGroupTask.setType(groupTaskDTO.type());
-        existingGroupTask.setRepetition(groupTaskDTO.repetition());
-        existingGroupTask.setReminder(groupTaskDTO.reminder());
-        existingGroupTask.setSkillIncrease(groupTaskDTO.skillIncrease());
-        existingGroupTask.setSkillDecrease(groupTaskDTO.skillDecrease());
-    
+        existingGroupTask.edit(groupTaskDTO);
+        
         // Obtém os usuários
         List<UserProgressData> newProgressData = groupTaskDTO.usernames().stream()
                 .map(username -> userRepository.findByUsername(username))
@@ -84,29 +72,13 @@ public class GroupTaskService {
     }
     
     public List<GroupTask> getGroupTaskList(Optional<User> user) {
-        List<GroupTask> groupTasks = user.get().getProgressData().getGroupTasks();
-        return groupTasks;
+        return user.map(u -> u.getProgressData().getGroupTasks()).orElse(Collections.emptyList());
     }
 
     public List<GroupTaskDTO> mapToGroupTaskDTO(List<GroupTask> groupTasks) {
         List<GroupTaskDTO> groupTaskDTOs = new ArrayList<>();
         for (GroupTask groupTask : groupTasks) {
-            GroupTaskDTO groupTaskDTO = new GroupTaskDTO(
-                    groupTask.getStatus(),
-                    groupTask.getName(),
-                    groupTask.getDescription(),
-                    groupTask.getXp(),
-                    groupTask.getCoins(),
-                    groupTask.getType(),
-                    groupTask.getRepetition(),
-                    groupTask.getReminder(),
-                    groupTask.getSkillIncrease(),
-                    groupTask.getSkillDecrease(),
-                    groupTask.getAuthor(),
-                    groupTask.getEditor(),
-                    groupTask.getCategory(),
-                    groupTask.getProgressData().stream().map(user -> user.getUser().getUsername())
-                            .collect(Collectors.toList()));
+            GroupTaskDTO groupTaskDTO = new GroupTaskDTO(groupTask);
             groupTaskDTOs.add(groupTaskDTO);
         }
         return groupTaskDTOs;

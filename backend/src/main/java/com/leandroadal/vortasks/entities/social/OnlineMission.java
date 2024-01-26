@@ -20,7 +20,7 @@ import lombok.Setter;
 @NoArgsConstructor
 public class OnlineMission extends AbstractMission {
 
-    public OnlineMission(OnlineMissionDTO data) {
+    public OnlineMission(OnlineMissionDTO data, UserProgressData dataProgress, List<Task> requirements) {
         this.setTitle(data.title());
         this.setDescription(data.description());
         this.setStatus(data.status());
@@ -32,6 +32,8 @@ public class OnlineMission extends AbstractMission {
         this.setSkillIncrease(data.skillIncrease());
         this.setSkillDecrease(data.skillDecrease());
         this.likes = data.likes();
+        this.progressData = dataProgress;
+        this.requirements = requirements;
     }
 
     private int likes;
@@ -41,4 +43,18 @@ public class OnlineMission extends AbstractMission {
 
     @OneToMany(mappedBy = "onlineMission", cascade = CascadeType.ALL)
     private List<Task> requirements; // tarefas necessárias para concluir a missão
+
+    public void edit(OnlineMissionDTO data) {
+        this.setTitle(data.title());
+        this.setDescription(data.description());
+        this.setStatus(data.status());
+        this.setXp(data.xp());
+        this.setCoins(data.coins());
+        this.setType(data.type());
+        this.setRepetition(data.repetition());
+        this.setReminder(data.reminder());
+        this.setSkillIncrease(data.skillIncrease());
+        this.setSkillDecrease(data.skillDecrease());
+        this.setLikes(data.likes());
+    }
 }

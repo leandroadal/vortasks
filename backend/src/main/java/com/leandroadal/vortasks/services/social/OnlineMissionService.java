@@ -24,9 +24,7 @@ public class OnlineMissionService {
     public OnlineMission addOnlineMission(OnlineMissionDTO onlineMissionDTO, User account) {
         List<Task> taskList = createTaskList(onlineMissionDTO.requirements());
         
-        OnlineMission onlineMission = new OnlineMission(onlineMissionDTO);
-        onlineMission.setProgressData(account.getProgressData());
-        onlineMission.setRequirements(taskList);
+        OnlineMission onlineMission = new OnlineMission(onlineMissionDTO, account.getProgressData(), taskList);
         taskList.forEach(task -> task.setOnlineMission(onlineMission));
         return onlineMissionRepository.save(onlineMission);
     }
@@ -61,17 +59,7 @@ public class OnlineMissionService {
         if (mission.getRequirements() != null) {
             List<TaskDTO> taskRequirements = new ArrayList<>();
             for (Task task : mission.getRequirements()) {
-                TaskDTO taskDTO = new TaskDTO(
-                        task.getStatus(),
-                        task.getName(),
-                        task.getDescription(),
-                        task.getXp(),
-                        task.getCoins(),
-                        task.getType(),
-                        task.getRepetition(),
-                        task.getReminder(),
-                        task.getSkillIncrease(),
-                        task.getSkillDecrease());
+                TaskDTO taskDTO = new TaskDTO(task);
                 taskRequirements.add(taskDTO);
             }
             return taskRequirements;

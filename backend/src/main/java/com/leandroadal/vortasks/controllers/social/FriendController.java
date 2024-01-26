@@ -31,7 +31,7 @@ public class FriendController {
     private UserRepository userRepository;
 
     @Autowired
-    private FriendService socialService;
+    private FriendService friendService;
 
     @GetMapping(value = "/friends/{userId}")
     public ResponseEntity<List<FriendDTO>> getFriends(@PathVariable Long userId) {
@@ -44,7 +44,7 @@ public class FriendController {
             return ResponseEntity.badRequest().build();
         }
 
-        return ResponseEntity.ok(socialService.getFriendListDTOs(user));
+        return ResponseEntity.ok(friendService.getFriendListDTOs(user));
     }
 
     @PostMapping(value = "/addFriends/{userId}")
@@ -61,7 +61,7 @@ public class FriendController {
         }
         User user = optionalUser.get();
 
-        Friend friend = socialService.addFriend(friendDTO, user);
+        Friend friend = friendService.addFriend(friendDTO, user);
 
         if (friend != null) {
             return ResponseEntity.ok("amigo criado com sucesso");

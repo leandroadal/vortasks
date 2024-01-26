@@ -45,4 +45,19 @@ public class GroupTask extends AbstractTask {
     @ManyToMany(mappedBy = "groupTasks", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<UserProgressData> progressData; // Participantes
     
+    public void edit(GroupTaskDTO data) {
+        this.setStatus(data.status());
+        this.setName(data.name());
+        this.setDescription(data.description());
+        this.setXp(data.xp());
+        this.setCoins(data.coins());
+        this.setType(data.type());
+        this.setRepetition(data.repetition());
+        this.setReminder(data.reminder());
+        this.setSkillIncrease(data.skillIncrease());
+        this.setSkillDecrease(data.skillDecrease());
+        this.setAuthor(data.author());
+        this.setEditor(data.editor());
+        this.setCategory(data.category());
+    }
 }

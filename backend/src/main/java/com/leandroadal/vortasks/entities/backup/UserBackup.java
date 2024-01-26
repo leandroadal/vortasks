@@ -39,12 +39,12 @@ public class UserBackup {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Setter(AccessLevel.NONE)
     private Long id;
+    
+    private LocalDateTime lastModified;
 
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "progress_data_id")
     private UserProgressData progressData;
-
-    private LocalDateTime lastModified;
 
     @OneToOne(mappedBy = "userBackup", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private CheckInDays checkInDays;

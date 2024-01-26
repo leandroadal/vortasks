@@ -30,11 +30,15 @@ public class Goals {
     @Setter(AccessLevel.NONE)
     private Long id;
 
+    private float daily;
+    private float monthly;
+
     @OneToOne
     @JoinColumn(name = "user_backup_id")
     private UserBackup userBackup;
 
-    private float daily;
-    private float monthly;
-
+    public void edit(GoalsDTO goalsDTO) {
+        this.daily = goalsDTO.daily();
+        this.monthly = goalsDTO.monthly();
+    }
 }
