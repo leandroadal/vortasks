@@ -42,7 +42,7 @@ public class AccountController {
     public ResponseEntity<String> register(@RequestBody UserCreateDTO userDTO) {
         User newUser = new User(userDTO);
 
-        UserProgressData newProgressData = new UserProgressData(0.0f, 0.0f, 1, 0.0f, newUser);
+        UserProgressData newProgressData = new UserProgressData(0, 0, 1, 0.0f, newUser);
         newUser.setProgressData(newProgressData);
 
         userRepository.save(newUser);

@@ -7,6 +7,8 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.Inheritance;
+import jakarta.persistence.InheritanceType;
 //import jakarta.persistence.Inheritance;
 //import jakarta.persistence.InheritanceType;
 import lombok.AccessLevel;
@@ -19,6 +21,7 @@ import lombok.Setter;
 @Entity
 @NoArgsConstructor
 //@Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
+@Inheritance(strategy = InheritanceType.JOINED)
 public abstract class AbstractMission {
 
     public AbstractMission(MissionDTO data) {
@@ -56,7 +59,7 @@ public abstract class AbstractMission {
     private String description;
     private String status; // Concluído, falha ou em andamento
     private int xp; // xp
-    private float coins;
+    private int coins;
     private String type; // Lazer  ou atividade
     private String repetition;
     private String reminder;

@@ -6,4 +6,6 @@ import com.leandroadal.vortasks.entities.backup.UserBackup;
 
 public interface UserBackupRepository extends JpaRepository<UserBackup, Long> {
 
+    UserBackup findByProgressDataId(Long userId);
+
 }

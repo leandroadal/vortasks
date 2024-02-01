@@ -4,6 +4,8 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.Inheritance;
+import jakarta.persistence.InheritanceType;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -13,6 +15,7 @@ import lombok.Setter;
 @Setter
 @Entity
 @NoArgsConstructor
+@Inheritance(strategy = InheritanceType.JOINED)
 public abstract class AbstractTask {
 
     @Id
@@ -24,7 +27,7 @@ public abstract class AbstractTask {
     private String name;
     private String description;
     private int xp;
-    private float coins; // moeda
+    private int coins; // moeda
     private String type; // Lazer ou Atividade
     private int repetition; // Diária(1), semanal(7) ou mensal(30)
     private String reminder;

@@ -4,8 +4,8 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import com.leandroadal.vortasks.dto.shop.CheckInDaysDTO;
 import com.leandroadal.vortasks.dto.userprogress.AchievementDTO;
+import com.leandroadal.vortasks.dto.userprogress.CheckInDaysDTO;
 import com.leandroadal.vortasks.dto.userprogress.GoalsDTO;
 import com.leandroadal.vortasks.dto.userprogress.MissionDTO;
 import com.leandroadal.vortasks.dto.userprogress.SkillDTO;

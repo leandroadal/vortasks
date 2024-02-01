@@ -1,4 +1,4 @@
-package com.leandroadal.vortasks.dto.shop;
+package com.leandroadal.vortasks.dto.userprogress;
 
 import com.leandroadal.vortasks.entities.backup.userprogress.CheckInDays;
 

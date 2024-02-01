@@ -1,6 +1,6 @@
 package com.leandroadal.vortasks.entities.backup.userprogress;
 
-import com.leandroadal.vortasks.dto.shop.CheckInDaysDTO;
+import com.leandroadal.vortasks.dto.userprogress.CheckInDaysDTO;
 import com.leandroadal.vortasks.entities.backup.UserBackup;
 
 import jakarta.persistence.Entity;
@@ -20,9 +20,10 @@ import lombok.Setter;
 @NoArgsConstructor
 public class CheckInDays {
 
-    public CheckInDays(CheckInDaysDTO data) {
+    public CheckInDays(CheckInDaysDTO data, UserBackup backup) {
         this.days = data.days();
         this.month = data.month();
+        this.userBackup = backup;
     }
 
     @Id

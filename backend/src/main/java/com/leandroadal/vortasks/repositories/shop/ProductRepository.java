@@ -1,4 +1,4 @@
-package com.leandroadal.vortasks.repositories;
+package com.leandroadal.vortasks.repositories.shop;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 

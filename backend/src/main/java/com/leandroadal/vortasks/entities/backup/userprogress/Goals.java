@@ -20,9 +20,10 @@ import lombok.Setter;
 @NoArgsConstructor
 public class Goals {
 
-    public Goals(GoalsDTO data) {
+    public Goals(GoalsDTO data, UserBackup backup) {
         this.daily = data.daily();
         this.monthly = data.monthly();
+        this.userBackup = backup;
     }
 
     @Id

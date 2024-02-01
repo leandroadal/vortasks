@@ -32,7 +32,7 @@ import lombok.Setter;
 @NoArgsConstructor
 public class UserProgressData {
 
-    public UserProgressData(float coins, float gems, int level, float xp, User user) {
+    public UserProgressData(int coins, int gems, int level, float xp, User user) {
         this.coins = coins;
         this.gems = gems;
         this.level = level;
@@ -45,8 +45,8 @@ public class UserProgressData {
     @Setter(AccessLevel.NONE)
     private Long id;
 
-    private float coins;
-    private float gems;
+    private int coins;
+    private int gems;
     private int level;
     private float xp;
 
@@ -57,8 +57,12 @@ public class UserProgressData {
     @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private UserBackup backup; // Referência ao backup associado
 
-    @ManyToMany(mappedBy = "progressData", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private List<Product> myShopping;
+    @JoinTable(
+      name = "user_purchased_products", 
+      joinColumns = @JoinColumn(name = "user_progress_id"), 
+      inverseJoinColumns = @JoinColumn(name = "product_id"))
+    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)  
+    private List<Product> purchasedProducts;
 
     @OneToMany(mappedBy = "progressData", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Friend> friends;

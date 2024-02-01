@@ -10,7 +10,7 @@ public record MissionDTO(
         String title,
         String description,
         int xp,
-        float coins,
+        int coins,
         String type,
         String repetition,
         String reminder,

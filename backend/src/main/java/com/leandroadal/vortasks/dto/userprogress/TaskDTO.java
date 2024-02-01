@@ -7,7 +7,7 @@ public record TaskDTO(
         String name,
         String description,
         int xp,
-        float coins,
+        int coins,
         String type,
         int repetition,
         String reminder,
