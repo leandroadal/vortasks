@@ -13,10 +13,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.leandroadal.vortasks.dto.social.FriendDTO;
 import com.leandroadal.vortasks.entities.social.Friend;
+import com.leandroadal.vortasks.entities.social.dto.FriendDTO;
 import com.leandroadal.vortasks.entities.user.User;
-import com.leandroadal.vortasks.repositories.UserRepository;
+import com.leandroadal.vortasks.repositories.user.UserRepository;
 import com.leandroadal.vortasks.services.social.FriendService;
 
 import jakarta.validation.Valid;

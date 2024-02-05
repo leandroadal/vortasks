@@ -13,10 +13,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.leandroadal.vortasks.dto.social.OnlineMissionDTO;
 import com.leandroadal.vortasks.entities.social.OnlineMission;
+import com.leandroadal.vortasks.entities.social.dto.OnlineMissionDTO;
 import com.leandroadal.vortasks.entities.user.User;
-import com.leandroadal.vortasks.repositories.UserRepository;
+import com.leandroadal.vortasks.repositories.user.UserRepository;
 import com.leandroadal.vortasks.services.social.OnlineMissionService;
 
 import jakarta.validation.constraints.Positive;

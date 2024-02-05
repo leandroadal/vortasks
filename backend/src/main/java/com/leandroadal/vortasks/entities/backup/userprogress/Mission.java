@@ -2,10 +2,8 @@ package com.leandroadal.vortasks.entities.backup.userprogress;
 
 import java.util.List;
 
-import com.leandroadal.vortasks.dto.userprogress.MissionDTO;
-import com.leandroadal.vortasks.dto.userprogress.TaskDTO;
 import com.leandroadal.vortasks.entities.backup.UserBackup;
-
+import com.leandroadal.vortasks.entities.backup.userprogress.dto.AbstractMissionDTO;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.JoinColumn;
@@ -21,7 +19,7 @@ import lombok.Setter;
 @NoArgsConstructor
 public class Mission extends AbstractMission {
 
-    public Mission(MissionDTO data, UserBackup userBackup) {
+    public Mission(AbstractMissionDTO data, UserBackup userBackup) {
         this.setTitle(data.title());
         this.setDescription(data.description());
         this.setStatus(data.status());
@@ -35,14 +33,14 @@ public class Mission extends AbstractMission {
         this.userBackup = userBackup;
     }
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "user_backup_id")
     private UserBackup userBackup;
 
     @OneToMany(mappedBy = "mission", cascade = CascadeType.ALL)
-    private List<Task> requirements; // tarefas necessárias para concluir a missão
+    private List<MissionTasks> requirements; // tarefas necessárias para concluir a missão
  
-    public void edit(MissionDTO missionDTO) {
+    public void edit(AbstractMissionDTO missionDTO) {
         this.setTitle(missionDTO.title());
         this.setDescription(missionDTO.description());
         this.setStatus(missionDTO.status());
@@ -55,7 +53,4 @@ public class Mission extends AbstractMission {
         this.setSkillDecrease(missionDTO.skillDecrease());
     }
 
-    public Mission(MissionDTO missionDTO, UserBackup userBackup2, List<TaskDTO> collect) {
-        //TODO Auto-generated constructor stub
-    }
 }

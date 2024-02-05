@@ -2,7 +2,7 @@ package com.leandroadal.vortasks.entities.shop;
 
 import java.math.BigDecimal;
 
-import com.leandroadal.vortasks.dto.shop.GemsPackageRequestDTO;
+import com.leandroadal.vortasks.entities.shop.dto.GemsPackageRequestDTO;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;

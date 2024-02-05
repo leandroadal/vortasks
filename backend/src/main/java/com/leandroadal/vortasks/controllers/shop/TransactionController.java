@@ -10,9 +10,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.leandroadal.vortasks.dto.shop.GemsTransactionDTO;
-import com.leandroadal.vortasks.dto.shop.ProductTransactionDTO;
-import com.leandroadal.vortasks.dto.shop.TransactionResponseDTO;
+import com.leandroadal.vortasks.entities.shop.dto.GemsTransactionDTO;
+import com.leandroadal.vortasks.entities.shop.dto.ProductTransactionDTO;
+import com.leandroadal.vortasks.entities.shop.dto.TransactionResponseDTO;
 import com.leandroadal.vortasks.entities.shop.transaction.GemsTransaction;
 import com.leandroadal.vortasks.entities.shop.transaction.ProductTransaction;
 import com.leandroadal.vortasks.repositories.shop.GemsTransactionRepository;

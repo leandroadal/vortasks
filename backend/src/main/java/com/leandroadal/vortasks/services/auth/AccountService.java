@@ -3,7 +3,8 @@ package com.leandroadal.vortasks.services.auth;
 import org.springframework.stereotype.Service;
 
 import com.leandroadal.vortasks.entities.user.User;
-import com.leandroadal.vortasks.repositories.UserRepository;
+import com.leandroadal.vortasks.repositories.user.UserRepository;
+import com.leandroadal.vortasks.services.auth.exceptions.UserNotFoundException;
 
 @Service
 public class AccountService {
@@ -14,13 +15,12 @@ public class AccountService {
         this.accountRepository = accountRepository;
     }
 
-    public User findById(Long id) {
-        
-        return accountRepository.findById(id).orElse(null);
+    public User findById(Long id) throws UserNotFoundException {
+        return accountRepository.findById(id).orElseThrow(() -> new UserNotFoundException("null"));
     }
 
     public User findByUsername(String username) {
-        return accountRepository.findByUsername(username);
+        return accountRepository.findByUsername(username).orElseThrow(() -> new UserNotFoundException("null"));
     }
 
     public User save(User account) {

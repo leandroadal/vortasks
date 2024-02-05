@@ -5,20 +5,21 @@ import java.time.LocalDateTime;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import com.leandroadal.vortasks.dto.shop.CompletePurchaseRequestDTO;
-import com.leandroadal.vortasks.dto.shop.GemsTransactionDTO;
-import com.leandroadal.vortasks.dto.shop.StartPurchaseRequestDTO;
+
 import com.leandroadal.vortasks.entities.shop.GemsPackage;
 import com.leandroadal.vortasks.entities.shop.Product;
+import com.leandroadal.vortasks.entities.shop.dto.CompletePurchaseRequestDTO;
+import com.leandroadal.vortasks.entities.shop.dto.GemsTransactionDTO;
+import com.leandroadal.vortasks.entities.shop.dto.StartPurchaseRequestDTO;
 import com.leandroadal.vortasks.entities.shop.enumerators.PaymentStatus;
 import com.leandroadal.vortasks.entities.shop.transaction.GemsTransaction;
 import com.leandroadal.vortasks.entities.shop.transaction.ProductTransaction;
 import com.leandroadal.vortasks.entities.user.User;
-import com.leandroadal.vortasks.repositories.UserRepository;
 import com.leandroadal.vortasks.repositories.shop.GemsPackageRepository;
 import com.leandroadal.vortasks.repositories.shop.GemsTransactionRepository;
 import com.leandroadal.vortasks.repositories.shop.ProductRepository;
 import com.leandroadal.vortasks.repositories.shop.ProductTransactionRepository;
+import com.leandroadal.vortasks.repositories.user.UserRepository;
 import com.leandroadal.vortasks.services.auth.exceptions.UserNotFoundException;
 import com.leandroadal.vortasks.services.shop.exceptions.GemsPackageNotFoundException;
 import com.leandroadal.vortasks.services.shop.exceptions.GemsTransactionNotFoundException;

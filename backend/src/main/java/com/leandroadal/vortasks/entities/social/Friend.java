@@ -1,6 +1,6 @@
 package com.leandroadal.vortasks.entities.social;
 
-import com.leandroadal.vortasks.dto.social.FriendDTO;
+import com.leandroadal.vortasks.entities.social.dto.FriendDTO;
 import com.leandroadal.vortasks.entities.user.UserProgressData;
 
 import jakarta.persistence.CascadeType;

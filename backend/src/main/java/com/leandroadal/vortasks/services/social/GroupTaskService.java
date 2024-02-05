@@ -3,7 +3,6 @@ package com.leandroadal.vortasks.services.social;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -11,12 +10,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
 
-import com.leandroadal.vortasks.dto.social.GroupTaskDTO;
 import com.leandroadal.vortasks.entities.social.GroupTask;
+import com.leandroadal.vortasks.entities.social.dto.GroupTaskDTO;
 import com.leandroadal.vortasks.entities.user.User;
 import com.leandroadal.vortasks.entities.user.UserProgressData;
-import com.leandroadal.vortasks.repositories.GroupTaskRepository;
-import com.leandroadal.vortasks.repositories.UserRepository;
+import com.leandroadal.vortasks.repositories.social.GroupTaskRepository;
+import com.leandroadal.vortasks.repositories.user.UserRepository;
+import com.leandroadal.vortasks.services.auth.exceptions.UserNotFoundException;
+import com.leandroadal.vortasks.services.social.exceptions.GroupTaskNotFoundException;
 
 @Service
 public class GroupTaskService {
@@ -30,7 +31,8 @@ public class GroupTaskService {
     public GroupTask addGroupTask(GroupTaskDTO groupTaskDTO) {
         GroupTask groupTask = new GroupTask(groupTaskDTO);
         for (String username : groupTaskDTO.usernames()) {
-            User user = userRepository.findByUsername(username);
+            User user = userRepository.findByUsername(username).orElseThrow(
+                    () -> new UserNotFoundException(String.format("O usuário com o username: '{}'", username)));
             UserProgressData progressData = user.getProgressData();
             groupTask.getProgressData().add(progressData);
             progressData.getGroupTasks().add(groupTask);
@@ -38,39 +40,33 @@ public class GroupTaskService {
         return groupTaskRepository.save(groupTask);
     }
 
-    public GroupTask editGroupTask(@NonNull Long id, GroupTaskDTO groupTaskDTO) {
-        Optional<GroupTask> opGroupTask = groupTaskRepository.findById(id);
-        if (opGroupTask.isEmpty()) {
-            return null;
-        }
-    
-        GroupTask existingGroupTask = opGroupTask.get();
+    public GroupTask editGroupTask(@NonNull String id, GroupTaskDTO groupTaskDTO) {
+        GroupTask existingGroupTask = groupTaskRepository.findById(id)
+                .orElseThrow(() -> new GroupTaskNotFoundException(id));
         existingGroupTask.edit(groupTaskDTO);
-        
+
         // Obtém os usuários
         List<UserProgressData> newProgressData = groupTaskDTO.usernames().stream()
                 .map(username -> userRepository.findByUsername(username))
-                .filter(Objects::nonNull)
+                .filter(Optional::isPresent)
+                .map(Optional::get)
                 .map(User::getProgressData)
                 .collect(Collectors.toList());
-    
-        // Cria lista com os dados de progresso dos usuários atuais
-        List<UserProgressData> progressDataToRemove = new ArrayList<>(existingGroupTask.getProgressData());
-        // Remove da lista os dados de progresso dos usuários que devem permanecer apos a edição
-        progressDataToRemove.removeAll(newProgressData);
-        // Remove a referência à GroupTask dos dados de progresso dos usuários que não estão mais presentes
-        progressDataToRemove.forEach(user -> user.getGroupTasks().remove(existingGroupTask));
-    
+
+        // Remove os usuários que não estão mais presentes
+        existingGroupTask.getProgressData().removeIf(user -> !newProgressData.contains(user));
+
         // Adiciona os novos usuários à lista, se ainda não estiverem presentes
-        newProgressData.forEach(newProgress -> {
-            if (!existingGroupTask.getProgressData().contains(newProgress)) {
-                existingGroupTask.getProgressData().add(newProgress);
-                newProgress.getGroupTasks().add(existingGroupTask);
-            }
-        });   
+        newProgressData.stream()
+                .filter(newUser -> !existingGroupTask.getProgressData().contains(newUser))
+                .forEach(newUser -> {
+                    existingGroupTask.getProgressData().add(newUser);
+                    newUser.getGroupTasks().add(existingGroupTask);
+                });
+
         return groupTaskRepository.save(existingGroupTask);
     }
-    
+
     public List<GroupTask> getGroupTaskList(Optional<User> user) {
         return user.map(u -> u.getProgressData().getGroupTasks()).orElse(Collections.emptyList());
     }

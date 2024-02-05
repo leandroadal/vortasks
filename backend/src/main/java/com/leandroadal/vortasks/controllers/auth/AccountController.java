@@ -8,10 +8,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.leandroadal.vortasks.dto.auth.UserCreateDTO;
 import com.leandroadal.vortasks.entities.user.User;
 import com.leandroadal.vortasks.entities.user.UserProgressData;
-import com.leandroadal.vortasks.repositories.UserRepository;
+import com.leandroadal.vortasks.entities.user.dto.UserCreateDTO;
+import com.leandroadal.vortasks.repositories.user.UserRepository;
 
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -26,7 +26,7 @@ public class AccountController {
 
     @GetMapping(value = "/login")
     public ResponseEntity<String> login(@RequestBody UserCreateDTO userDTO) {
-        User user = userRepository.findByUsername(userDTO.username());
+        User user = userRepository.findByUsername(userDTO.username()).orElseThrow();
         if (user.getPassword().equals(userDTO.password())) {
             return ResponseEntity.ok("Requisição bem-sucedida!");
         }

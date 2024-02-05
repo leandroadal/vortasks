@@ -9,9 +9,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.leandroadal.vortasks.dto.shop.CompletePurchaseRequestDTO;
-import com.leandroadal.vortasks.dto.shop.GemsTransactionDTO;
-import com.leandroadal.vortasks.dto.shop.StartPurchaseRequestDTO;
+import com.leandroadal.vortasks.entities.shop.dto.CompletePurchaseRequestDTO;
+import com.leandroadal.vortasks.entities.shop.dto.GemsTransactionDTO;
+import com.leandroadal.vortasks.entities.shop.dto.StartPurchaseRequestDTO;
 import com.leandroadal.vortasks.services.auth.exceptions.UserNotFoundException;
 import com.leandroadal.vortasks.services.shop.PurchaseService;
 import com.leandroadal.vortasks.services.shop.exceptions.GemsPackageNotFoundException;

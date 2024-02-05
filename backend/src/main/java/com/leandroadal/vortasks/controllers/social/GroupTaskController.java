@@ -15,10 +15,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.leandroadal.vortasks.dto.social.GroupTaskDTO;
 import com.leandroadal.vortasks.entities.social.GroupTask;
+import com.leandroadal.vortasks.entities.social.dto.GroupTaskDTO;
 import com.leandroadal.vortasks.entities.user.User;
-import com.leandroadal.vortasks.repositories.UserRepository;
+import com.leandroadal.vortasks.repositories.user.UserRepository;
 import com.leandroadal.vortasks.services.social.GroupTaskService;
 
 import jakarta.validation.constraints.Positive;
@@ -57,7 +57,7 @@ public class GroupTaskController {
     }
 
     @PutMapping("editGroupTask/{groupTaskId}")
-    public ResponseEntity<String> editGroupTask(@PathVariable @NonNull @Positive Long groupTaskId, @RequestBody GroupTaskDTO groupTaskDTO) {
+    public ResponseEntity<String> editGroupTask(@PathVariable @NonNull @Positive String groupTaskId, @RequestBody GroupTaskDTO groupTaskDTO) {
         GroupTask groupTask = groupTaskService.editGroupTask(groupTaskId, groupTaskDTO);
 
         if (groupTask != null) {

@@ -4,70 +4,81 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
-import com.leandroadal.vortasks.dto.backup.UserBackupDTO;
 import com.leandroadal.vortasks.entities.backup.UserBackup;
+import com.leandroadal.vortasks.entities.backup.dto.UserBackupDTO;
 import com.leandroadal.vortasks.entities.user.User;
-import com.leandroadal.vortasks.repositories.UserRepository;
-import com.leandroadal.vortasks.services.backup.UserBackupService;
+import com.leandroadal.vortasks.services.backup.CreateBackupService;
+import com.leandroadal.vortasks.services.backup.DeleteBackupService;
+import com.leandroadal.vortasks.services.backup.LatestBackupService;
+import com.leandroadal.vortasks.services.backup.UpdateBackupService;
+import com.leandroadal.vortasks.services.backup.BackupOperationService;
 
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 @RestController
 @RequestMapping(value = "/account/backup")
 public class UserBackupController {
 
     @Autowired
-    private UserRepository userRepository;
+    private BackupOperationService service;
 
     @Autowired
-    private UserBackupService userBackupService;
+    private CreateBackupService createService;
+
+    @Autowired
+    private UpdateBackupService updateService;
+
+    @Autowired
+    private DeleteBackupService deleteService;
+
+    @Autowired
+    private LatestBackupService latestBackupService;
 
     @PostMapping("/create/{username}")
-    public ResponseEntity<String> createAccountBackup(@PathVariable String username, @RequestBody UserBackupDTO backup) {
-        User user = userRepository.findByUsername(username);
-        if (user != null) {
-            UserBackup createdBackup = userBackupService.createBackup(backup, user);
+    public ResponseEntity<UserBackupDTO> createAccountBackup(@PathVariable String username, @RequestBody UserBackupDTO backupDTO) {
+        User user = service.findUserByUsername(username);
+        UserBackup backup = createService.createBackup(backupDTO, user);
 
-            if (createdBackup != null) {
-                return ResponseEntity.ok("Backup criado com sucesso");
-            } else {
-                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Falha ao criar o backup");
-            }
-        } else {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Conta não encontrada");
-        }
+        return ResponseEntity.ok(new UserBackupDTO(backup));
     }
 
     @GetMapping("/latestBackup/{userId}")
     public ResponseEntity<UserBackupDTO> latestBackup(@PathVariable Long userId, LocalDateTime lastModified) {
-        UserBackup backup = userBackupService.getBackupByUserId(userId);
-        if (backup != null) {
-            if (backup.getLastModified().isAfter(lastModified)) {
-                UserBackupDTO latestBackupResponseDTO = userBackupService.latestBackup(backup);
-
-                if (latestBackupResponseDTO != null) {
-                    return ResponseEntity.ok(latestBackupResponseDTO);
-                } else {
-                    return ResponseEntity.notFound().build();
-                }
-            } else {
-                return ResponseEntity.status(HttpStatus.CONFLICT).body(null);
-            }
-
-        } else {
-            return ResponseEntity.notFound().build();
-        }
+        UserBackup latestBackup = latestBackupService.latestBackup(userId, lastModified);
+        log.info("Backup mais recente enviado com sucesso para o usuário {}", userId);
+        return ResponseEntity.ok(new UserBackupDTO(latestBackup));
     }
 
-    @GetMapping("/getBackup")
-    public List<UserBackup> getAllBackups() {
-        return userBackupService.getBackupAll();
+    @GetMapping
+    public ResponseEntity<List<UserBackupDTO>> getAllBackups() {
+        List<UserBackup> backups = service.getAllBackups();
+        log.info("Lista de backups enviada com sucesso");
+        return ResponseEntity.ok(backups.stream()
+                                        .map(UserBackupDTO::new)
+                                        .toList());
+    }
+
+    @PutMapping("/update/{userId}")
+    public ResponseEntity<String> updateBackup(@PathVariable Long userId, @RequestBody UserBackupDTO backupDTO) {
+        updateService.updateBackup(backupDTO, userId);
+
+        return ResponseEntity.ok("Backup atualizado com sucesso");
+    }
+
+    @DeleteMapping("/{userId}")
+    public ResponseEntity<String> deleteBackup(@PathVariable Long userId) {
+        deleteService.deleteUserBackup(userId);
+        log.info("Backup deletado com sucesso para o usuário {}", userId);
+        return ResponseEntity.ok("Backup deletado com sucesso");
     }
 }

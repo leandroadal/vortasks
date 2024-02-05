@@ -1,8 +1,9 @@
 package com.leandroadal.vortasks.entities.user;
 
-import com.leandroadal.vortasks.dto.auth.UserCreateDTO;
+import com.leandroadal.vortasks.entities.user.dto.UserCreateDTO;
 
 import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
@@ -35,6 +36,7 @@ public class User {
     private Long id;
 
     private String name;
+    @Column(nullable = false)
 	private String username;
     private String email;
     private String password;

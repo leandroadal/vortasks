@@ -1,9 +1,9 @@
 package com.leandroadal.vortasks.entities.social;
 
 import java.util.List;
-import com.leandroadal.vortasks.dto.social.OnlineMissionDTO;
+
 import com.leandroadal.vortasks.entities.backup.userprogress.AbstractMission;
-import com.leandroadal.vortasks.entities.backup.userprogress.Task;
+import com.leandroadal.vortasks.entities.social.dto.OnlineMissionDTO;
 import com.leandroadal.vortasks.entities.user.UserProgressData;
 
 import jakarta.persistence.CascadeType;
@@ -20,7 +20,7 @@ import lombok.Setter;
 @NoArgsConstructor
 public class OnlineMission extends AbstractMission {
 
-    public OnlineMission(OnlineMissionDTO data, UserProgressData dataProgress, List<Task> requirements) {
+    public OnlineMission(OnlineMissionDTO data, UserProgressData dataProgress, List<OnlineMissionTasks> requirements) {
         this.setTitle(data.title());
         this.setDescription(data.description());
         this.setStatus(data.status());
@@ -42,7 +42,7 @@ public class OnlineMission extends AbstractMission {
     private UserProgressData progressData;
 
     @OneToMany(mappedBy = "onlineMission", cascade = CascadeType.ALL)
-    private List<Task> requirements; // tarefas necessárias para concluir a missão
+    private List<OnlineMissionTasks> requirements; // tarefas necessárias para concluir a missão
 
     public void edit(OnlineMissionDTO data) {
         this.setTitle(data.title());

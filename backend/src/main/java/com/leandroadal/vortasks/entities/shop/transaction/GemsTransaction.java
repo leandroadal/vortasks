@@ -2,8 +2,8 @@ package com.leandroadal.vortasks.entities.shop.transaction;
 
 import java.math.BigDecimal;
 
-import com.leandroadal.vortasks.dto.shop.GemsTransactionDTO;
 import com.leandroadal.vortasks.entities.shop.GemsPackage;
+import com.leandroadal.vortasks.entities.shop.dto.GemsTransactionDTO;
 import com.leandroadal.vortasks.entities.shop.enumerators.PaymentStatus;
 
 import jakarta.persistence.Entity;

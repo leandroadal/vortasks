@@ -1,5 +1,7 @@
 package com.leandroadal.vortasks.entities.backup.userprogress;
 
+import com.leandroadal.vortasks.entities.backup.userprogress.dto.AbstractTaskDTO;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -18,10 +20,23 @@ import lombok.Setter;
 @Inheritance(strategy = InheritanceType.JOINED)
 public abstract class AbstractTask {
 
+    public AbstractTask(AbstractTaskDTO data) {
+        this.setStatus(data.status());
+        this.setName(data.name());
+        this.setDescription(data.description());
+        this.setXp(data.xp());
+        this.setCoins(data.coins());
+        this.setType(data.type());
+        this.setRepetition(data.repetition());
+        this.setReminder(data.reminder());
+        this.setSkillIncrease(data.skillIncrease());
+        this.setSkillDecrease(data.skillDecrease());
+    }
+
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.UUID)
     @Setter(AccessLevel.NONE)
-    private Long id;
+    private String id;
 
     private String status; // Concluído, falha ou em andamento
     private String name;

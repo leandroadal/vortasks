@@ -9,9 +9,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.leandroadal.vortasks.dto.shop.GemsPackageRequestDTO;
-import com.leandroadal.vortasks.dto.shop.GemsPackageResponseDTO;
 import com.leandroadal.vortasks.entities.shop.GemsPackage;
+import com.leandroadal.vortasks.entities.shop.dto.GemsPackageRequestDTO;
+import com.leandroadal.vortasks.entities.shop.dto.GemsPackageResponseDTO;
 import com.leandroadal.vortasks.repositories.shop.GemsPackageRepository;
 import com.leandroadal.vortasks.services.shop.exceptions.GemsPackageNotFoundException;
 
@@ -30,13 +30,9 @@ public class GemsPackageService {
     }
 
     public GemsPackage getGemsPackageById(Long id) throws GemsPackageNotFoundException {
-        try {
-            return gemsPackageRepository.findById(id).orElseThrow(() -> new GemsPackageNotFoundException("Pacote de gemas não encontrado"));
-        } catch (GemsPackageNotFoundException e) {
-            logger.warn("Pacote de gemas {} não encontrado", id, e);
-            throw e;
-        }
+        return gemsPackageRepository.findById(id).orElseThrow(() -> new GemsPackageNotFoundException("Pacote de gemas não encontrado"));
     }
+    
     public void addGemsPackage(GemsPackageRequestDTO gemsPackageDTO) {
         GemsPackage gemsPackage = new GemsPackage(gemsPackageDTO);
         gemsPackageRepository.save(gemsPackage);
@@ -46,6 +42,7 @@ public class GemsPackageService {
         GemsPackage gemsPackage = getGemsPackageById(id);
         gemsPackage.edit(gemsPackageDTO);
         gemsPackageRepository.save(gemsPackage);
+        logger.info("Pacote de gemas com ID: '{}' foi editado com sucesso!", id);
     }
 
 
@@ -58,11 +55,13 @@ public class GemsPackageService {
         updateFieldIfPositive(gemsPackageDTO.gems(), gemsPackage::setGems);
 
         gemsPackageRepository.save(gemsPackage);
+        logger.info("Pacote de gemas com ID: '{}' foi parcialmente editado com sucesso!", id);
     }
 
     public void deleteGemsPackage(Long id) throws GemsPackageNotFoundException {
         GemsPackage gemsPackage = getGemsPackageById(id);
         gemsPackageRepository.delete(gemsPackage);
+        logger.info("Pacote de gemas com ID: '{}' foi deletado com sucesso!", id);
     }
 
     private <T> void updateFieldIfNotNull(T value, Consumer<T> setter) {

@@ -1,8 +1,9 @@
 package com.leandroadal.vortasks.entities.backup.userprogress;
 
-import com.leandroadal.vortasks.dto.userprogress.SkillDTO;
 import com.leandroadal.vortasks.entities.backup.UserBackup;
+import com.leandroadal.vortasks.entities.backup.userprogress.dto.SkillDTO;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -27,14 +28,14 @@ public class Skill {
     }
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.UUID)
     @Setter(AccessLevel.NONE)
-    private Long id;
+    private String id;
 
     private String name;
     private float xp;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "user_backup_id")
     private UserBackup userBackup;
 

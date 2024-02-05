@@ -1,6 +1,6 @@
 package com.leandroadal.vortasks.entities.shop;
 
-import com.leandroadal.vortasks.dto.shop.ProductRequestDTO;
+import com.leandroadal.vortasks.entities.shop.dto.ProductRequestDTO;
 import com.leandroadal.vortasks.entities.shop.enumerators.ProductType;
 
 import jakarta.persistence.Entity;

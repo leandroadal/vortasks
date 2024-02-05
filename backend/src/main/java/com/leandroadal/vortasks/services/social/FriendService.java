@@ -6,10 +6,10 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.leandroadal.vortasks.dto.social.FriendDTO;
 import com.leandroadal.vortasks.entities.social.Friend;
+import com.leandroadal.vortasks.entities.social.dto.FriendDTO;
 import com.leandroadal.vortasks.entities.user.User;
-import com.leandroadal.vortasks.repositories.FriendRepository;
+import com.leandroadal.vortasks.repositories.social.FriendRepository;
 
 @Service
 public class FriendService {

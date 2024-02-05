@@ -3,8 +3,8 @@ package com.leandroadal.vortasks.entities.social;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.leandroadal.vortasks.dto.social.GroupTaskDTO;
 import com.leandroadal.vortasks.entities.backup.userprogress.AbstractTask;
+import com.leandroadal.vortasks.entities.social.dto.GroupTaskDTO;
 import com.leandroadal.vortasks.entities.user.UserProgressData;
 
 import jakarta.persistence.CascadeType;

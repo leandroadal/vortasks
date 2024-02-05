@@ -1,8 +1,9 @@
 package com.leandroadal.vortasks.entities.backup.userprogress;
 
-import com.leandroadal.vortasks.dto.userprogress.AchievementDTO;
 import com.leandroadal.vortasks.entities.backup.UserBackup;
+import com.leandroadal.vortasks.entities.backup.userprogress.dto.AchievementDTO;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -27,16 +28,16 @@ public class Achievement {
         this.userBackup = userBackup;
     }
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id // TODO mudar para uuid pois nsera igual então pra pra set o id que vir do cliente
+    @GeneratedValue(strategy = GenerationType.UUID)
     @Setter(AccessLevel.NONE)
-    private Long id; 
+    private String id; 
 
     private String title;
     private String description;
     private int xp;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "user_backup_id")
     private UserBackup userBackup;
 

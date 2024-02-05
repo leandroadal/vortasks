@@ -15,8 +15,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.leandroadal.vortasks.dto.shop.GemsPackageRequestDTO;
-import com.leandroadal.vortasks.dto.shop.GemsPackageResponseDTO;
+import com.leandroadal.vortasks.entities.shop.GemsPackage;
+import com.leandroadal.vortasks.entities.shop.dto.GemsPackageRequestDTO;
+import com.leandroadal.vortasks.entities.shop.dto.GemsPackageResponseDTO;
 import com.leandroadal.vortasks.services.shop.GemsPackageService;
 import com.leandroadal.vortasks.services.shop.exceptions.GemsPackageNotFoundException;
 
@@ -42,6 +43,12 @@ public class GemsController {
     public ResponseEntity<List<GemsPackageResponseDTO>> getAllGemsPackage() {
         List<GemsPackageResponseDTO> gemsPackage = gemsPackageSellService.getAllGemsPackages();
         return ResponseEntity.status(HttpStatus.OK).body(gemsPackage);
+    }
+
+    @GetMapping("/gemsPackage/{gemsPackageId}")
+    public ResponseEntity<GemsPackageResponseDTO> getGemsPackage(@PathVariable @NotNull @Positive Long gemsPackageId) {
+        GemsPackage gemsPackage = gemsPackageSellService.getGemsPackageById(gemsPackageId);
+        return ResponseEntity.status(HttpStatus.OK).body(new GemsPackageResponseDTO(gemsPackage));
     }
 
     @PutMapping("/gemsPackage/{id}")

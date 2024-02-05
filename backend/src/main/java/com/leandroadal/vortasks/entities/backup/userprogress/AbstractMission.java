@@ -1,7 +1,7 @@
 package com.leandroadal.vortasks.entities.backup.userprogress;
 
-import com.leandroadal.vortasks.dto.social.OnlineMissionDTO;
-import com.leandroadal.vortasks.dto.userprogress.MissionDTO;
+import com.leandroadal.vortasks.entities.backup.userprogress.dto.AbstractMissionDTO;
+import com.leandroadal.vortasks.entities.social.dto.OnlineMissionDTO;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -9,8 +9,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Inheritance;
 import jakarta.persistence.InheritanceType;
-//import jakarta.persistence.Inheritance;
-//import jakarta.persistence.InheritanceType;
+import jakarta.validation.constraints.NotNull;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -20,11 +19,10 @@ import lombok.Setter;
 @Setter
 @Entity
 @NoArgsConstructor
-//@Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
 @Inheritance(strategy = InheritanceType.JOINED)
 public abstract class AbstractMission {
 
-    public AbstractMission(MissionDTO data) {
+    public AbstractMission(AbstractMissionDTO data) {
         this.title = data.title();
         this.description = data.description();
         this.status = data.status();
@@ -51,10 +49,11 @@ public abstract class AbstractMission {
     }
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.UUID)
     @Setter(AccessLevel.NONE)
-    private Long id;
+    private String id;
 
+    @NotNull
     private String title;
     private String description;
     private String status; // Concluído, falha ou em andamento
