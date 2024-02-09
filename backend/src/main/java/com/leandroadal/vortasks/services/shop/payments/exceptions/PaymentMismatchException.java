@@ -1,4 +1,4 @@
-package com.leandroadal.vortasks.services.shop.exceptions;
+package com.leandroadal.vortasks.services.shop.payments.exceptions;
 
 public class PaymentMismatchException extends RuntimeException {
 
