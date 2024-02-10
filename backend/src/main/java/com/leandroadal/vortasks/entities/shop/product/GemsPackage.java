@@ -1,9 +1,9 @@
-package com.leandroadal.vortasks.entities.shop;
+package com.leandroadal.vortasks.entities.shop.product;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 
-import com.leandroadal.vortasks.dto.shop.GemsPackageRequestDTO;
-
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -20,29 +20,24 @@ import lombok.Setter;
 @AllArgsConstructor
 public class GemsPackage {
 
-    public GemsPackage(GemsPackageRequestDTO data) {
-        this.nameOfPackage = data.nameOfPackage();
-        this.gems = data.gems();
-        this.money = data.money();
-        this.icon = data.icon();
-        this.totalSales = 0;
-    }
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(unique = true)
     private String nameOfPackage;
-    private String icon;
-    private int gems;
-    private BigDecimal money;
-    private int totalSales;
     
-    public void edit(GemsPackageRequestDTO data) {
-        this.nameOfPackage = data.nameOfPackage();
-        this.gems = data.gems();
-        this.money = data.money();
-        this.icon = data.icon();
+    private String icon;
+    private Integer gems;
+    private BigDecimal money;
+    private Float discountPercentage;
+    private int totalSales;
+
+    public BigDecimal priceWithDiscount() {
+        BigDecimal totalPrice = money;
+        BigDecimal discountAmount = totalPrice.multiply(BigDecimal.valueOf(discountPercentage / 100));
+        BigDecimal totalPriceWithDiscount = totalPrice.subtract(discountAmount);
+        return totalPriceWithDiscount.setScale(2, RoundingMode.HALF_UP);
     }
 
     public void sell(){

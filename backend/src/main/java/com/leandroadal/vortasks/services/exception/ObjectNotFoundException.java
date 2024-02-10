@@ -11,6 +11,10 @@ public class ObjectNotFoundException extends RuntimeException {
         super(String.format("O Objeto com o ID: {} não foi encontrado!", userId));
     }
 
+    public ObjectNotFoundException(Long userId) {
+        super(String.format("O Objeto com o ID: {} não foi encontrado!", userId));
+    }
+
     public ObjectNotFoundException(String message, Throwable cause) {
         super(message, cause);
     }
