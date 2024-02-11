@@ -8,15 +8,14 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 
 import com.leandroadal.vortasks.services.backup.exceptions.BackupCreationException;
 import com.leandroadal.vortasks.services.backup.exceptions.BackupNotModifiedException;
+import com.leandroadal.vortasks.services.exception.DatabaseException;
 import com.leandroadal.vortasks.services.exception.ObjectNotFoundException;
 import com.leandroadal.vortasks.services.shop.payments.exceptions.PaymentException;
 import com.leandroadal.vortasks.services.shop.payments.exceptions.PaymentMismatchException;
 import com.leandroadal.vortasks.services.social.exceptions.FriendReceiverMismatchException;
 
 import jakarta.servlet.http.HttpServletRequest;
-import lombok.extern.slf4j.Slf4j;
 
-@Slf4j
 @ControllerAdvice
 public class ControllerExceptionHandler {
 
@@ -26,7 +25,6 @@ public class ControllerExceptionHandler {
         HttpStatus status = HttpStatus.NOT_FOUND;
         String message = e.getMessage();
         StandardError err = new StandardError(Instant.now(), status.value(), error, message, request.getRequestURI());
-        log.warn(message);
         return ResponseEntity.status(status).body(err);
     }
 
@@ -65,6 +63,14 @@ public class ControllerExceptionHandler {
     @ExceptionHandler(FriendReceiverMismatchException.class)
     public ResponseEntity<StandardError> friendReceiverMismatch(FriendReceiverMismatchException e, HttpServletRequest request) {
         String error = "Erro ao recuperar amigo";
+        HttpStatus status = HttpStatus.BAD_REQUEST;
+        StandardError err = new StandardError(Instant.now(), status.value(), error, e.getMessage(), request.getRequestURI());
+        return ResponseEntity.status(status).body(err);
+    }
+
+    @ExceptionHandler(DatabaseException.class)
+    public ResponseEntity<StandardError> databaseException(DatabaseException e, HttpServletRequest request) {
+        String error = "Erro no banco de dados";
         HttpStatus status = HttpStatus.BAD_REQUEST;
         StandardError err = new StandardError(Instant.now(), status.value(), error, e.getMessage(), request.getRequestURI());
         return ResponseEntity.status(status).body(err);

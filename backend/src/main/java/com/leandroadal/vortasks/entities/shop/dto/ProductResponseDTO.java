@@ -1,13 +1,15 @@
 package com.leandroadal.vortasks.entities.shop.dto;
 
-import com.leandroadal.vortasks.entities.shop.Product;
-import com.leandroadal.vortasks.entities.shop.enumerators.ProductType;
+import java.util.Set;
+import java.util.stream.Collectors;
+
+import com.leandroadal.vortasks.entities.shop.product.Product;
 
 public record ProductResponseDTO(
         Long id,
         String name,
         String description,
-        ProductType type,
+        Set<CategoryResponseDTO> type,
         String icon,
         int coins,
         int gems,
@@ -18,7 +20,7 @@ public record ProductResponseDTO(
             data.getId(), 
             data.getName(), 
             data.getDescription(),
-            data.getType(),
+            data.getCategories().stream().map(CategoryResponseDTO::new).collect(Collectors.toSet()),
             data.getIcon(),
             data.getCoins(), 
             data.getGems(), 
