@@ -1,6 +1,7 @@
 package com.leandroadal.vortasks.entities.shop.transaction;
 
-import com.leandroadal.vortasks.entities.shop.Product;
+import com.leandroadal.vortasks.entities.shop.product.Product;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
@@ -16,8 +17,8 @@ import lombok.Setter;
 @AllArgsConstructor
 public class ProductTransaction extends AbstractTransaction {
 
-    private int priceInCoins;
-    private int priceInGems;
+    private Integer priceInCoins;
+    private Integer priceInGems;
 
     @ManyToOne
     @JoinColumn(name = "product_id")

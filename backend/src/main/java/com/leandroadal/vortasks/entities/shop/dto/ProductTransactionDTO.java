@@ -4,7 +4,7 @@ import java.time.Instant;
 import com.leandroadal.vortasks.entities.shop.transaction.ProductTransaction;
 
 public record ProductTransactionDTO(
-    String id, int coins, int gems, Instant purchaseDate, String errorMessage
+    String id, Integer coins, Integer gems, Instant purchaseDate, String errorMessage, Long productId
 ) {
     public ProductTransactionDTO(ProductTransaction data) {
         this(
@@ -12,7 +12,8 @@ public record ProductTransactionDTO(
                 data.getPriceInCoins(),
                 data.getPriceInGems(),
                 data.getPurchaseDate(),
-                data.getErrorMessage()
+                data.getErrorMessage(),
+                data.getProduct().getId()
         );
     }
 }
