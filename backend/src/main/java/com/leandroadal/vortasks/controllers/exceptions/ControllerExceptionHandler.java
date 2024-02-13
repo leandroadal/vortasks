@@ -14,7 +14,7 @@ import com.leandroadal.vortasks.services.shop.payments.exceptions.PaymentExcepti
 import com.leandroadal.vortasks.services.shop.payments.exceptions.PaymentMismatchException;
 import com.leandroadal.vortasks.services.shop.purchase.exceptions.InsufficientFundsException;
 import com.leandroadal.vortasks.services.shop.purchase.exceptions.TransactionFinishException;
-import com.leandroadal.vortasks.services.social.exceptions.FriendReceiverMismatchException;
+import com.leandroadal.vortasks.services.social.friendship.exceptions.FriendException;
 
 import jakarta.servlet.http.HttpServletRequest;
 
@@ -27,22 +27,6 @@ public class ControllerExceptionHandler {
         HttpStatus status = HttpStatus.NOT_FOUND;
         String message = e.getMessage();
         StandardError err = new StandardError(Instant.now(), status.value(), error, message, request.getRequestURI());
-        return ResponseEntity.status(status).body(err);
-    }
-
-    @ExceptionHandler(PaymentMismatchException.class)
-    public ResponseEntity<StandardError> paymentMismatch(PaymentMismatchException e, HttpServletRequest request) {
-        String error = "Erro no pagamento";
-        HttpStatus status = HttpStatus.BAD_REQUEST;
-        StandardError err = new StandardError(Instant.now(), status.value(), error, e.getMessage(), request.getRequestURI());
-        return ResponseEntity.status(status).body(err);
-    }
-
-    @ExceptionHandler(PaymentException.class)
-    public ResponseEntity<StandardError> payment(PaymentException e, HttpServletRequest request) {
-        String error = "Erro no pagamento";
-        HttpStatus status = HttpStatus.BAD_REQUEST;
-        StandardError err = new StandardError(Instant.now(), status.value(), error, e.getMessage(), request.getRequestURI());
         return ResponseEntity.status(status).body(err);
     }
 
@@ -62,8 +46,8 @@ public class ControllerExceptionHandler {
         return ResponseEntity.status(status).body(err);
     }
 
-    @ExceptionHandler(FriendReceiverMismatchException.class)
-    public ResponseEntity<StandardError> friendReceiverMismatch(FriendReceiverMismatchException e, HttpServletRequest request) {
+    @ExceptionHandler(FriendException.class)
+    public ResponseEntity<StandardError> friendReceiverMismatch(FriendException e, HttpServletRequest request) {
         String error = "Erro ao recuperar amigo";
         HttpStatus status = HttpStatus.BAD_REQUEST;
         StandardError err = new StandardError(Instant.now(), status.value(), error, e.getMessage(), request.getRequestURI());
@@ -73,6 +57,22 @@ public class ControllerExceptionHandler {
     @ExceptionHandler(DatabaseException.class)
     public ResponseEntity<StandardError> databaseException(DatabaseException e, HttpServletRequest request) {
         String error = "Erro no banco de dados";
+        HttpStatus status = HttpStatus.BAD_REQUEST;
+        StandardError err = new StandardError(Instant.now(), status.value(), error, e.getMessage(), request.getRequestURI());
+        return ResponseEntity.status(status).body(err);
+    }
+
+    @ExceptionHandler(PaymentMismatchException.class)
+    public ResponseEntity<StandardError> paymentMismatch(PaymentMismatchException e, HttpServletRequest request) {
+        String error = "Erro no pagamento";
+        HttpStatus status = HttpStatus.BAD_REQUEST;
+        StandardError err = new StandardError(Instant.now(), status.value(), error, e.getMessage(), request.getRequestURI());
+        return ResponseEntity.status(status).body(err);
+    }
+
+    @ExceptionHandler(PaymentException.class)
+    public ResponseEntity<StandardError> payment(PaymentException e, HttpServletRequest request) {
+        String error = "Erro no pagamento";
         HttpStatus status = HttpStatus.BAD_REQUEST;
         StandardError err = new StandardError(Instant.now(), status.value(), error, e.getMessage(), request.getRequestURI());
         return ResponseEntity.status(status).body(err);
@@ -93,5 +93,5 @@ public class ControllerExceptionHandler {
         StandardError err = new StandardError(Instant.now(), status.value(), error, e.getMessage(), request.getRequestURI());
         return ResponseEntity.status(status).body(err);
     }
-    
+
 }

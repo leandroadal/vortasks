@@ -1,4 +1,4 @@
-package com.leandroadal.vortasks.entities.social.dto;
+package com.leandroadal.vortasks.entities.social.friend.dto;
 
 import com.leandroadal.vortasks.entities.social.friend.FriendInvite;
 

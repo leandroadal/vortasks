@@ -1,4 +1,4 @@
-package com.leandroadal.vortasks.entities.social.dto.create;
+package com.leandroadal.vortasks.entities.social.friend.dto.create;
 
 import com.leandroadal.vortasks.entities.social.friend.FriendInvite;
 import com.leandroadal.vortasks.entities.user.User;
@@ -10,10 +10,11 @@ public record FriendInviteRequestDTO(
         String userId
         ) {
 
-    public FriendInvite toFriendInvite() {
+    public FriendInvite toFriendInvite(String friendUserId) {
         User userSender = new User();
         User userReceiver = new User();
         userSender.setId(this.userId);
+        userReceiver.setId(friendUserId);
         return new FriendInvite(null, userSender, userReceiver, null, null);
     }
 }
