@@ -1,70 +1,69 @@
 package com.leandroadal.vortasks.controllers.shop;
 
+import java.net.URI;
+
+import org.hibernate.validator.constraints.UUID;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-import com.leandroadal.vortasks.dto.shop.CompletePurchaseRequestDTO;
-import com.leandroadal.vortasks.dto.shop.GemsTransactionDTO;
-import com.leandroadal.vortasks.dto.shop.StartPurchaseRequestDTO;
-import com.leandroadal.vortasks.services.auth.exceptions.UserNotFoundException;
-import com.leandroadal.vortasks.services.shop.PurchaseService;
-import com.leandroadal.vortasks.services.shop.exceptions.GemsPackageNotFoundException;
-import com.leandroadal.vortasks.services.shop.exceptions.GemsTransactionNotFoundException;
-import com.leandroadal.vortasks.services.shop.exceptions.PaymentException;
-import com.leandroadal.vortasks.services.shop.exceptions.PaymentMismatchException;
-import com.leandroadal.vortasks.services.shop.exceptions.ProductNotFoundException;
+import com.leandroadal.vortasks.entities.shop.dto.CompletePurchaseRequestDTO;
+import com.leandroadal.vortasks.entities.shop.dto.GemsTransactionDTO;
+import com.leandroadal.vortasks.entities.shop.dto.ProductTransactionDTO;
+import com.leandroadal.vortasks.entities.shop.dto.StartPurchaseRequestDTO;
+import com.leandroadal.vortasks.entities.shop.transaction.GemsTransaction;
+import com.leandroadal.vortasks.entities.shop.transaction.ProductTransaction;
+import com.leandroadal.vortasks.services.shop.purchase.GemsPurchaseService;
+import com.leandroadal.vortasks.services.shop.purchase.ProductPurchaseService;
 
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Positive;
+import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/shop/purchases")
 public class PurchaseController {
 
     @Autowired
-    private PurchaseService purchaseService;
+    private GemsPurchaseService gemsService;
+
+    @Autowired
+    private ProductPurchaseService productService;
 
     @PostMapping("/gems/start/{userId}")
-    public ResponseEntity<GemsTransactionDTO> startGemsPurchase(@PathVariable @NotNull @Positive Long userId, @RequestBody StartPurchaseRequestDTO request) {
-        GemsTransactionDTO response;
-        try {
-            response = purchaseService.startGemsPurchase(userId, request.productOrGemsId());
-            return ResponseEntity.ok(response);
-        } catch (UserNotFoundException | GemsPackageNotFoundException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-        }
-        
+    public ResponseEntity<GemsTransactionDTO> startGemsPurchase(@PathVariable @UUID String userId, @Valid @RequestBody StartPurchaseRequestDTO request) {
+        GemsTransaction gemsT = gemsService.startGemsPurchase(userId, request.productOrGemsId());
+        URI uri = ServletUriComponentsBuilder.fromCurrentRequest()
+                .replacePath("/shop/my-transactions/gems/{id}")
+                .buildAndExpand(gemsT.getId())
+                .toUri();
+        return ResponseEntity.created(uri).body(new GemsTransactionDTO(gemsT));    
     }
 
     @PostMapping("/gems/complete/{userId}")
-    public ResponseEntity<String> completeGemsPurchase(@PathVariable @NotNull @Positive Long userId, @RequestBody CompletePurchaseRequestDTO request) {
-        try {
-            purchaseService.completeGemsPurchase(userId, request);
-            return ResponseEntity.ok("Compra concluída com sucesso.");
-        } catch (PaymentException e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
-        } catch (UserNotFoundException | GemsTransactionNotFoundException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
-        } catch (PaymentMismatchException e) {
-            return ResponseEntity.ok(e.getMessage());
-        }
+    public ResponseEntity<String> completeGemsPurchase(@PathVariable @UUID  String userId, @Valid @RequestBody CompletePurchaseRequestDTO request) {
+        gemsService.completeGemsPurchase(userId, request);
+        return ResponseEntity.ok("Compra concluída com sucesso.");
     }
 
-    @PostMapping("/product")
-    public ResponseEntity<String> productPurchase(@PathVariable @NotNull @Positive Long userId, @RequestBody StartPurchaseRequestDTO request) {
-        try {
-            purchaseService.productPurchase(userId, request);
-            return ResponseEntity.ok("Compra concluída com sucesso.");
-        } catch (UserNotFoundException | ProductNotFoundException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
-        }
-        
+    @PatchMapping("/gems/cancel/{transactionId}")
+    public ResponseEntity<String> cancelGemsPurchase(@PathVariable @UUID  String transactionId) {
+        gemsService.cancelGemsPurchase(transactionId);
+        return ResponseEntity.ok("Compra cancelada com sucesso.");
+    }
+    
+
+    @PostMapping("/product/{userId}")
+    public ResponseEntity<ProductTransactionDTO> productPurchase(@PathVariable @UUID String userId, @Valid @RequestBody StartPurchaseRequestDTO request) {
+        ProductTransaction productT = productService.productPurchase(userId, request.productOrGemsId());
+        URI uri = ServletUriComponentsBuilder.fromCurrentRequest()
+                .replacePath("/shop/my-transactions/product/{id}")
+                .buildAndExpand(productT.getId())
+                .toUri();
+        return ResponseEntity.created(uri).body(new ProductTransactionDTO(productT));
     }
 }
-

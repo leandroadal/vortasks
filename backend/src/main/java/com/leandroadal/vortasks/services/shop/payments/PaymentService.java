@@ -1,11 +1,11 @@
-package com.leandroadal.vortasks.services.shop;
+package com.leandroadal.vortasks.services.shop.payments;
 
 import java.math.BigDecimal;
 
 import org.springframework.stereotype.Service;
 
-import com.leandroadal.vortasks.services.shop.exceptions.PaymentException;
-import com.leandroadal.vortasks.services.shop.exceptions.PaymentMismatchException;
+import com.leandroadal.vortasks.services.shop.payments.exceptions.PaymentException;
+import com.leandroadal.vortasks.services.shop.payments.exceptions.PaymentMismatchException;
 
 @Service
 public class PaymentService {
@@ -18,7 +18,7 @@ public class PaymentService {
             } else {
                 throw new PaymentMismatchException("Compra Negada: O valor enviado e o valor do produto não são equivalentes.");
             }
-        } catch (NullPointerException e) {
+        } catch (Exception e) {
             throw new PaymentException("Falha ao processar o pagamento. Token inválido.");
         }
     }

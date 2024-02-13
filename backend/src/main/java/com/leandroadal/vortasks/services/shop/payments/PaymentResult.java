@@ -1,4 +1,4 @@
-package com.leandroadal.vortasks.services.shop;
+package com.leandroadal.vortasks.services.shop.payments;
 
 public class PaymentResult {
 

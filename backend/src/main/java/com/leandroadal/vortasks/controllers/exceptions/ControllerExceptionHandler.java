@@ -12,6 +12,8 @@ import com.leandroadal.vortasks.services.exception.DatabaseException;
 import com.leandroadal.vortasks.services.exception.ObjectNotFoundException;
 import com.leandroadal.vortasks.services.shop.payments.exceptions.PaymentException;
 import com.leandroadal.vortasks.services.shop.payments.exceptions.PaymentMismatchException;
+import com.leandroadal.vortasks.services.shop.purchase.exceptions.InsufficientFundsException;
+import com.leandroadal.vortasks.services.shop.purchase.exceptions.TransactionFinishException;
 import com.leandroadal.vortasks.services.social.exceptions.FriendReceiverMismatchException;
 
 import jakarta.servlet.http.HttpServletRequest;
@@ -75,4 +77,21 @@ public class ControllerExceptionHandler {
         StandardError err = new StandardError(Instant.now(), status.value(), error, e.getMessage(), request.getRequestURI());
         return ResponseEntity.status(status).body(err);
     }
+
+    @ExceptionHandler(TransactionFinishException.class)
+    public ResponseEntity<StandardError> transactionFinish(TransactionFinishException e, HttpServletRequest request) {
+        String error = "Erro na transação";
+        HttpStatus status = HttpStatus.BAD_REQUEST;
+        StandardError err = new StandardError(Instant.now(), status.value(), error, e.getMessage(), request.getRequestURI());
+        return ResponseEntity.status(status).body(err);
+    }
+
+    @ExceptionHandler(InsufficientFundsException.class)
+    public ResponseEntity<StandardError> insufficientFunds(InsufficientFundsException e, HttpServletRequest request) {
+        String error = "Saldo insuficiente";
+        HttpStatus status = HttpStatus.BAD_REQUEST;
+        StandardError err = new StandardError(Instant.now(), status.value(), error, e.getMessage(), request.getRequestURI());
+        return ResponseEntity.status(status).body(err);
+    }
+    
 }
