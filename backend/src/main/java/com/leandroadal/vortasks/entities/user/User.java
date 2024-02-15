@@ -80,11 +80,7 @@ public class User {
     @ManyToMany(mappedBy = "users", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Set<Friendship> friendships = new HashSet<>();
 
-    @JoinTable(
-      name = "user_group_task", 
-      joinColumns = @JoinColumn(name = "user_id"), 
-      inverseJoinColumns = @JoinColumn(name = "group_task_id"))
-    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @ManyToMany(mappedBy = "users", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<GroupTask> groupTasks = new ArrayList<>();
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)

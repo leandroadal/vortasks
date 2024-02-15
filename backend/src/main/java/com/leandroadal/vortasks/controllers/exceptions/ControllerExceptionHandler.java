@@ -10,6 +10,7 @@ import com.leandroadal.vortasks.services.backup.exceptions.BackupCreationExcepti
 import com.leandroadal.vortasks.services.backup.exceptions.BackupNotModifiedException;
 import com.leandroadal.vortasks.services.exception.DatabaseException;
 import com.leandroadal.vortasks.services.exception.ObjectNotFoundException;
+import com.leandroadal.vortasks.services.exception.ValidateException;
 import com.leandroadal.vortasks.services.shop.payments.exceptions.PaymentException;
 import com.leandroadal.vortasks.services.shop.payments.exceptions.PaymentMismatchException;
 import com.leandroadal.vortasks.services.shop.purchase.exceptions.InsufficientFundsException;
@@ -27,6 +28,14 @@ public class ControllerExceptionHandler {
         HttpStatus status = HttpStatus.NOT_FOUND;
         String message = e.getMessage();
         StandardError err = new StandardError(Instant.now(), status.value(), error, message, request.getRequestURI());
+        return ResponseEntity.status(status).body(err);
+    }
+
+    @ExceptionHandler(ValidateException.class)
+    public ResponseEntity<StandardError> validate(ValidateException e, HttpServletRequest request) {
+        String error = "Erro ao validar";
+        HttpStatus status = HttpStatus.BAD_REQUEST;
+        StandardError err = new StandardError(Instant.now(), status.value(), error, e.getMessage(), request.getRequestURI());
         return ResponseEntity.status(status).body(err);
     }
 

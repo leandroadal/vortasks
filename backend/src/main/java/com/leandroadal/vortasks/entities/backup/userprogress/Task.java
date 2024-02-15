@@ -1,7 +1,10 @@
 package com.leandroadal.vortasks.entities.backup.userprogress;
 
+import java.time.Instant;
+
 import com.leandroadal.vortasks.entities.backup.Backup;
-import com.leandroadal.vortasks.entities.backup.userprogress.dto.create.AbstractTaskCreateDTO;
+import com.leandroadal.vortasks.entities.social.tasks.enumerators.Difficulty;
+import com.leandroadal.vortasks.entities.social.tasks.enumerators.Theme;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
@@ -25,20 +28,13 @@ public class Task extends AbstractTask {
 
 
 
-    public Task(AbstractTaskCreateDTO taskDTO, Backup userBackup2) {
-        //TODO Auto-generated constructor stub
+
+    public Task(String id, String name, String description, Status status, Integer xp, Integer coins, Type type,
+            Integer repetition, String reminder, Integer skillIncrease, Integer skillDecrease, Instant startDate,
+            Instant endDate, Theme theme, Difficulty difficulty, Backup userBackup) {
+        super(id, name, description, status, xp, coins, type, repetition, reminder, skillIncrease, skillDecrease,
+                startDate, endDate, theme, difficulty);
+        this.userBackup = userBackup;
     }
     
-    public Task(String id, String name, String description, Status status, int xp, int coins, Type type, int repetition,
-            String reminder, int skillIncrease, int skillDecrease, Backup userBackup) {
-        super(id, name, description, status, xp, coins, type, repetition, reminder, skillIncrease, skillDecrease);
-        this.userBackup = userBackup;
-    }
-
-    public Task(String name, String description, Status status, int xp, int coins, Type type, int repetition,
-            String reminder, int skillIncrease, int skillDecrease, Backup userBackup) {
-        super(name, description, status, xp, coins, type, repetition, reminder, skillIncrease, skillDecrease);
-        this.userBackup = userBackup;
-    }
-
 }

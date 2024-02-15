@@ -1,13 +1,13 @@
-package com.leandroadal.vortasks.entities.social.dto;
+package com.leandroadal.vortasks.entities.social.tasks.dto.grouptask;
 
 import java.util.Set;
 import java.util.stream.Collectors;
 
 import com.leandroadal.vortasks.entities.backup.userprogress.Status;
 import com.leandroadal.vortasks.entities.backup.userprogress.Type;
-import com.leandroadal.vortasks.entities.social.GroupTask;
+import com.leandroadal.vortasks.entities.social.tasks.GroupTask;
 
-public record GroupTaskDTO(
+public record GroupTaskResponseDTO(
         String id,
         Status status,
         String name,
@@ -23,7 +23,8 @@ public record GroupTaskDTO(
         String editor,
         Set<String> usernames) {
 
-    public GroupTaskDTO(GroupTask groupTask) {
+            
+    public GroupTaskResponseDTO(GroupTask groupTask) {
         this(
             groupTask.getId(),
             groupTask.getStatus(),
@@ -38,6 +39,7 @@ public record GroupTaskDTO(
             groupTask.getSkillDecrease(),
             groupTask.getAuthor(),
             groupTask.getEditor(),
-            groupTask.getUser().stream().map(user -> user.getUsername()).collect(Collectors.toSet()));
+            groupTask.getUsers().stream().map(user -> user.getUsername()).collect(Collectors.toSet()));
     }
+
 }
