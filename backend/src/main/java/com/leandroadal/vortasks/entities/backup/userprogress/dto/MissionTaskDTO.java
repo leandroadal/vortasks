@@ -5,6 +5,8 @@ import java.time.Instant;
 import com.leandroadal.vortasks.entities.backup.userprogress.MissionTasks;
 import com.leandroadal.vortasks.entities.backup.userprogress.Status;
 import com.leandroadal.vortasks.entities.backup.userprogress.Type;
+import com.leandroadal.vortasks.entities.social.tasks.enumerators.Difficulty;
+import com.leandroadal.vortasks.entities.social.tasks.enumerators.Theme;
 
 
 public record MissionTaskDTO(
@@ -20,7 +22,9 @@ public record MissionTaskDTO(
     Integer skillIncrease,
     Integer skillDecrease,
     Instant startDate,
-    Instant endDate
+    Instant endDate,
+    Theme theme,
+    Difficulty difficulty
 ) {
     public MissionTaskDTO(MissionTasks missionTask) {
         this(
@@ -36,7 +40,9 @@ public record MissionTaskDTO(
             missionTask.getSkillIncrease(),
             missionTask.getSkillDecrease(),
             missionTask.getStartDate(),
-            missionTask.getEndDate()
+            missionTask.getEndDate(),
+            missionTask.getTheme(),
+            missionTask.getDifficulty()
         );
     }
 

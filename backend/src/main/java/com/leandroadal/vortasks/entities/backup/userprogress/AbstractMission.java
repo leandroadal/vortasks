@@ -1,6 +1,9 @@
 package com.leandroadal.vortasks.entities.backup.userprogress;
 
-import com.leandroadal.vortasks.entities.social.dto.OnlineMissionDTO;
+import java.time.Instant;
+
+import com.leandroadal.vortasks.entities.social.tasks.enumerators.Difficulty;
+import com.leandroadal.vortasks.entities.social.tasks.enumerators.Theme;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -11,8 +14,8 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Inheritance;
 import jakarta.persistence.InheritanceType;
 import jakarta.validation.constraints.NotNull;
-import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -22,12 +25,12 @@ import lombok.Setter;
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
+@EqualsAndHashCode(of = "id")
 @Inheritance(strategy = InheritanceType.JOINED)
 public abstract class AbstractMission {
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
-    @Setter(AccessLevel.NONE)
     private String id;
 
     @NotNull
@@ -37,42 +40,23 @@ public abstract class AbstractMission {
     @Enumerated(EnumType.STRING)
     private Status status; // Concluído, falha ou em andamento
 
-    private int xp; // xp
-    private int coins;
+    private Integer xp; // xp
+    private Integer coins;
 
     @Enumerated(EnumType.STRING)
     private Type type; // Lazer  ou atividade
 
     private String repetition;
     private String reminder;
-    private int skillIncrease; // Aumentar xp da skill 
-    private int skillDecrease; // diminuir xp da skill
+    private Integer skillIncrease; // Aumentar xp da skill 
+    private Integer skillDecrease; // diminuir xp da skill
+    private Instant startDate;
+    private Instant endDate;
 
-        
-    public AbstractMission(@NotNull String title, String description, Status status, int xp, int coins, Type type,
-            String repetition, String reminder, int skillIncrease, int skillDecrease) {
-        this.title = title;
-        this.description = description;
-        this.status = status;
-        this.xp = xp;
-        this.coins = coins;
-        this.type = type;
-        this.repetition = repetition;
-        this.reminder = reminder;
-        this.skillIncrease = skillIncrease;
-        this.skillDecrease = skillDecrease;
-    }
+    @Enumerated(EnumType.STRING)
+    private Theme theme;
 
-    public AbstractMission(OnlineMissionDTO data) {
-        this.title = data.title();
-        this.description = data.description();
-        this.status = data.status();
-        this.xp = data.xp();
-        this.coins = data.coins();
-        this.type = data.type();
-        this.repetition = data.repetition();
-        this.reminder = data.reminder();
-        this.skillIncrease = data.skillIncrease();
-        this.skillDecrease = data.skillDecrease();
-    }
+    @Enumerated(EnumType.STRING)
+    private Difficulty difficulty;
+
 }
