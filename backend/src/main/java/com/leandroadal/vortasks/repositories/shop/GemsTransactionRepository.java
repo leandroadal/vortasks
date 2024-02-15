@@ -6,10 +6,10 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import com.leandroadal.vortasks.entities.shop.transaction.GemsTransaction;
 
-public interface GemsTransactionRepository extends JpaRepository<GemsTransaction, Long> {
+public interface GemsTransactionRepository extends JpaRepository<GemsTransaction, String> {
 
-    List<GemsTransaction> findAllByUserId(Long userId);
+    List<GemsTransaction> findAllByUserId(String userId);
 
-    GemsTransaction findByUserId(Long userId);
+    GemsTransaction findByUserId(String userId);
 
 }

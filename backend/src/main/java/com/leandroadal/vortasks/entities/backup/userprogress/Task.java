@@ -1,12 +1,16 @@
 package com.leandroadal.vortasks.entities.backup.userprogress;
 
-import com.leandroadal.vortasks.entities.backup.UserBackup;
-import com.leandroadal.vortasks.entities.backup.userprogress.dto.AbstractTaskDTO;
+import java.time.Instant;
+
+import com.leandroadal.vortasks.entities.backup.Backup;
+import com.leandroadal.vortasks.entities.social.tasks.enumerators.Difficulty;
+import com.leandroadal.vortasks.entities.social.tasks.enumerators.Theme;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -15,27 +19,22 @@ import lombok.Setter;
 @Setter
 @Entity
 @NoArgsConstructor
+@AllArgsConstructor
 public class Task extends AbstractTask {  
 
-    public Task(AbstractTaskDTO data, UserBackup userBackup) {
-        super(data);
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "backup_id")
+    private Backup userBackup;
+
+
+
+
+    public Task(String id, String name, String description, Status status, Integer xp, Integer coins, Type type,
+            Integer repetition, String reminder, Integer skillIncrease, Integer skillDecrease, Instant startDate,
+            Instant endDate, Theme theme, Difficulty difficulty, Backup userBackup) {
+        super(id, name, description, status, xp, coins, type, repetition, reminder, skillIncrease, skillDecrease,
+                startDate, endDate, theme, difficulty);
         this.userBackup = userBackup;
     }
-
-    @ManyToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "user_backup_id")
-    private UserBackup userBackup;
-
-    public void edit(AbstractTaskDTO data) {
-        this.setStatus(data.status());
-        this.setName(data.name());
-        this.setDescription(data.description());
-        this.setXp(data.xp());
-        this.setCoins(data.coins());
-        this.setType(data.type());
-        this.setRepetition(data.repetition());
-        this.setReminder(data.reminder());
-        this.setSkillIncrease(data.skillIncrease());
-        this.setSkillDecrease(data.skillDecrease());
-    }
+    
 }

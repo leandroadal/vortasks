@@ -1,8 +1,6 @@
 package com.leandroadal.vortasks.entities.backup.userprogress;
 
-import com.leandroadal.vortasks.entities.backup.UserBackup;
-import com.leandroadal.vortasks.entities.backup.userprogress.dto.SkillDTO;
-
+import com.leandroadal.vortasks.entities.backup.Backup;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -10,7 +8,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
-import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -19,30 +17,19 @@ import lombok.Setter;
 @Setter
 @Entity
 @NoArgsConstructor
+@AllArgsConstructor
 public class Skill {
-
-    public Skill(SkillDTO data, UserBackup userBackup) {
-        this.name = data.name();
-        this.xp = data.xp();
-        this.userBackup = userBackup;
-    }
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
-    @Setter(AccessLevel.NONE)
     private String id;
 
     private String name;
-    private float xp;
+    private Float xp;
+    private Integer level;
 
     @ManyToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "user_backup_id")
-    private UserBackup userBackup;
+    @JoinColumn(name = "backup_id")
+    private Backup userBackup;
 
-    public void edit(SkillDTO skillDTO) {
-        this.name = skillDTO.name();
-        this.xp = skillDTO.xp();
-    }
-
-    
 }

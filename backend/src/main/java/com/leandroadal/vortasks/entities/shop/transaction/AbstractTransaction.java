@@ -1,6 +1,6 @@
 package com.leandroadal.vortasks.entities.shop.transaction;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 
 import com.leandroadal.vortasks.entities.user.User;
 
@@ -26,10 +26,10 @@ import lombok.Setter;
 public abstract class AbstractTransaction {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @GeneratedValue(strategy = GenerationType.UUID)
+    private String id;
 
-    private LocalDateTime purchaseDate;
+    private Instant purchaseDate;
     private String errorMessage;
 
     @ManyToOne

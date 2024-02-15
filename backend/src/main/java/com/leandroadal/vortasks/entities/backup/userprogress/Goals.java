@@ -1,7 +1,8 @@
 package com.leandroadal.vortasks.entities.backup.userprogress;
 
-import com.leandroadal.vortasks.entities.backup.UserBackup;
+import com.leandroadal.vortasks.entities.backup.Backup;
 import com.leandroadal.vortasks.entities.backup.userprogress.dto.GoalsDTO;
+import com.leandroadal.vortasks.entities.backup.userprogress.dto.create.GoalsCreateDTO;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
@@ -11,6 +12,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToOne;
 import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -19,13 +21,8 @@ import lombok.Setter;
 @Setter
 @Entity
 @NoArgsConstructor
+@AllArgsConstructor
 public class Goals {
-
-    public Goals(GoalsDTO data, UserBackup backup) {
-        this.daily = data.daily();
-        this.monthly = data.monthly();
-        this.userBackup = backup;
-    }
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
@@ -36,11 +33,26 @@ public class Goals {
     private float monthly;
 
     @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "user_backup_id")
-    private UserBackup userBackup;
+    @JoinColumn(name = "backup_id")
+    private Backup userBackup;
+
+
+    
+    public Goals(GoalsCreateDTO goalsDTO, Backup backup) {
+        this.daily = goalsDTO.daily();
+        this.monthly = goalsDTO.monthly();
+        this.userBackup = backup;
+    }
 
     public void edit(GoalsDTO goalsDTO) {
         this.daily = goalsDTO.daily();
         this.monthly = goalsDTO.monthly();
     }
+
+    public Goals(float daily, float monthly, Backup userBackup) {
+        this.daily = daily;
+        this.monthly = monthly;
+        this.userBackup = userBackup;
+    }
+    
 }
