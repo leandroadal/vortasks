@@ -25,7 +25,7 @@ import lombok.Setter;
 @EqualsAndHashCode(of = "id")
 public class FriendInvite {
 
-    @Id
+    @Id // TODO muda para @EmbeddedId
     @GeneratedValue(strategy = GenerationType.UUID)
     private String id;
 

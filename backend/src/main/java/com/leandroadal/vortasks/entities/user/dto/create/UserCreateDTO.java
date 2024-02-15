@@ -6,6 +6,7 @@ import com.leandroadal.vortasks.entities.user.User;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.Size;
 
 public record UserCreateDTO(
         @NotEmpty(message="Preenchimento obrigatório")
@@ -13,6 +14,7 @@ public record UserCreateDTO(
         String name,
 
         @NotEmpty(message="Preenchimento obrigatório")
+        @Size(min = 6, max = 16, message = "A senha deve ter entre 6 e 16 caracteres")
         String username,
 
         @NotEmpty(message="Preenchimento obrigatório")
@@ -20,6 +22,7 @@ public record UserCreateDTO(
         String email,
 
         @NotEmpty(message="Preenchimento obrigatório")
+        @Size(min = 6, max = 40, message = "A senha deve ter entre 6 e 40 caracteres")
         String password) {
 
     public User toUser() {

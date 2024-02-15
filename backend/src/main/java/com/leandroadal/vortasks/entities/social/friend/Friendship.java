@@ -2,6 +2,7 @@ package com.leandroadal.vortasks.entities.social.friend;
 
 import java.time.Instant;
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 
 import com.leandroadal.vortasks.entities.user.User;
@@ -15,7 +16,6 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
-import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -24,7 +24,6 @@ import lombok.Setter;
 @Setter
 @Entity
 @NoArgsConstructor
-@EqualsAndHashCode(of = "id")
 public class Friendship {
 
     @Id
@@ -40,5 +39,18 @@ public class Friendship {
     private Set<User> users = new HashSet<>();
 
     private Instant friendshipDate;
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Friendship)) return false;
+        Friendship that = (Friendship) o;
+        return Objects.equals(getUsers(), that.getUsers());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getUsers());
+    }
 
 }
