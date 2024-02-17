@@ -71,10 +71,10 @@ public class User {
     @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)  
     private List<Product> purchasedProducts = new ArrayList<>();
 
-    @OneToMany(mappedBy = "senderUser")
+    @OneToMany(mappedBy = "id.senderUser")
     private Set<FriendInvite> senderFriendRequests = new HashSet<>();
 
-    @OneToMany(mappedBy = "receiverUser")
+    @OneToMany(mappedBy = "id.receiverUser")
     private Set<FriendInvite> receivedFriendRequests = new HashSet<>();
 
     @ManyToMany(mappedBy = "users", cascade = CascadeType.ALL, fetch = FetchType.LAZY)

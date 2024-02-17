@@ -1,6 +1,7 @@
 package com.leandroadal.vortasks.entities.social.friend.dto.create;
 
 import com.leandroadal.vortasks.entities.social.friend.FriendInvite;
+import com.leandroadal.vortasks.entities.social.friend.pk.FriendInvitePK;
 import com.leandroadal.vortasks.entities.user.User;
 
 import jakarta.validation.constraints.NotBlank;
@@ -15,6 +16,7 @@ public record FriendInviteRequestDTO(
         User userReceiver = new User();
         userSender.setId(this.userId);
         userReceiver.setId(friendUserId);
-        return new FriendInvite(null, userSender, userReceiver, null, null);
+        FriendInvitePK pk = new FriendInvitePK(userSender, userReceiver);
+        return new FriendInvite(pk, null, null);
     }
 }

@@ -36,22 +36,23 @@ public class FriendshipService {
 
     }
 
-    public Friendship createFriendship(User user, FriendInvite request) {
-        User senderUser = request.getSenderUser();
+    public Friendship createFriendship(FriendInvite request) {
+        User sender = request.getId().getSenderUser();
+        User receiver = request.getId().getReceiverUser();
         Friendship friendship = new Friendship();
-        friendship.setUsers(Set.of(user, senderUser));
+        friendship.setUsers(Set.of(sender, receiver));
         friendship.setFriendshipDate(Instant.now());
 
         friendshipRepository.save(friendship);
 
-        linkUserToFriendship(user, senderUser, friendship);
+        linkUserToFriendship(sender, receiver, friendship);
         log.createFriendship(friendship.getId());
         return friendship;
     }
 
-    private void linkUserToFriendship(User user, User senderUser, Friendship friendship) {
-        senderUser.getFriendships().add(friendship);
-        user.getFriendships().add(friendship);
+    private void linkUserToFriendship(User sender, User receiver, Friendship friendship) {
+        sender.getFriendships().add(friendship);
+        receiver.getFriendships().add(friendship);
     }
 
     public void deleteFriendship(String friendshipId) {
