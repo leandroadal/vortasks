@@ -1,5 +1,7 @@
 package com.leandroadal.vortasks.services.user;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -7,27 +9,50 @@ import com.leandroadal.vortasks.entities.user.User;
 import com.leandroadal.vortasks.repositories.user.UserRepository;
 import com.leandroadal.vortasks.services.exception.ObjectNotFoundException;
 
-import lombok.extern.slf4j.Slf4j;
-
-@Slf4j
 @Service
 public class UserService {
 
     @Autowired
     private UserRepository repository;
 
+    @Autowired
+    private LogUser log;
+
+    public List<User> findAllUsers() {
+        return repository.findAll();
+    }
+    
     public User findUserById(String id) {
         try {
             return repository.findById(id).orElseThrow(() -> new ObjectNotFoundException(id));
         } catch (ObjectNotFoundException e) {
-            //log.userNotFound(id);
-            log.error("Usuário com ID: {} não foi encontrado!", id);
+            log.userNotFound(id);
             throw e;
         }        
     }
 
     public User findUserByUsername(String username) {
-        return repository.findByUsername(username).orElseThrow(() -> new ObjectNotFoundException(username));
+        try {
+            return repository.findByUsername(username).orElseThrow(() -> new ObjectNotFoundException(username));
+        } catch (ObjectNotFoundException e) {
+            log.userByUsername(username);
+            throw e;
+        }
+        
+    }
+
+    public User findUserByEmail(String email) {
+        try {
+            return repository.findByEmail(email).orElseThrow(() -> new ObjectNotFoundException(email));
+        } catch (ObjectNotFoundException e) {
+            log.userByEmail(email);
+            throw e;
+        }
+        
+    }
+
+    public boolean existsByUsername(String username) {
+        return repository.existsByUsername(username);
     }
 
     public User save(User user) {

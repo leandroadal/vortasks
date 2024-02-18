@@ -42,7 +42,6 @@ public class FriendInviteService {
     public FriendInvite findFriendInvite(String senderId, String receiverId) {
         try {
             return friendInviteRepository.findByIdSenderUserIdAndIdReceiverUserId(senderId, receiverId);
-
         } catch (ObjectNotFoundException e) {
             log.notFoundFriendInvite(senderId, receiverId);
             throw e;

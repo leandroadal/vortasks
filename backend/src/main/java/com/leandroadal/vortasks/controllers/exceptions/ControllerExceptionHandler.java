@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import com.leandroadal.vortasks.services.backup.exceptions.BackupCreationException;
 import com.leandroadal.vortasks.services.backup.exceptions.BackupNotModifiedException;
 import com.leandroadal.vortasks.services.exception.DatabaseException;
+import com.leandroadal.vortasks.services.exception.InvalidCredentialsException;
 import com.leandroadal.vortasks.services.exception.ObjectNotFoundException;
 import com.leandroadal.vortasks.services.exception.ValidateException;
 import com.leandroadal.vortasks.services.shop.payments.exceptions.PaymentException;
@@ -31,6 +32,18 @@ public class ControllerExceptionHandler {
         return ResponseEntity.status(status).body(err);
     }
 
+    // ----------------------- SECURITY -----------------------
+
+    @ExceptionHandler(InvalidCredentialsException.class)
+    public ResponseEntity<StandardError> invalidCredentials(InvalidCredentialsException e, HttpServletRequest request) {
+        String error = "Credenciais inválidas";
+        HttpStatus status = HttpStatus.UNAUTHORIZED;
+        StandardError err = new StandardError(Instant.now(), status.value(), error, e.getMessage(), request.getRequestURI());
+        return ResponseEntity.status(status).body(err);
+    }
+
+    // ----------------------- Validation -----------------------
+
     @ExceptionHandler(ValidateException.class)
     public ResponseEntity<StandardError> validate(ValidateException e, HttpServletRequest request) {
         String error = "Erro ao validar";
@@ -38,6 +51,8 @@ public class ControllerExceptionHandler {
         StandardError err = new StandardError(Instant.now(), status.value(), error, e.getMessage(), request.getRequestURI());
         return ResponseEntity.status(status).body(err);
     }
+
+    // ----------------------- BACKUP -----------------------
 
     @ExceptionHandler(BackupCreationException.class)
     public ResponseEntity<StandardError> backupCreate(BackupCreationException e, HttpServletRequest request) {
@@ -63,6 +78,8 @@ public class ControllerExceptionHandler {
         return ResponseEntity.status(status).body(err);
     }
 
+    // ----------------------- DATABASE -----------------------
+
     @ExceptionHandler(DatabaseException.class)
     public ResponseEntity<StandardError> databaseException(DatabaseException e, HttpServletRequest request) {
         String error = "Erro no banco de dados";
@@ -70,6 +87,8 @@ public class ControllerExceptionHandler {
         StandardError err = new StandardError(Instant.now(), status.value(), error, e.getMessage(), request.getRequestURI());
         return ResponseEntity.status(status).body(err);
     }
+
+    // ----------------------- SHOPPING -----------------------
 
     @ExceptionHandler(PaymentMismatchException.class)
     public ResponseEntity<StandardError> paymentMismatch(PaymentMismatchException e, HttpServletRequest request) {
