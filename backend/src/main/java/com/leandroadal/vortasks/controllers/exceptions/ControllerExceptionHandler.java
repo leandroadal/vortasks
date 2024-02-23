@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import com.leandroadal.vortasks.services.backup.exceptions.BackupCreationException;
 import com.leandroadal.vortasks.services.backup.exceptions.BackupNotModifiedException;
 import com.leandroadal.vortasks.services.exception.DatabaseException;
+import com.leandroadal.vortasks.services.exception.ForbiddenAccessException;
 import com.leandroadal.vortasks.services.exception.InvalidCredentialsException;
 import com.leandroadal.vortasks.services.exception.ObjectNotFoundException;
 import com.leandroadal.vortasks.services.exception.ValidateException;
@@ -37,7 +38,15 @@ public class ControllerExceptionHandler {
     @ExceptionHandler(InvalidCredentialsException.class)
     public ResponseEntity<StandardError> invalidCredentials(InvalidCredentialsException e, HttpServletRequest request) {
         String error = "Credenciais inválidas";
-        HttpStatus status = HttpStatus.UNAUTHORIZED;
+        HttpStatus status = HttpStatus.FORBIDDEN;
+        StandardError err = new StandardError(Instant.now(), status.value(), error, e.getMessage(), request.getRequestURI());
+        return ResponseEntity.status(status).body(err);
+    }
+
+    @ExceptionHandler(ForbiddenAccessException.class)
+    public ResponseEntity<StandardError> forbiddenAccess(ForbiddenAccessException e, HttpServletRequest request) {
+        String error = "Acesso negado";
+        HttpStatus status = HttpStatus.FORBIDDEN;
         StandardError err = new StandardError(Instant.now(), status.value(), error, e.getMessage(), request.getRequestURI());
         return ResponseEntity.status(status).body(err);
     }
@@ -70,6 +79,8 @@ public class ControllerExceptionHandler {
         return ResponseEntity.status(status).body(err);
     }
 
+    // ----------------------- FRIENDSHIP -----------------------
+    
     @ExceptionHandler(FriendException.class)
     public ResponseEntity<StandardError> friendReceiverMismatch(FriendException e, HttpServletRequest request) {
         String error = "Erro ao recuperar amigo";

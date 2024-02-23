@@ -12,6 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.leandroadal.vortasks.entities.backup.Backup;
 import com.leandroadal.vortasks.entities.user.User;
 import com.leandroadal.vortasks.repositories.backup.BackupRepository;
+import com.leandroadal.vortasks.security.UserSS;
 import com.leandroadal.vortasks.services.backup.exceptions.BackupCreationException;
 import com.leandroadal.vortasks.services.backup.exceptions.BackupNotModifiedException;
 import com.leandroadal.vortasks.services.exception.ObjectNotFoundException;
@@ -67,7 +68,8 @@ public class BackupService {
 
     @Transactional
     public Backup createBackup(Backup backup) {
-        User user = userService.findUserById(backup.getUser().getId());
+        UserSS userSS = UserService.authenticated();
+        User user = userService.findUserById(userSS.getId());
         validateBackupCreation(user);
         try {
             backupAssociation.linkUserAndBackup(user, backup);
@@ -81,21 +83,23 @@ public class BackupService {
         }
     }
 
-    public Backup latestBackup(String userId, Instant lastModified) {
-        Backup backup = getBackupByUserId(userId);
+    public Backup latestBackup(Instant lastModified) {
+        UserSS userSS = UserService.authenticated();
+        Backup backup = getBackupByUserId(userSS.getId());
 
         if (lastModified == null || backup.getLastModified().isAfter(lastModified)) {
-            logService.logLatestBackupRetrievalSuccess(userId);
+            logService.logLatestBackupRetrievalSuccess(backup.getId());
             return backup;
         } else {
-            logService.logBackupNotModified(userId);
-            throw new BackupNotModifiedException("Backup não modificado para o usuário", userId);
+            logService.logBackupNotModified(backup.getId());
+            throw new BackupNotModifiedException("Backup não modificado para o usuário", backup.getId());
         }
     }
 
     @Transactional
     public Backup updateBackup(Backup data) {
-        Backup newBackup = findBackup(data.getId());
+        UserSS userSS = UserService.authenticated();
+        Backup newBackup = getBackupByUserId(userSS.getId());
         updateData(newBackup, data);
         saveBackup(newBackup);
         logService.logBackupUpdateSuccess(newBackup.getId());
@@ -103,12 +107,13 @@ public class BackupService {
     }
 
     @Transactional
-    public void deleteUserBackup(String id) {
-        Backup userBackup = findBackup(id);
+    public void deleteUserBackup() {
+        UserSS userSS = UserService.authenticated();
+        Backup userBackup = getBackupByUserId(userSS.getId());
 
         backupAssociation.removeReferences(userBackup);
         deleteBackup(userBackup);
-        logService.logBackupDeletionSuccess(id);
+        logService.logBackupDeletionSuccess(userSS.getId());
     }
 
     private void validateBackupCreation(User user) {

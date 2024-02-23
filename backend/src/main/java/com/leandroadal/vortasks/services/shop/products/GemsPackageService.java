@@ -21,7 +21,7 @@ public class GemsPackageService {
     private GemsPackageRepository gemsPackageRepository;
 
     @Autowired
-    private LogGemsPackageService log;
+    private LogGemsPackage log;
 
     public List<GemsPackage> getAllGemsPackages() {
         return gemsPackageRepository.findAll();

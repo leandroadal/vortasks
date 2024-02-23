@@ -5,6 +5,8 @@ import java.util.Set;
 import com.leandroadal.vortasks.entities.backup.userprogress.Status;
 import com.leandroadal.vortasks.entities.backup.userprogress.Type;
 import com.leandroadal.vortasks.entities.social.tasks.GroupTask;
+import com.leandroadal.vortasks.entities.social.tasks.enumerators.Difficulty;
+import com.leandroadal.vortasks.entities.social.tasks.enumerators.Theme;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
@@ -49,6 +51,12 @@ public record GroupTaskCreateDTO(
         @NotBlank(message = "O editor não pode estar em branco") 
         String editor,
 
+        @NotNull(message = "O theme não pode ser nulo")
+        Theme theme,
+
+        @NotNull(message = "O difficulty não pode ser nulo")
+        Difficulty difficulty,
+
         @NotEmpty(message = "A lista de nomes de usuário não pode estar vazia") @Size(min = 1, max = 5, message = "A lista de nomes de usuário deve ter entre 1 e 5 elementos") 
         Set<String> usernames) {
 
@@ -66,6 +74,8 @@ public record GroupTaskCreateDTO(
         task.setSkillDecrease(skillDecrease);
         task.setAuthor(author);
         task.setEditor(editor);
+        task.setTheme(theme);
+        task.setDifficulty(difficulty);
         return task;
     }
 

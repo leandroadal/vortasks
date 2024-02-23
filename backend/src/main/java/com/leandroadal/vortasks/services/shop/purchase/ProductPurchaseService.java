@@ -10,6 +10,7 @@ import com.leandroadal.vortasks.entities.shop.product.Product;
 import com.leandroadal.vortasks.entities.shop.transaction.ProductTransaction;
 import com.leandroadal.vortasks.entities.user.User;
 import com.leandroadal.vortasks.repositories.shop.ProductRepository;
+import com.leandroadal.vortasks.security.UserSS;
 import com.leandroadal.vortasks.services.shop.products.ProductService;
 import com.leandroadal.vortasks.services.shop.purchase.exceptions.InsufficientFundsException;
 import com.leandroadal.vortasks.services.user.UserService;
@@ -30,11 +31,12 @@ public class ProductPurchaseService {
     private TransactionService transactionService;
 
     @Autowired
-    private LogPurchaseService log;
+    private LogPurchase log;
 
     @Transactional
-    public ProductTransaction productPurchase(String userId, Long request) {
-        User user = getUserById(userId);
+    public ProductTransaction productPurchase(Long request) {
+        UserSS userSS = UserService.authenticated();
+        User user = getUserById(userSS.getId());
         Product product = getProductById(request);
 
         if (hasEnoughCoinsAndGems(user, product)) {

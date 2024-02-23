@@ -27,22 +27,16 @@ public class FriendInviteController {
     @Autowired
     private FriendInviteService service;
 
-    @GetMapping("{userId}")
-    public ResponseEntity<List<FriendInviteResponseDTO>> getMyFriendInvite(@PathVariable String userId) {
-        List<FriendInvite> friendship = service.friendInvitesForUser(userId);
-        return ResponseEntity.ok(friendship.stream().map(FriendInviteResponseDTO::new).toList());
+    @GetMapping("/{senderId}/{receiverId}")
+    public ResponseEntity<FriendInviteResponseDTO> getFriendInvite(@PathVariable String senderId, @PathVariable String receiverId) {
+        FriendInvite friendInvite = service.getFriendInviteByUsersId(senderId, receiverId);
+        return ResponseEntity.ok(new FriendInviteResponseDTO(friendInvite));
     }
 
     @GetMapping
-    public ResponseEntity<List<FriendInviteResponseDTO>> getFriendInvites() {
-        List<FriendInvite> friendship = service.findAll();
+    public ResponseEntity<List<FriendInviteResponseDTO>> getMyFriendInvite() {
+        List<FriendInvite> friendship = service.friendInvitesForUser();
         return ResponseEntity.ok(friendship.stream().map(FriendInviteResponseDTO::new).toList());
-    }
-
-    @GetMapping("/{senderId}/{receiverId}")
-    public ResponseEntity<FriendInviteResponseDTO> getFriendInvite(@PathVariable String senderId, @PathVariable String receiverId) {
-        FriendInvite friendInvite = service.findFriendInvite(senderId, receiverId);
-        return ResponseEntity.ok(new FriendInviteResponseDTO(friendInvite));
     }
 
     @PostMapping("/{senderId}/{receiverId}")

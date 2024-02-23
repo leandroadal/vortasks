@@ -9,7 +9,7 @@ public record ProductResponseDTO(
         Long id,
         String name,
         String description,
-        Set<CategoryResponseDTO> type,
+        Set<CategoryResponseDTO> category,
         String icon,
         int coins,
         int gems,

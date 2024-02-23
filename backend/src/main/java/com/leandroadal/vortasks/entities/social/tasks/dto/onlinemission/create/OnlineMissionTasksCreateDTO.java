@@ -4,6 +4,8 @@ import java.time.Instant;
 
 import com.leandroadal.vortasks.entities.backup.userprogress.Type;
 import com.leandroadal.vortasks.entities.social.tasks.OnlineMissionTasks;
+import com.leandroadal.vortasks.entities.social.tasks.enumerators.Difficulty;
+import com.leandroadal.vortasks.entities.social.tasks.enumerators.Theme;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -41,7 +43,13 @@ public record OnlineMissionTasksCreateDTO(
     Instant startDate,
 
     @NotNull(message = "A data de término não pode ser nula")
-    Instant endDate
+    Instant endDate,
+
+    @NotNull(message = "O theme não pode ser nulo")
+    Theme theme,
+
+    @NotNull(message = "O difficulty não pode ser nulo")
+    Difficulty difficulty
 ) {
     public OnlineMissionTasks toOnlineMissionTasks() {
         OnlineMissionTasks missionTasks = new OnlineMissionTasks();
@@ -56,6 +64,8 @@ public record OnlineMissionTasksCreateDTO(
         missionTasks.setSkillDecrease(skillDecrease);
         missionTasks.setStartDate(startDate);
         missionTasks.setEndDate(endDate);
+        missionTasks.setTheme(theme);
+        missionTasks.setDifficulty(difficulty);
         return missionTasks;
     }
 

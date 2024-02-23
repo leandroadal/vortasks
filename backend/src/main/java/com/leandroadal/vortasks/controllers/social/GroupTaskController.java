@@ -1,6 +1,5 @@
 package com.leandroadal.vortasks.controllers.social;
 
-import java.util.List;
 import org.hibernate.validator.constraints.UUID;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -36,16 +35,8 @@ public class GroupTaskController {
 
     @GetMapping("{id}")
     public ResponseEntity<GroupTaskResponseDTO> getGroupTask(@PathVariable @UUID String id) {
-        GroupTask groupTask = service.findGroupTaskById(id);
+        GroupTask groupTask = service.finGroupTask(id);
         return ResponseEntity.ok(new GroupTaskResponseDTO(groupTask));
-    }
-
-    @GetMapping
-    public ResponseEntity<List<GroupTaskResponseDTO>> allGroupTasks() {
-        List<GroupTask> groupTask = service.getGroupTaskList();
-        return ResponseEntity.ok(groupTask.stream()
-                                            .map(GroupTaskResponseDTO::new)
-                                            .toList());
     }
 
     @GetMapping("/search")
@@ -72,14 +63,14 @@ public class GroupTaskController {
 
     @PutMapping("/{groupTaskId}")
     public ResponseEntity<GroupTaskResponseDTO> editGroupTask(@PathVariable @UUID String groupTaskId, @Valid @RequestBody GroupTaskRequestDTO groupTaskDTO) {
-        GroupTask groupTask = service.editGroupTask(groupTaskDTO.toGroupTask(groupTaskId), groupTaskDTO.usernames());
+        GroupTask groupTask = service.editGroupTask(groupTaskDTO.toGroupTask(groupTaskId));
 
         return ResponseEntity.ok(new GroupTaskResponseDTO(groupTask));
     }
 
     @PatchMapping("/{groupTaskId}")
     public ResponseEntity<GroupTaskResponseDTO> partialEditGroupTask(@PathVariable @UUID String groupTaskId, @RequestBody GroupTaskRequestDTO groupTaskDTO) {
-        GroupTask groupTask = service.partialEditGroupTask(groupTaskDTO.toGroupTask(groupTaskId), groupTaskDTO.usernames());
+        GroupTask groupTask = service.partialEditGroupTask(groupTaskDTO.toGroupTask(groupTaskId));
 
         return ResponseEntity.ok(new GroupTaskResponseDTO(groupTask));
     }
@@ -89,5 +80,18 @@ public class GroupTaskController {
         service.deleteGroupTask(groupTaskId);
         return ResponseEntity.noContent().build();
     }
+
+    @PostMapping("/{groupTaskId}/participants/{userId}")
+    public ResponseEntity<String> addUserToGroupTask(@PathVariable @UUID String groupTaskId, @PathVariable @UUID String userId) {
+        service.addUser(groupTaskId, userId);
+        return ResponseEntity.noContent().build();
+    }
+
+    @DeleteMapping("/{groupTaskId}/participants/{userId}")
+    public ResponseEntity<String> removeUserFromGroupTask(@PathVariable @UUID String groupTaskId, @PathVariable @UUID String userId) {
+        service.deleteUser(groupTaskId, userId);
+        return ResponseEntity.noContent().build();
+    }
+
 
 }

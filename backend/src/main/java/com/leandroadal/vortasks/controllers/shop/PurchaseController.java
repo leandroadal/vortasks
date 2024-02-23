@@ -34,9 +34,9 @@ public class PurchaseController {
     @Autowired
     private ProductPurchaseService productService;
 
-    @PostMapping("/gems/start/{userId}")
-    public ResponseEntity<GemsTransactionDTO> startGemsPurchase(@PathVariable @UUID String userId, @Valid @RequestBody StartPurchaseRequestDTO request) {
-        GemsTransaction gemsT = gemsService.startGemsPurchase(userId, request.productOrGemsId());
+    @PostMapping("/gems/start")
+    public ResponseEntity<GemsTransactionDTO> startGemsPurchase(@Valid @RequestBody StartPurchaseRequestDTO request) {
+        GemsTransaction gemsT = gemsService.startGemsPurchase(request.productOrGemsId());
         URI uri = ServletUriComponentsBuilder.fromCurrentRequest()
                 .replacePath("/shop/my-transactions/gems/{id}")
                 .buildAndExpand(gemsT.getId())
@@ -44,9 +44,9 @@ public class PurchaseController {
         return ResponseEntity.created(uri).body(new GemsTransactionDTO(gemsT));    
     }
 
-    @PostMapping("/gems/complete/{userId}")
-    public ResponseEntity<String> completeGemsPurchase(@PathVariable @UUID  String userId, @Valid @RequestBody CompletePurchaseRequestDTO request) {
-        gemsService.completeGemsPurchase(userId, request);
+    @PostMapping("/gems/complete")
+    public ResponseEntity<String> completeGemsPurchase(@Valid @RequestBody CompletePurchaseRequestDTO request) {
+        gemsService.completeGemsPurchase(request);
         return ResponseEntity.ok("Compra concluída com sucesso.");
     }
 
@@ -58,8 +58,8 @@ public class PurchaseController {
     
 
     @PostMapping("/product/{userId}")
-    public ResponseEntity<ProductTransactionDTO> productPurchase(@PathVariable @UUID String userId, @Valid @RequestBody StartPurchaseRequestDTO request) {
-        ProductTransaction productT = productService.productPurchase(userId, request.productOrGemsId());
+    public ResponseEntity<ProductTransactionDTO> productPurchase(@Valid @RequestBody StartPurchaseRequestDTO request) {
+        ProductTransaction productT = productService.productPurchase(request.productOrGemsId());
         URI uri = ServletUriComponentsBuilder.fromCurrentRequest()
                 .replacePath("/shop/my-transactions/product/{id}")
                 .buildAndExpand(productT.getId())

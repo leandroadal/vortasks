@@ -7,6 +7,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -36,7 +37,8 @@ public class ProductController {
     @Autowired
     private ProductService service;
 
-    @PostMapping("/add")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PostMapping
     public ResponseEntity<ProductResponseDTO> createProduct(@Valid @RequestBody ProductRequestDTO productDTO) {
         Product data = productDTO.toProduct();
         Product newProduct = service.addProduct(data);
@@ -48,6 +50,7 @@ public class ProductController {
         return ResponseEntity.created(uri).body(new ProductResponseDTO(newProduct));
     }
 
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @GetMapping
     public ResponseEntity<List<ProductResponseDTO>> getAllProducts() {
         List<Product> products = service.getAllProducts();
@@ -114,7 +117,7 @@ public class ProductController {
         return ResponseEntity.noContent().build();
     }
 
-    @PutMapping("/{id}/category")
+    @PostMapping("/{id}/category")
     public ResponseEntity<String> updateProductCategory(@PathVariable @Positive Long id,
             @RequestBody List<Integer> ids) {
         service.addCategoryToProduct(id, ids);

@@ -6,6 +6,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -33,7 +34,8 @@ public class GemsController {
     @Autowired
     private GemsPackageService service;
 
-    @PostMapping("/add")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PostMapping
     public ResponseEntity<String> createGemsPackage(@Valid @RequestBody GemsPackRequestDTO gemsDTO) {
         GemsPackage data = gemsDTO.toGemsPackage();
         GemsPackage newPackage = service.addGemsPackage(data);
@@ -45,6 +47,7 @@ public class GemsController {
         return ResponseEntity.created(uri).build();
     }
 
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @GetMapping
     public ResponseEntity<List<GemsPackResponseDTO>> getAllGemsPackage() {
         List<GemsPackage> gemsPackage = service.getAllGemsPackages();
@@ -71,6 +74,7 @@ public class GemsController {
         return ResponseEntity.ok(new GemsPackResponseDTO(gemsPackage));
     }
 
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @PutMapping("/{id}")
     public ResponseEntity<GemsPackResponseDTO> editGemsPackage(@PathVariable @Positive Long id,
             @Valid @RequestBody GemsPackRequestDTO gemsDTO) {
@@ -81,6 +85,7 @@ public class GemsController {
         return ResponseEntity.ok(new GemsPackResponseDTO(newGemsPackage));
     }
 
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @PatchMapping("/{id}")
     public ResponseEntity<GemsPackResponseDTO> partialUpdateGemsPackage(@PathVariable @Positive Long id,
             @RequestBody GemsPackRequestDTO gemsDTO) {
@@ -91,6 +96,7 @@ public class GemsController {
         return ResponseEntity.ok(new GemsPackResponseDTO(newGemsPackage));
     }
 
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @DeleteMapping("/{id}")
     public ResponseEntity<String> deleteGemsPackage(@PathVariable @Positive Long id) {
         service.deleteGemsPackage(id);

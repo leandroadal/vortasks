@@ -7,6 +7,7 @@ import com.leandroadal.vortasks.services.shop.validation.PercentageRange;
 
 import jakarta.validation.constraints.DecimalMin;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 
 public record GemsPackRequestDTO(
@@ -15,9 +16,11 @@ public record GemsPackRequestDTO(
         @NotBlank(message = "O ícone não pode estar em branco") 
         String icon,
 
+        @NotNull(message = "O valor não pode ser nulo")
         @Positive(message = "O número de gemas deve ser positivo") 
         Integer gems,
 
+        @NotNull(message = "O valor não pode ser nulo")
         @DecimalMin(value = "0.0", inclusive = false, message = "O valor do dinheiro deve ser maior que zero") 
         BigDecimal money,
 

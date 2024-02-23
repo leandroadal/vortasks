@@ -18,7 +18,9 @@ public class CheckIn {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private int day;
+    private Integer coins;
+    private Integer gems;
+    private Integer day;
 
 
 }

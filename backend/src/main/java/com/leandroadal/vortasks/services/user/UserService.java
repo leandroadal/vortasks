@@ -3,10 +3,12 @@ package com.leandroadal.vortasks.services.user;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import com.leandroadal.vortasks.entities.user.User;
 import com.leandroadal.vortasks.repositories.user.UserRepository;
+import com.leandroadal.vortasks.security.UserSS;
 import com.leandroadal.vortasks.services.exception.ObjectNotFoundException;
 
 @Service
@@ -37,8 +39,7 @@ public class UserService {
         } catch (ObjectNotFoundException e) {
             log.userByUsername(username);
             throw e;
-        }
-        
+        }   
     }
 
     public User findUserByEmail(String email) {
@@ -47,14 +48,22 @@ public class UserService {
         } catch (ObjectNotFoundException e) {
             log.userByEmail(email);
             throw e;
-        }
-        
+        }   
     }
 
     public boolean existsByUsername(String username) {
         return repository.existsByUsername(username);
     }
 
+    public static UserSS authenticated() {
+		try {
+			return (UserSS) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		}
+		catch (Exception e) {
+			return null;
+		}
+    }
+    
     public User save(User user) {
         return repository.save(user);
     }

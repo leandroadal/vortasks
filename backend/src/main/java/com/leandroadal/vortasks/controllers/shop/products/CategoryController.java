@@ -6,6 +6,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -33,7 +34,8 @@ public class CategoryController {
     @Autowired
     private CategoryService service;
 
-    @PostMapping("/add")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PostMapping
     public ResponseEntity<CategoryResponseDTO> createCategory(@Valid @RequestBody CategoryRequestDTO categoryDTO) {
         Category data = categoryDTO.toCategory();
         Category newCategory = service.addCategory(data);
@@ -51,6 +53,7 @@ public class CategoryController {
         return ResponseEntity.ok(new CategoryResponseDTO(product));
     }
 
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @GetMapping
     public ResponseEntity<List<CategoryResponseDTO>> getAllCategory() {
         List<Category> products = service.getAllCategories();
@@ -59,6 +62,7 @@ public class CategoryController {
                 .toList());
     }
 
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @GetMapping("/page")
     public ResponseEntity<Page<CategoryResponseDTO>> findPage(
             @RequestParam(value = "page", defaultValue = "0") Integer page,
@@ -71,6 +75,7 @@ public class CategoryController {
         return ResponseEntity.ok().body(listDto);
     }
 
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @PutMapping("/{id}")
     public ResponseEntity<CategoryResponseDTO> editCategory(@PathVariable @Positive Integer id, @Valid @RequestBody CategoryRequestDTO productDTO) {
         Category data = productDTO.toCategory();
@@ -79,6 +84,7 @@ public class CategoryController {
         return ResponseEntity.ok(new CategoryResponseDTO(product));
     }
 
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @DeleteMapping("/{id}")
     public ResponseEntity<String> deleteCategory(@PathVariable @Positive Integer id) {
         service.deleteCategory(id);

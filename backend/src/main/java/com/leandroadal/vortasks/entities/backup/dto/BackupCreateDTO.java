@@ -4,8 +4,6 @@ import java.time.Instant;
 import java.util.List;
 import java.util.function.Function;
 
-import org.hibernate.validator.constraints.UUID;
-
 import com.leandroadal.vortasks.entities.backup.Backup;
 import com.leandroadal.vortasks.entities.backup.userprogress.Achievement;
 import com.leandroadal.vortasks.entities.backup.userprogress.CheckInDays;
@@ -23,7 +21,6 @@ import com.leandroadal.vortasks.entities.backup.userprogress.dto.create.SkillCre
 import com.leandroadal.vortasks.entities.user.User;
 
 public record BackupCreateDTO(
-        @UUID String userId,
         CheckInDaysCreateDTO checkInDays,
         GoalsCreateDTO goals,
         Instant lastModified,
@@ -34,7 +31,6 @@ public record BackupCreateDTO(
 
     public Backup toBackup(Backup backup) {
         User user = new User();
-        user.setId(userId);
         backup.setUser(user);
         backup.setLastModified(this.lastModified);
         mapCheckInDays(this.checkInDays, backup);

@@ -1,12 +1,12 @@
 package com.leandroadal.vortasks.services.shop.purchase;
 
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
-@Service
-public class LogPurchaseService {
+@Component
+public class LogPurchase {
 
     // --------------- Gems ---------------
 

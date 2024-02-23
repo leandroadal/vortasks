@@ -12,7 +12,10 @@ import com.leandroadal.vortasks.entities.shop.transaction.GemsTransaction;
 import com.leandroadal.vortasks.entities.shop.transaction.ProductTransaction;
 import com.leandroadal.vortasks.repositories.shop.GemsTransactionRepository;
 import com.leandroadal.vortasks.repositories.shop.ProductTransactionRepository;
+import com.leandroadal.vortasks.security.UserSS;
+import com.leandroadal.vortasks.services.exception.ForbiddenAccessException;
 import com.leandroadal.vortasks.services.exception.ObjectNotFoundException;
+import com.leandroadal.vortasks.services.user.UserService;
 
 @Service
 public class TransactionService {
@@ -24,27 +27,47 @@ public class TransactionService {
     private ProductTransactionRepository productRepository;
 
     @Autowired
-    private LogPurchaseService log;
+    private LogPurchase log;
 
-    public List<ProductTransaction> productListTransaction() {
-        return productRepository.findAll();
+    public List<ProductTransaction> myProductListTransaction() {
+        UserSS userSS = UserService.authenticated();
+        return productRepository.findAllByUserId(userSS.getId());
     }
 
-    public List<GemsTransaction> gemsListTransaction() {
-        return gemsRepository.findAll();
+    public List<GemsTransaction> myGemsListTransaction() {
+        UserSS userSS = UserService.authenticated();
+        return gemsRepository.findAllByUserId(userSS.getId());
     }
 
     public GemsTransaction findGemsTransaction(String id) {
+        GemsTransaction gems = getGemsTransactionById(id);
+        validateUserAuth(gems.getUser().getId());
+        return gems;
+    }
+
+    public GemsTransaction getGemsTransactionById(String id) {
         try {
             return gemsRepository.findById(id).orElseThrow(() -> new ObjectNotFoundException(id));
         } catch (ObjectNotFoundException e) {
             log.gemsTransactionNotFound(id);
             throw e;
         }
-        
+    }
+
+    private void validateUserAuth(String userId) {
+        UserSS userSS = UserService.authenticated();
+        if (!userSS.getId().equals(userId)) {
+            throw new ForbiddenAccessException("Requisição invalida para o usuário");
+        }
     }
 
     public ProductTransaction findProductTransaction(String id) {
+        ProductTransaction product = getProductTransactionById(id);
+        validateUserAuth(product.getUser().getId());
+        return product;
+    }
+
+    public ProductTransaction getProductTransactionById(String id) {
         try {
            return productRepository.findById(id).orElseThrow(() -> new ObjectNotFoundException(id)); 
         } catch (ObjectNotFoundException e) {
