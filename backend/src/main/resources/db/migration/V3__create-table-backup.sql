@@ -1,0 +1,6 @@
+CREATE TABLE IF NOT EXISTS backup (
+    id VARCHAR(36) PRIMARY KEY,
+    last_modified TIMESTAMP WITH TIME ZONE,
+    user_id VARCHAR(36),
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+);

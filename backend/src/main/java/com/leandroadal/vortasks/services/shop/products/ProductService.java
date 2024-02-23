@@ -59,6 +59,7 @@ public class ProductService {
     }
 
     public Product addProduct(Product data) {
+        data.setTotalSales(0);
         data.setActive(true);
         saveProduct(data);
         log.logAddProduct(data.getId());

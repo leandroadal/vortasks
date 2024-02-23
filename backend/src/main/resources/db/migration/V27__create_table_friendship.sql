@@ -1,0 +1,4 @@
+CREATE TABLE IF NOT EXISTS friendship (
+    id VARCHAR(36) PRIMARY KEY,
+    friendship_date TIMESTAMP WITH TIME ZONE
+);
