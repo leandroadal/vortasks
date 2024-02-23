@@ -40,8 +40,8 @@ public class TransactionController {
 
     @GetMapping
     public ResponseEntity<TransactionResponseDTO> myTransactions() {
-        List<ProductTransaction> productList = service.productListTransaction();
-        List<GemsTransaction> gemsList = service.gemsListTransaction();
+        List<ProductTransaction> productList = service.myProductListTransaction();
+        List<GemsTransaction> gemsList = service.myGemsListTransaction();
 
         List<ProductTransactionDTO> productsDTOs = productList.stream()
                 .map(ProductTransactionDTO::new)

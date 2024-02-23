@@ -12,6 +12,8 @@ import com.leandroadal.vortasks.entities.social.friend.enums.FriendStatus;
 import com.leandroadal.vortasks.entities.social.friend.pk.FriendInvitePK;
 import com.leandroadal.vortasks.entities.user.User;
 import com.leandroadal.vortasks.repositories.social.FriendInviteRepository;
+import com.leandroadal.vortasks.security.UserSS;
+import com.leandroadal.vortasks.services.exception.ForbiddenAccessException;
 import com.leandroadal.vortasks.services.exception.ObjectNotFoundException;
 import com.leandroadal.vortasks.services.social.friendship.exceptions.FriendException;
 import com.leandroadal.vortasks.services.user.UserService;
@@ -31,44 +33,10 @@ public class FriendInviteService {
     @Autowired
     private LogFriendService log;
 
-    public List<FriendInvite> friendInvitesForUser(String userId) {
-        return friendInviteRepository.findByIdSenderUserIdOrIdReceiverUserId(userId, userId);
-    }
-
-    public List<FriendInvite> findAll() {
-        return friendInviteRepository.findAll();
-    }
-
     public FriendInvite findFriendInvite(String senderId, String receiverId) {
-        try {
-            return friendInviteRepository.findByIdSenderUserIdAndIdReceiverUserId(senderId, receiverId);
-        } catch (ObjectNotFoundException e) {
-            log.notFoundFriendInvite(senderId, receiverId);
-            throw e;
-        }
-    }
-
-    public FriendInvite sendFriendRequest(String senderId, String receiverId) {
         validateSenderReceiverIds(senderId, receiverId);
-        User requestingUser = userService.findUserById(senderId);
-        User receiverUser = userService.findUserById(receiverId);
-        FriendInvite newInvite = new FriendInvite();
-
-        newInvite.setId(new FriendInvitePK(requestingUser, receiverUser));
-
-        if (friendInviteRepository.existsById(newInvite.getId())) {
-            throw new FriendException("O convite de amizade com ID: " 
-                + newInvite.getId().getSenderUser().getId() 
-                + newInvite.getId().getReceiverUser().getId() + "' já existe");
-        }
-
-        newInvite.setRequestDate(Instant.now());
-        newInvite.setStatus(FriendStatus.PENDING);
-
-        requestingUser.getSenderFriendRequests().add(newInvite);
-        receiverUser.getReceivedFriendRequests().add(newInvite);
-        log.sendFriendRequest(newInvite.getId());
-        return friendInviteRepository.save(newInvite);
+        validateUserAuth(senderId, receiverId);
+        return getFriendInviteByUsersId(senderId, receiverId);
     }
 
     private void validateSenderReceiverIds(String senderId, String receiverId) {
@@ -77,12 +45,72 @@ public class FriendInviteService {
         }
     }
 
-    public Friendship acceptFriendRequest(String senderId, String receiverId) {
-        FriendInvite invite = findFriendInvite(senderId, receiverId);
+    private void validateUserAuth(String userId, String userId2) {
+        UserSS userSS = UserService.authenticated();
+        if (!userSS.getId().equals(userId) && !userSS.getId().equals(userId2)) {
+            throw new ForbiddenAccessException("Requisição invalida para o usuário");
+        }
+    }
 
+    public FriendInvite getFriendInviteByUsersId(String senderId, String receiverId) {
+        try {
+            return friendInviteRepository.findByIdSenderUserIdAndIdReceiverUserId(senderId, receiverId);
+        } catch (ObjectNotFoundException e) {
+            log.notFoundFriendInvite(senderId, receiverId);
+            throw e;
+        }
+    }
+
+    public List<FriendInvite> findAll() {
+        return friendInviteRepository.findAll();
+    }
+
+    public List<FriendInvite> friendInvitesForUser() {
+        UserSS userSS = UserService.authenticated();
+        String userId = userSS.getId();
+        return friendInviteRepository.findByIdSenderUserIdOrIdReceiverUserId(userId, userId);
+    }
+
+    public FriendInvite sendFriendRequest(String senderId, String receiverId) {
+        validateSenderReceiverIds(senderId, receiverId);
+        validateUserAuth(senderId, receiverId);
+        FriendInvite newInvite = createInvite(senderId, receiverId);
+        log.sendFriendRequest(newInvite.getId());
+        return friendInviteRepository.save(newInvite);
+    }
+
+    private FriendInvite createInvite(String senderId, String receiverId) {
+        User requestingUser = userService.findUserById(senderId);
+        User receiverUser = userService.findUserById(receiverId);
+        FriendInvite newInvite = new FriendInvite();
+
+        newInvite.setId(new FriendInvitePK(requestingUser, receiverUser));
+        validateUniqueFriendship(newInvite);
+        newInvite.setRequestDate(Instant.now());
+        newInvite.setStatus(FriendStatus.PENDING);
+
+        friendInviteAssociation(requestingUser, receiverUser, newInvite);
+        return newInvite;
+    }
+
+    private void validateUniqueFriendship(FriendInvite newInvite) {
+        if (friendInviteRepository.existsById(newInvite.getId())) {
+            throw new FriendException("O convite de amizade com ID: " 
+                + newInvite.getId().getSenderUser().getId() 
+                + newInvite.getId().getReceiverUser().getId() + "' já existe");
+        }
+    }
+
+    private void friendInviteAssociation(User requestingUser, User receiverUser, FriendInvite newInvite) {
+        requestingUser.getSenderFriendRequests().add(newInvite);
+        receiverUser.getReceivedFriendRequests().add(newInvite);
+    }
+
+    public Friendship acceptFriendRequest(String senderId, String receiverId) {
+        validateSenderReceiverIds(senderId, receiverId);
+        FriendInvite invite = getFriendInviteByUsersId(senderId, receiverId);
         validateStatus(invite);
-        // TODO ativar a validação do receiver quando implementar a autenticação
-        //validateReceiverUser(invite, user);
+        validateReceiverUser(invite);
 
         invite.setStatus(FriendStatus.ACCEPTED);
 
@@ -97,18 +125,17 @@ public class FriendInviteService {
         }
     }
 
-    private void validateReceiverUser(FriendInvite invite, User user) {
-        if (invite.getId().getReceiverUser()!= user) {
-            log.friendReceiverMismatch(invite.getId(), user.getId());
-            throw new FriendException("Usuário incompatível com o usuário requerido na amizade: "+ invite.getId());
+    private void validateReceiverUser(FriendInvite invite) {
+        UserSS userSS = UserService.authenticated();
+        if (invite.getId().getReceiverUser().getId()!= userSS.getId()) {
+            log.friendReceiverMismatch(invite.getId(), userSS.getId());
+            throw new ForbiddenAccessException("Usuário incompatível com o usuário requerido na amizade: "+ invite.getId());
         }
     }
 
     public void refusedFriendInvite(String userId, String friendId) {
-        FriendInvite invite = findFriendInvite(userId, friendId);
-
-        // TODO ativar a validação do receiver quando implementar a autenticação
-        //validateReceiverUser(invite, user);
+        FriendInvite invite = getFriendInviteByUsersId(userId, friendId);
+        validateReceiverUser(invite);
 
         invite.setStatus(FriendStatus.REJECTED);
         friendInviteRepository.save(invite);
@@ -116,11 +143,21 @@ public class FriendInviteService {
     }
 
     public void cancelFriendInvite(String userId, String friendId) {
-        FriendInvite request = findFriendInvite(userId, friendId);
+        FriendInvite request = getFriendInviteByUsersId(userId, friendId);
+        validateSenderUser(request);
+
         request.getId().setReceiverUser(null);;
         request.getId().setSenderUser(null);
         friendInviteRepository.delete(request);
         log.cancelFriendInvite(userId,friendId);
+    }
+
+    private void validateSenderUser(FriendInvite invite) {
+        UserSS userSS = UserService.authenticated();
+        if (invite.getId().getSenderUser().getId()!= userSS.getId()) {
+            log.friendReceiverMismatch(invite.getId(), userSS.getId());
+            throw new ForbiddenAccessException("Usuário incompatível com o usuário requerido na amizade: "+ invite.getId());
+        }
     }
 
 }

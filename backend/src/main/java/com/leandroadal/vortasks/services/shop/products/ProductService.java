@@ -22,7 +22,7 @@ public class ProductService {
     private ProductRepository productRepository;
 
     @Autowired
-    private LogProductService log;
+    private LogProduct log;
 
     @Autowired
     private CategoryService categoryService;

@@ -57,23 +57,23 @@ public class OnlineMissionController {
 
     @GetMapping(value = "/page")
     public ResponseEntity<Page<OnlineMissionResponseDTO>> findPage(
-            @PathVariable @UUID String id,
             @RequestParam(value ="title", defaultValue = "") String title,
             @RequestParam(value = "status", defaultValue = "IN_PROGRESS") Status status,
             @RequestParam(value = "page", defaultValue = "0") Integer page,
             @RequestParam(value = "type", required = false) Type type,
             @RequestParam(value = "linesPerPage", defaultValue = "10") Integer linesPerPage,
             @RequestParam(value = "orderBy", defaultValue = "status") String orderBy,
-            @RequestParam(value = "direction", defaultValue = "ASC") String direction) {
+            @RequestParam(value = "direction", defaultValue = "ASC") String direction,
+            @RequestParam(value = "byUser", defaultValue = "false") Boolean byUser) {
 
-        Page<OnlineMission> list = service.search(title, status, type, page, linesPerPage, direction, orderBy);
+        Page<OnlineMission> list = service.search(title, status, type, page, linesPerPage, direction, orderBy, byUser);
         Page<OnlineMissionResponseDTO> listDto = list.map(obj -> new OnlineMissionResponseDTO(obj));
         return ResponseEntity.ok(listDto);
     }
 
-    @PostMapping("/{userId}")
-    public ResponseEntity<OnlineMissionResponseDTO> addOnlineMissions(@PathVariable @UUID String userId, @Valid @RequestBody OnlineMissionCreateDTO onlineMissionDTO) {
-        OnlineMission onlineMission = service.addOnlineMission(userId, onlineMissionDTO.toOnlineMission());
+    @PostMapping
+    public ResponseEntity<OnlineMissionResponseDTO> addOnlineMissions(@Valid @RequestBody OnlineMissionCreateDTO onlineMissionDTO) {
+        OnlineMission onlineMission = service.addOnlineMission(onlineMissionDTO.toOnlineMission());
 
         URI uri = ServletUriComponentsBuilder.fromCurrentRequest()
                 .replacePath("/social/onlineMissions/{id}")

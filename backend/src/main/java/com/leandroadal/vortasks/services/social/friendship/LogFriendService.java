@@ -30,8 +30,12 @@ public class LogFriendService {
         log.info("Solicitação de amizade com ID composto: '"+ friendInvitePK.getSenderUser().getId() +"', '" + friendInvitePK.getReceiverUser().getId() + "' foi criada com sucesso!");
     }
 
-    public void friendReceiverMismatch(FriendInvitePK friendInvitePK, String userId) {
+    protected void friendReceiverMismatch(FriendInvitePK friendInvitePK, String userId) {
         log.debug("Usuário '{}' incompatível com o usuário receptor requerido na amizade: {}", userId , friendInvitePK);
+    }
+
+    protected void friendSenderMismatch(FriendInvitePK friendInvitePK, String userId) {
+        log.debug("Usuário '{}' incompatível com o usuário emissário na amizade: {}", userId, friendInvitePK);
     }
 
     protected void findFriendshipById(String id) {

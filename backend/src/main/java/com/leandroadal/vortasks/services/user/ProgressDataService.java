@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import com.leandroadal.vortasks.entities.user.ProgressData;
 import com.leandroadal.vortasks.repositories.user.ProgressDataRepository;
+import com.leandroadal.vortasks.security.UserSS;
 import com.leandroadal.vortasks.services.exception.DatabaseException;
 import com.leandroadal.vortasks.services.exception.ObjectNotFoundException;
 
@@ -56,13 +57,14 @@ public class ProgressDataService {
         return progress;
     }
 
-    public void deleteProgress(String progressId) {
+    public void deleteProgress() {
+        UserSS userSS = UserService.authenticated();
         try {
-            ProgressData progress = findProgressById(progressId);
+            ProgressData progress = findProgressById(userSS.getId());
             delete(progress);
-            log.deleteProgress(progressId);
+            log.deleteProgress(userSS.getId());
         } catch (DataIntegrityViolationException e) {
-            log.progressDeleteFailed(progressId);
+            log.progressDeleteFailed(userSS.getId());
             throw new DatabaseException(e.getMessage());
         }
     }

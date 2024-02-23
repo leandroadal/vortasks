@@ -5,24 +5,23 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.function.Consumer;
-import java.util.stream.Collectors;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 import com.leandroadal.vortasks.entities.backup.userprogress.Status;
 import com.leandroadal.vortasks.entities.backup.userprogress.Type;
 import com.leandroadal.vortasks.entities.social.tasks.GroupTask;
 import com.leandroadal.vortasks.entities.user.User;
 import com.leandroadal.vortasks.repositories.social.GroupTaskRepository;
+import com.leandroadal.vortasks.security.UserSS;
+import com.leandroadal.vortasks.services.exception.ForbiddenAccessException;
 import com.leandroadal.vortasks.services.exception.ObjectNotFoundException;
+import com.leandroadal.vortasks.services.exception.ValidateException;
 import com.leandroadal.vortasks.services.user.UserService;
 
-import jakarta.validation.ValidationException;
 
 
 
@@ -38,11 +37,13 @@ public class GroupTaskService {
     @Autowired
     private LogSocialTasks log;
 
-    public List<GroupTask> getGroupTaskList() {
-        return repository.findAll();
+    public GroupTask finGroupTask(String id) {
+        GroupTask group = getGroupTaskById(id);
+        validateUserAuth(group);
+        return group;
     }
 
-    public GroupTask findGroupTaskById(String id) {
+    private GroupTask getGroupTaskById(String id) {
         try {
             return repository.findById(id).orElseThrow(() -> new ObjectNotFoundException(id));
         } catch (Exception e) {
@@ -51,18 +52,34 @@ public class GroupTaskService {
         }
     }
 
+    private void validateUserAuth(GroupTask group) {
+        UserSS userSS = UserService.authenticated();
+        boolean userFound = group.getUsers().stream()
+                                             .anyMatch(user -> user.getId().equals(userSS.getId()));
+        if (!userFound) {
+            throw new ForbiddenAccessException("Usuário incompatível com o usuário requerido no grupo de tarefas: "+ group.getId());
+        }
+    }
+
+    public List<GroupTask> getGroupTaskList() {
+        return repository.findAll();
+    }
+
     public Page<GroupTask> search(String name, Status status, Type type, Integer page, Integer linesPerPage, String direction, String orderBy){
         PageRequest pageRequest = PageRequest.of(page, linesPerPage, Direction.valueOf(direction), orderBy);
-
+        UserSS userSS = UserService.authenticated();
         if (type == null) {
-            return repository.findDistinctByNameContainingAndStatus(name, status, pageRequest);
+            return repository.findDistinctByNameContainingAndStatusAndUsersId(name, status, userSS.getId(), pageRequest);
         } else {
-            return repository.findDistinctByNameContainingAndStatusAndType(name, status, type, pageRequest);
+            return repository.findDistinctByNameContainingAndStatusAndTypeAndUsersId(name, status, userSS.getId(), type, pageRequest);
         }
     }
 
     @Transactional
     public GroupTask addGroupTask(GroupTask groupTask, Set<String> usernames) {
+        UserSS userSS = UserService.authenticated();
+        if (!usernames.contains(userSS.getUsername())) usernames.add(userSS.getUsername()); 
+            
         for (String username : usernames) {
             User user = userService.findUserByUsername(username);
             groupTask.getUsers().add(user);
@@ -74,14 +91,20 @@ public class GroupTaskService {
     }
 
     @Transactional
-    public GroupTask editGroupTask(GroupTask data, Set<String> usernames) {
-        // TODO verificar se quem esta solicitando a edição é um autor ou editor para permitir a edição
-        GroupTask existingGroupTask = findGroupTaskById(data.getId());
+    public GroupTask editGroupTask(GroupTask data) {
+        authEdit(data);
+        GroupTask existingGroupTask = getGroupTaskById(data.getId());
         applyEdit(existingGroupTask, data);
-        updateUsersList(existingGroupTask, usernames);
         repository.save(existingGroupTask);
         log.editGroupTask(existingGroupTask.getId());
         return existingGroupTask;
+    }
+
+    private void authEdit(GroupTask groupTask) {
+        UserSS userSS = UserService.authenticated();
+        if (userSS.getUsername()!= groupTask.getAuthor() || userSS.getUsername()!= groupTask.getEditor()) {
+            throw new ForbiddenAccessException("O usuário não possui permissão para realizar edição!!");
+        }
     }
 
     private void applyEdit(GroupTask existingGroupTask, GroupTask data) {
@@ -100,46 +123,17 @@ public class GroupTaskService {
         existingGroupTask.setSkillDecrease(data.getSkillDecrease());        
     }
 
-    private void updateUsersList(GroupTask existingGroupTask, Set<String> usernames) { // TODO trocar para clear e addAll
-        // Obtém os usuários
-        Set<User> newUsersList = usernames.stream()
-              .map(username -> userService.findUserByUsername(username))
-              .collect(Collectors.toSet());
-
-        // Remove os usuários que não estão mais presentes
-        existingGroupTask.getUsers().removeIf(user ->!newUsersList.contains(user));
-
-        // Adiciona os novos usuários à lista, se ainda não estiverem presentes
-        newUsersList.stream()
-              .filter(newUser ->!existingGroupTask.getUsers().contains(newUser))
-              .forEach(newUser -> {
-                    existingGroupTask.getUsers().add(newUser);
-                    newUser.getGroupTasks().add(existingGroupTask);
-                });
-    }
+    
 
     @Transactional
-    public GroupTask partialEditGroupTask(GroupTask data, Set<String> usernames) {
-        // TODO verificar se quem esta solicitando a edição é um autor ou editor para permitir a edição
-        GroupTask existingGroupTask = findGroupTaskById(data.getId());
+    public GroupTask partialEditGroupTask(GroupTask data) {
+        authEdit(data);
+        GroupTask existingGroupTask = getGroupTaskById(data.getId());
         applyPartialEdit(existingGroupTask, data);
 
-        if (usernames == null) {
-            return repository.save(existingGroupTask);
-        }
-
-        validateNumberUsers(existingGroupTask.getId(), usernames);
-        updateUsersList(existingGroupTask, usernames);
         repository.save(existingGroupTask);
         log.partialEditGroupTask(existingGroupTask.getId());
         return existingGroupTask;
-    }
-
-    private void validateNumberUsers(String groupTaskId, Set<String> usernames) {
-        if (usernames.size() == 0 || usernames.size() > 5) {
-            log.invalidNumberUsers(groupTaskId);
-            throw new ValidationException("a lista de usuários de deve ter tamanho entre 1 e 5");
-        }
     }
 
     private void applyPartialEdit(GroupTask existingGroupTask, GroupTask data) {
@@ -168,30 +162,60 @@ public class GroupTaskService {
             setter.accept(value);
         }
     }
-
-    public void complete(String id) {
-        GroupTask groupTask = findGroupTaskById(id);
-        groupTask.setStatus(Status.COMPLETED);
-        repository.save(groupTask);
-    }
-
-    public void fail(String id) {
-        GroupTask groupTask = findGroupTaskById(id);
-        groupTask.setStatus(Status.FAILED);
-        repository.save(groupTask);
-    }
     
     @Transactional
     public void deleteGroupTask(String id) {
-        // TODO verificar se quem esta solicitando a exclusão é um autor ou editor para permitir excluir
-        GroupTask groupTask = findGroupTaskById(id);
+        GroupTask groupTask = getGroupTaskById(id);
+        authEdit(groupTask);
         groupTask.getUsers().forEach(user -> user.getGroupTasks()
                                                     .remove(groupTask));
         groupTask.getUsers().clear();
         repository.delete(groupTask);
     }
 
+    public void addUser(String groupId, String username) {
+        GroupTask groupTask = getGroupTaskById(groupId);
+        validateUserAuth(groupTask);
+        User user = userService.findUserByUsername(username);
+        
+        validateAddNumberUsers(groupTask);
+        groupTask.getUsers().add(user);
+        
+        userService.save(user);
+    }
+
+    private void validateAddNumberUsers(GroupTask groupTask) {
+        if (groupTask.getUsers().size() >= 5) {
+            log.invalidNumberUsers(groupTask.getId());
+            throw new ValidateException("a lista de usuários de deve ter tamanho entre 1 e 5");
+        }
+    }
+
+    public void deleteUser(String groupId, String username) {
+        GroupTask groupTask = getGroupTaskById(groupId);
+        validateUserAuth(groupTask);
+        User user = userService.findUserByUsername(username);
+        
+        validateRemoveNumberUsers(groupTask);
+        groupTask.getUsers().remove(user);
+        userService.save(user);
+    }
+
+    private void validateRemoveNumberUsers(GroupTask groupTask) {
+        if (groupTask.getUsers().size() <= 1) {
+            log.invalidNumberUsers(groupTask.getId());
+            throw new ValidateException("a lista de usuários de deve ter tamanho entre 1 e 5");
+        }
+    }
+
     public List<GroupTask> getGroupTaskList(Optional<User> user) {
         return user.map(u -> u.getGroupTasks()).orElse(Collections.emptyList());
     }
+    /* 
+    private void validateRemoveNumberUsers(GroupTask groupTask, Set<String> usernames) {
+        if ((groupTask.getUsers().size() + usernames.size()) <= 1) {
+            log.invalidNumberUsers(groupTask.getId());
+            throw new ValidateException("a lista de usuários de deve ter tamanho entre 1 e 5");
+        }
+    }*/
 }

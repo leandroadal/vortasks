@@ -20,7 +20,7 @@ public class CategoryService {
     private CategoryRepository repository;
 
     @Autowired
-    private LogCategoryService log;
+    private LogCategory log;
 
     public List<Category> getAllCategories() {
         return repository.findAll();

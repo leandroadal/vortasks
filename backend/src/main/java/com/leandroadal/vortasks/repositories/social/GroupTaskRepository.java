@@ -12,11 +12,11 @@ public interface GroupTaskRepository extends JpaRepository<GroupTask, String> {
 
     // List<GroupTask> findByUsersId(String userId);
 
-    Page<GroupTask> findDistinctByNameContainingAndStatusAndType(String name,
-            Status status, Type type, PageRequest pageRequest);
+    Page<GroupTask> findDistinctByNameContainingAndStatusAndTypeAndUsersId(String name,
+            Status status, String userId, Type type, PageRequest pageRequest);
 
-    Page<GroupTask> findDistinctByNameContainingAndStatus(String name,
-            Status status, PageRequest pageRequest);
+    Page<GroupTask> findDistinctByNameContainingAndStatusAndUsersId(String name,
+            Status status, String userId, PageRequest pageRequest);
 
     // Page<GroupTask>
     // findDistinctByNameContainingAndStatusContainingAndTypeContaining(

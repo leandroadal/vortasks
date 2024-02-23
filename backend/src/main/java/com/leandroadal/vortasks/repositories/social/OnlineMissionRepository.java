@@ -18,4 +18,10 @@ public interface OnlineMissionRepository extends JpaRepository<OnlineMission, St
 
     Page<OnlineMission> findDistinctByTitleContainingAndStatusAndType(String title, Status status, Type type,
             PageRequest pageRequest);
+
+    Page<OnlineMission> findDistinctByTitleContainingAndStatusAndUserId(String title, Status status, String userId,
+            PageRequest pageRequest);
+
+    Page<OnlineMission> findDistinctByTitleContainingAndStatusAndTypeAndUserId(String title, Status status, Type type,
+            String userId, PageRequest pageRequest);
 }

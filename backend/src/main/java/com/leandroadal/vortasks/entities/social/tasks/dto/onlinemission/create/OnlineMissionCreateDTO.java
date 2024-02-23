@@ -7,6 +7,8 @@ import java.util.stream.Collectors;
 import com.leandroadal.vortasks.entities.backup.userprogress.Status;
 import com.leandroadal.vortasks.entities.backup.userprogress.Type;
 import com.leandroadal.vortasks.entities.social.tasks.OnlineMission;
+import com.leandroadal.vortasks.entities.social.tasks.enumerators.Difficulty;
+import com.leandroadal.vortasks.entities.social.tasks.enumerators.Theme;
 
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
@@ -55,6 +57,12 @@ public record OnlineMissionCreateDTO(
         @Valid
         Set<OnlineMissionTasksCreateDTO> requirements,
 
+        @NotNull(message = "O theme não pode ser nulo")
+        Theme theme,
+
+        @NotNull(message = "O difficulty não pode ser nulo")
+        Difficulty difficulty,
+
         @PositiveOrZero(message = "O número de curtidas deve ser um número maior ou igual a zero")
         Integer likes) {
 
@@ -72,6 +80,8 @@ public record OnlineMissionCreateDTO(
         mission.setSkillDecrease(skillDecrease); 
         mission.setStartDate(startDate);
         mission.setEndDate(endDate);
+        mission.setTheme(theme);
+        mission.setDifficulty(difficulty);
         mission.getRequirements().addAll(requirements.stream().map(requirement -> requirement.toOnlineMissionTasks()).collect(Collectors.toSet()));
         mission.setLikes(likes);
         return mission;

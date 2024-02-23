@@ -10,6 +10,8 @@ import com.leandroadal.vortasks.entities.shop.product.GemsPackage;
 import com.leandroadal.vortasks.entities.shop.transaction.GemsTransaction;
 import com.leandroadal.vortasks.entities.user.User;
 import com.leandroadal.vortasks.repositories.shop.GemsPackageRepository;
+import com.leandroadal.vortasks.security.UserSS;
+import com.leandroadal.vortasks.services.exception.ValidateException;
 import com.leandroadal.vortasks.services.shop.payments.PaymentResult;
 import com.leandroadal.vortasks.services.shop.payments.PaymentService;
 import com.leandroadal.vortasks.services.shop.payments.exceptions.PaymentException;
@@ -37,11 +39,12 @@ public class GemsPurchaseService {
     private PaymentService paymentService;
 
     @Autowired
-    private LogPurchaseService log;
+    private LogPurchase log;
 
 
-    public GemsTransaction startGemsPurchase(String userId, Long gemsPackageId) {
-        User user = getUserById(userId);
+    public GemsTransaction startGemsPurchase(Long gemsPackageId) {
+        UserSS userSS = UserService.authenticated();
+        User user = getUserById(userSS.getId());
         GemsPackage gemsPackage = getGemsPackageById(gemsPackageId);
         return createGemsTransaction(user, gemsPackage);
     }
@@ -66,19 +69,29 @@ public class GemsPurchaseService {
         return transaction;
     }
 
-    public void cancelGemsPurchase(String userId) {
-        GemsTransaction gemsTransaction = getGemsTransactionById(userId);
+    public void cancelGemsPurchase(String transactionId) {
+        GemsTransaction gemsTransaction = getGemsTransactionById(transactionId);
+        validateUserAuth(gemsTransaction.getUser().getId());
+
         gemsTransaction.setStatus(PaymentStatus.CANCELLED);
         saveTransaction(gemsTransaction);
-        log.cancelGemsTransaction(userId);
+        log.cancelGemsTransaction(transactionId);
     }
 
     private GemsTransaction getGemsTransactionById(String gemsTransactionId) {
-        return transactionService.findGemsTransaction(gemsTransactionId);
+        return transactionService.getGemsTransactionById(gemsTransactionId);
     }
 
-    public void completeGemsPurchase(String userId, CompletePurchaseRequestDTO request) {
-        User user = getUserById(userId);
+    private void validateUserAuth(String userId) {
+        UserSS userSS = UserService.authenticated();
+        if (!userSS.getId().equals(userId)) {
+            throw new ValidateException("Requisição invalida para o usuário");
+        }
+    }
+
+    public void completeGemsPurchase(CompletePurchaseRequestDTO request) {
+        UserSS userSS = UserService.authenticated();
+        User user = getUserById(userSS.getId());
         GemsTransaction transaction = getGemsTransactionById(request.gemsTransactionId());
 
         validateTransactionStatus(transaction);

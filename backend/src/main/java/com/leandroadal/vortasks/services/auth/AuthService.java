@@ -49,6 +49,7 @@ public class AuthService {
     }
 
     public void logout(String token){
+        token = token.replace("Bearer ", "");
         tokenCache.revokeToken(token);
         log.logout(token);
     }
