@@ -1,5 +1,6 @@
 package com.leandroadal.vortasks.entities.social.tasks.dto.grouptask;
 
+import java.time.Instant;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -16,7 +17,7 @@ public record GroupTaskResponseDTO(
         int coins,
         Type type,
         int repetition,
-        String reminder,
+        Instant reminder,
         int skillIncrease,
         int skillDecrease,
         String author,

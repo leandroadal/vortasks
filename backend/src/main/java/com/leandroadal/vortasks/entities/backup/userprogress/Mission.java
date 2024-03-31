@@ -32,7 +32,7 @@ public class Mission extends AbstractMission {
     private List<MissionTasks> requirements; // tarefas necessárias para concluir a missão
 
     public Mission(String id, String title, String description, Status status, Integer xp, Integer coins, Type type,
-            String repetition, String reminder, Integer skillIncrease, Integer skillDecrease, Instant startDate,
+    Integer repetition, Instant reminder, Integer skillIncrease, Integer skillDecrease, Instant startDate,
             Instant endDate, Theme theme, Difficulty difficulty, Backup userBackup, List<MissionTasks> requirements) {
         super(id, title, description, status, xp, coins, type, repetition, reminder, skillIncrease, skillDecrease,
                 startDate, endDate, theme, difficulty);

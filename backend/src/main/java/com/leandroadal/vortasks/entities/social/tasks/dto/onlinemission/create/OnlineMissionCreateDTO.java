@@ -36,10 +36,10 @@ public record OnlineMissionCreateDTO(
         Type type,
 
         @NotBlank(message = "A repetição não pode estar em branco")
-        String repetition,
+        Integer repetition,
 
         @NotBlank(message = "O lembrete não pode estar em branco")
-        String reminder,
+        Instant reminder,
 
         @PositiveOrZero(message = "O aumento de habilidade deve ser um número maior ou igual a zero")
         Integer skillIncrease,

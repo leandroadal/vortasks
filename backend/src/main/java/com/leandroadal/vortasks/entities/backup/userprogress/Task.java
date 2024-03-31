@@ -30,7 +30,7 @@ public class Task extends AbstractTask {
 
 
     public Task(String id, String name, String description, Status status, Integer xp, Integer coins, Type type,
-            Integer repetition, String reminder, Integer skillIncrease, Integer skillDecrease, Instant startDate,
+            Integer repetition, Instant reminder, Integer skillIncrease, Integer skillDecrease, Instant startDate,
             Instant endDate, Theme theme, Difficulty difficulty, Backup userBackup) {
         super(id, name, description, status, xp, coins, type, repetition, reminder, skillIncrease, skillDecrease,
                 startDate, endDate, theme, difficulty);

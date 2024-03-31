@@ -1,5 +1,6 @@
 package com.leandroadal.vortasks.entities.social.tasks.dto.grouptask.create;
 
+import java.time.Instant;
 import java.util.Set;
 
 import com.leandroadal.vortasks.entities.backup.userprogress.Status;
@@ -37,7 +38,7 @@ public record GroupTaskCreateDTO(
         Integer repetition,
 
         @NotBlank(message = "O lembrete não pode estar em branco")
-        String reminder,
+        Instant reminder,
 
         @PositiveOrZero(message = "O aumento de habilidade deve ser um número maior ou igual a zero") 
         Integer skillIncrease,

@@ -43,7 +43,7 @@ public abstract class AbstractTask {
     @Enumerated(EnumType.STRING)
     private Type type; // Lazer ou Atividade
     private Integer repetition; // Diária(1), semanal(7) ou mensal(30)
-    private String reminder;
+    private Instant reminder;
     private Integer skillIncrease; // Aumentar xp da skill 
     private Integer skillDecrease;
     private Instant startDate;

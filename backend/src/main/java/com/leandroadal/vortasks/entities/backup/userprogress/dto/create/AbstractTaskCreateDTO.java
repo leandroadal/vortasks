@@ -15,7 +15,7 @@ public record AbstractTaskCreateDTO(
         int coins,
         Type type,
         int repetition,
-        String reminder,
+        Instant reminder,
         int skillIncrease,
         int skillDecrease,
         Instant startDate,

@@ -11,7 +11,7 @@ import com.leandroadal.vortasks.entities.backup.userprogress.dto.GoalsDTO;
 import com.leandroadal.vortasks.entities.backup.userprogress.dto.SkillDTO;
 
 public record BackupResponseDTO(
-        String idBackup,
+        String id,
         String userId,
         CheckInDaysDTO checkInDays,
         GoalsDTO goals,

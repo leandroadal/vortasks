@@ -46,8 +46,8 @@ public abstract class AbstractMission {
     @Enumerated(EnumType.STRING)
     private Type type; // Lazer  ou atividade
 
-    private String repetition;
-    private String reminder;
+    private Integer repetition;
+    private Instant reminder;
     private Integer skillIncrease; // Aumentar xp da skill 
     private Integer skillDecrease; // diminuir xp da skill
     private Instant startDate;

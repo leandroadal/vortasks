@@ -1,5 +1,6 @@
 package com.leandroadal.vortasks.entities.social.tasks.dto.grouptask;
 
+import java.time.Instant;
 import java.util.Set;
 import com.leandroadal.vortasks.entities.backup.userprogress.Status;
 import com.leandroadal.vortasks.entities.backup.userprogress.Type;
@@ -32,7 +33,7 @@ public record GroupTaskRequestDTO(
         @PositiveOrZero(message = "A repetição deve ser um número maior ou igual a zero")
         Integer repetition,
 
-        String reminder,
+        Instant reminder,
 
         @PositiveOrZero(message = "O aumento de habilidade deve ser um número maior ou igual a zero")
         Integer skillIncrease,

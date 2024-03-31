@@ -29,7 +29,7 @@ public class OnlineMissionTasks extends AbstractMission {
 
     // ------------------ Construtores ------------------
     public OnlineMissionTasks(String id, String title, String description, Status status, Integer xp, Integer coins,
-            Type type, String repetition, String reminder, Integer skillIncrease, Integer skillDecrease,
+            Type type, Integer repetition, Instant reminder, Integer skillIncrease, Integer skillDecrease,
             Instant startDate, Instant endDate, Theme theme, Difficulty difficulty, OnlineMission onlineMission) {
         super(id, title, description, status, xp, coins, type, repetition, reminder, skillIncrease, skillDecrease,
                 startDate, endDate, theme, difficulty);

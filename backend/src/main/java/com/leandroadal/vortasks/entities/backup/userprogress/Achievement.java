@@ -31,7 +31,7 @@ public class Achievement {
 
     private String title;
     private String description;
-    private int xp;
+    private Integer xp;
 
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "backup_id")

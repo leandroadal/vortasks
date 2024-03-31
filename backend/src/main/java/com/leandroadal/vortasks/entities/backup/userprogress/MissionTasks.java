@@ -24,7 +24,7 @@ public class MissionTasks extends AbstractMission{
     private Mission mission;
 
     public MissionTasks(String id, String title, String description, Status status, Integer xp, Integer coins,
-            Type type, String repetition, String reminder, Integer skillIncrease, Integer skillDecrease,
+            Type type, Integer repetition, Instant reminder, Integer skillIncrease, Integer skillDecrease,
             Instant startDate, Instant endDate, Theme theme, Difficulty difficulty, Mission mission) {
         super(id, title, description, status, xp, coins, type, repetition, reminder, skillIncrease, skillDecrease,
                 startDate, endDate, theme, difficulty);
