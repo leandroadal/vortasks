@@ -1,0 +1,1 @@
+ALTER TABLE IF EXISTS abstract_task RENAME COLUMN name TO title;

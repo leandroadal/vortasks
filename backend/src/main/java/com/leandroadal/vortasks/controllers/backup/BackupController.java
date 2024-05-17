@@ -19,7 +19,6 @@ import com.leandroadal.vortasks.entities.backup.dto.BackupRequestDTO;
 import com.leandroadal.vortasks.entities.backup.dto.BackupResponseDTO;
 import com.leandroadal.vortasks.services.backup.BackupService;
 
-import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -31,7 +30,7 @@ public class BackupController {
     private BackupService service;
 
     @PostMapping("/create")
-    public ResponseEntity<BackupResponseDTO> createUserBackup(@Valid @RequestBody BackupCreateDTO backupDTO) {
+    public ResponseEntity<BackupResponseDTO> createUserBackup(@RequestBody BackupCreateDTO backupDTO) {
         Backup data = backupDTO.toBackup(new Backup());
         Backup backup = service.createBackup(data);
         log.info("Enviado o Backup {} do Usuário com ID: {}", backup.getId(), backup.getUser().getId());

@@ -11,7 +11,7 @@ import com.leandroadal.vortasks.entities.social.tasks.enumerators.Theme;
 public record AbstractTaskDTO(
         String id, 
         Status status,
-        String name,
+        String title,
         String description,
         int xp,
         int coins,
@@ -29,7 +29,7 @@ public record AbstractTaskDTO(
         this(
             task.getId(),
             task.getStatus(),
-            task.getName(),
+            task.getTitle(),
             task.getDescription(),
             task.getXp(),
             task.getCoins(),

@@ -49,7 +49,7 @@ public record BackupCreateDTO(
     }
 
     private void mapGoals(GoalsCreateDTO goalsDTO, Backup backup) {
-        backup.setGoals(new Goals(goalsDTO.daily(), goalsDTO.monthly(), backup));
+        backup.setGoals(new Goals(goalsDTO.daily(), goalsDTO.monthly(), goalsDTO.dailyGoalProgress(), goalsDTO.monthlyGoalProgress(), backup));
     }
 
     private void mapAchievements(List<AchievementCreateDTO> achievementDTOList, Backup backup) {
@@ -78,7 +78,7 @@ public record BackupCreateDTO(
 
     private void mapTasks(List<AbstractTaskCreateDTO> taskDTOList, Backup userBackup) {
         userBackup.setTasks(mapList(taskDTOList,
-                taskDTO -> new Task(null, taskDTO.name(), taskDTO.description(), taskDTO.status(), taskDTO.xp(),
+                taskDTO -> new Task(null, taskDTO.title(), taskDTO.description(), taskDTO.status(), taskDTO.xp(),
                         taskDTO.coins(), taskDTO.type(), taskDTO.repetition(), taskDTO.reminder(),
                         taskDTO.skillIncrease(), taskDTO.skillDecrease(), taskDTO.startDate(), taskDTO.endDate(), taskDTO.theme(), taskDTO.difficulty(),
                         userBackup)));

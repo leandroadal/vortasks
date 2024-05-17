@@ -18,10 +18,10 @@ import lombok.Setter;
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
-public class MissionTasks extends AbstractMission{
+public class MissionTasks extends AbstractTask{
 
     @ManyToOne(cascade = CascadeType.ALL)
-    private Mission mission;
+    private Mission mission; // Precisa de um referencia a missão
 
     public MissionTasks(String id, String title, String description, Status status, Integer xp, Integer coins,
             Type type, Integer repetition, Instant reminder, Integer skillIncrease, Integer skillDecrease,

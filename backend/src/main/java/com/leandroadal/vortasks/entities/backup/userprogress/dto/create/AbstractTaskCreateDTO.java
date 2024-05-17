@@ -9,7 +9,7 @@ import com.leandroadal.vortasks.entities.social.tasks.enumerators.Theme;
 
 public record AbstractTaskCreateDTO(
         Status status,
-        String name,
+        String title,
         String description,
         int xp,
         int coins,

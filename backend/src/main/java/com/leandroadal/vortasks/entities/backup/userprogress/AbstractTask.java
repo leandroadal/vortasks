@@ -32,7 +32,7 @@ public abstract class AbstractTask {
     @GeneratedValue(strategy = GenerationType.UUID)
     private String id;
 
-    private String name;
+    private String title;
     private String description;
 
     @Enumerated(EnumType.STRING)

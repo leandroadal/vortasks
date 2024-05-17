@@ -64,7 +64,7 @@ public record GroupTaskCreateDTO(
     public GroupTask toGroupTask() {
         GroupTask task = new GroupTask();
         task.setStatus(status);
-        task.setName(name);
+        task.setTitle(name);
         task.setDescription(description);
         task.setXp(xp);
         task.setCoins(coins);

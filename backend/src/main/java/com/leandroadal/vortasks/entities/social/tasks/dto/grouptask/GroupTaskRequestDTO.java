@@ -55,7 +55,7 @@ public record GroupTaskRequestDTO(
         GroupTask task = new GroupTask();
         task.setId(id);
         task.setStatus(status);
-        task.setName(name);
+        task.setTitle(name);
         task.setDescription(description);
         task.setXp(xp);
         task.setCoins(coins);

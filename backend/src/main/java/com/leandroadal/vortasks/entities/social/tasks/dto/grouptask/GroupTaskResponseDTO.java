@@ -29,7 +29,7 @@ public record GroupTaskResponseDTO(
         this(
             groupTask.getId(),
             groupTask.getStatus(),
-            groupTask.getName(),
+            groupTask.getTitle(),
             groupTask.getDescription(),
             groupTask.getXp(),
             groupTask.getCoins(),

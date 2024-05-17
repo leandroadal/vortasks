@@ -27,6 +27,9 @@ public class Skill {
     private String name;
     private Float xp;
     private Integer level;
+    //@Enumerated(EnumType.STRING)
+    //private List<Theme> themes; 
+
 
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "backup_id")

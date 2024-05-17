@@ -65,13 +65,13 @@ public class GroupTaskService {
         return repository.findAll();
     }
 
-    public Page<GroupTask> search(String name, Status status, Type type, Integer page, Integer linesPerPage, String direction, String orderBy){
+    public Page<GroupTask> search(String title, Status status, Type type, Integer page, Integer linesPerPage, String direction, String orderBy){
         PageRequest pageRequest = PageRequest.of(page, linesPerPage, Direction.valueOf(direction), orderBy);
         UserSS userSS = UserService.authenticated();
         if (type == null) {
-            return repository.findDistinctByNameContainingAndStatusAndUsersId(name, status, userSS.getId(), pageRequest);
+            return repository.findDistinctByTitleContainingAndStatusAndUsersId(title, status, userSS.getId(), pageRequest);
         } else {
-            return repository.findDistinctByNameContainingAndStatusAndTypeAndUsersId(name, status, userSS.getId(), type, pageRequest);
+            return repository.findDistinctByTitleContainingAndStatusAndTypeAndUsersId(title, status, userSS.getId(), type, pageRequest);
         }
     }
 
@@ -111,7 +111,7 @@ public class GroupTaskService {
         existingGroupTask.setAuthor(data.getAuthor());
         existingGroupTask.setEditor(data.getEditor());
 
-        existingGroupTask.setName(data.getName());
+        existingGroupTask.setTitle(data.getTitle());
         existingGroupTask.setDescription(data.getDescription());
         existingGroupTask.setStatus(data.getStatus());
         existingGroupTask.setXp(data.getXp());
@@ -139,7 +139,7 @@ public class GroupTaskService {
     private void applyPartialEdit(GroupTask existingGroupTask, GroupTask data) {
         updateFieldIfNotNull(existingGroupTask::setAuthor, data.getAuthor());
         updateFieldIfNotNull(existingGroupTask::setEditor, data.getEditor());
-        updateFieldIfNotNull(existingGroupTask::setName, data.getName());
+        updateFieldIfNotNull(existingGroupTask::setTitle, data.getTitle());
         updateFieldIfNotNull(existingGroupTask::setDescription, data.getDescription());
         updateFieldIfNotNull(existingGroupTask::setStatus, data.getStatus());
         updateFieldIfPositive(existingGroupTask::setXp, data.getXp());

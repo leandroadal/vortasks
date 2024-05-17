@@ -22,7 +22,7 @@ import lombok.Setter;
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
-public class Mission extends AbstractMission {
+public class Mission extends AbstractTask{
 
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "backup_id")

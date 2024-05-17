@@ -2,7 +2,8 @@ package com.leandroadal.vortasks.entities.social.tasks;
 
 import java.time.Instant;
 
-import com.leandroadal.vortasks.entities.backup.userprogress.AbstractMission;
+
+import com.leandroadal.vortasks.entities.backup.userprogress.AbstractTask;
 import com.leandroadal.vortasks.entities.backup.userprogress.Status;
 import com.leandroadal.vortasks.entities.backup.userprogress.Type;
 import com.leandroadal.vortasks.entities.social.tasks.enumerators.Difficulty;
@@ -21,7 +22,7 @@ import lombok.Setter;
 @Entity
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper=true)
-public class OnlineMissionTasks extends AbstractMission {
+public class OnlineMissionTasks extends AbstractTask {
 
     @ManyToOne(cascade = CascadeType.ALL)
     private OnlineMission onlineMission;

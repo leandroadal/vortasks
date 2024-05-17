@@ -31,6 +31,8 @@ public class Goals {
 
     private float daily;
     private float monthly;
+    private Integer dailyGoalProgress;
+    private Integer monthlyGoalProgress;
 
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "backup_id")
@@ -41,6 +43,8 @@ public class Goals {
     public Goals(GoalsCreateDTO goalsDTO, Backup backup) {
         this.daily = goalsDTO.daily();
         this.monthly = goalsDTO.monthly();
+        this.dailyGoalProgress = goalsDTO.dailyGoalProgress();
+        this.monthlyGoalProgress = goalsDTO.monthlyGoalProgress();
         this.userBackup = backup;
     }
 
@@ -49,9 +53,12 @@ public class Goals {
         this.monthly = goalsDTO.monthly();
     }
 
-    public Goals(float daily, float monthly, Backup userBackup) {
+    public Goals(float daily, float monthly, int dailyGoalProgress,
+    int monthlyGoalProgress, Backup userBackup) {
         this.daily = daily;
         this.monthly = monthly;
+        this.dailyGoalProgress = dailyGoalProgress;
+        this.monthlyGoalProgress = monthlyGoalProgress;
         this.userBackup = userBackup;
     }
     
