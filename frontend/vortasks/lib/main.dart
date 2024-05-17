@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:vortasks/core/themes/app_theme.dart';
 
 void main() {
   runApp(const MyApp());
@@ -11,11 +12,10 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: const Color(0xFF63BFFC)),
-        useMaterial3: true,
-      ),
+      title: 'Vortasks',
+      theme: AppTheme.lightTheme,
+      darkTheme: AppTheme.darkTheme,
+      debugShowCheckedModeBanner: false,
       home: const MyHomePage(title: 'Flutter Demo Home Page'),
     );
   }
