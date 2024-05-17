@@ -12,8 +12,8 @@ import com.leandroadal.vortasks.entities.backup.userprogress.Mission;
 import com.leandroadal.vortasks.entities.backup.userprogress.MissionTasks;
 import com.leandroadal.vortasks.entities.backup.userprogress.Skill;
 import com.leandroadal.vortasks.entities.backup.userprogress.Task;
-import com.leandroadal.vortasks.entities.backup.userprogress.dto.AbstractMissionDTO;
-import com.leandroadal.vortasks.entities.backup.userprogress.dto.AbstractTaskDTO;
+import com.leandroadal.vortasks.entities.backup.userprogress.dto.MissionDTO;
+import com.leandroadal.vortasks.entities.backup.userprogress.dto.TaskDTO;
 import com.leandroadal.vortasks.entities.backup.userprogress.dto.AchievementDTO;
 import com.leandroadal.vortasks.entities.backup.userprogress.dto.CheckInDaysDTO;
 import com.leandroadal.vortasks.entities.backup.userprogress.dto.GoalsDTO;
@@ -28,8 +28,8 @@ public record BackupRequestDTO(
         GoalsDTO goals,
         Instant lastModified,
         List<AchievementDTO> achievements,
-        List<AbstractTaskDTO> tasks,
-        List<AbstractMissionDTO> missions,
+        List<TaskDTO> tasks,
+        List<MissionDTO> missions,
         List<SkillDTO> skills) {
 
     public Backup toBackup(Backup backup) {
@@ -62,7 +62,7 @@ public record BackupRequestDTO(
                                 achDTO.description(), achDTO.xp(), backup)));
     }
 
-    private void mapMissions(List<AbstractMissionDTO> dataList, Backup userBackup) {
+    private void mapMissions(List<MissionDTO> dataList, Backup userBackup) {
         userBackup.setMissions(mapList(dataList, missionDTO -> {
             Mission mission = new Mission(missionDTO.id(), missionDTO.title(),
                     missionDTO.description(), missionDTO.status(), missionDTO.xp(), missionDTO.coins(),
@@ -80,7 +80,7 @@ public record BackupRequestDTO(
 
     }
 
-    private void mapTasks(List<AbstractTaskDTO> dataList, Backup userBackup) {
+    private void mapTasks(List<TaskDTO> dataList, Backup userBackup) {
         userBackup.setTasks(mapList(dataList,
                 taskDTO -> new Task(taskDTO.id(), taskDTO.title(), taskDTO.description(), taskDTO.status(), taskDTO.xp(),
                         taskDTO.coins(), taskDTO.type(), taskDTO.repetition(), taskDTO.reminder(),

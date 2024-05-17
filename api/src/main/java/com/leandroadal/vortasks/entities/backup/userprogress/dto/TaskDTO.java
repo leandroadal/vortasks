@@ -8,7 +8,7 @@ import com.leandroadal.vortasks.entities.backup.userprogress.Type;
 import com.leandroadal.vortasks.entities.social.tasks.enumerators.Difficulty;
 import com.leandroadal.vortasks.entities.social.tasks.enumerators.Theme;
 
-public record AbstractTaskDTO(
+public record TaskDTO(
         String id, 
         Status status,
         String title,
@@ -25,7 +25,7 @@ public record AbstractTaskDTO(
         Theme theme,
         Difficulty difficulty) {
 
-    public AbstractTaskDTO(Task task) {
+    public TaskDTO(Task task) {
         this(
             task.getId(),
             task.getStatus(),

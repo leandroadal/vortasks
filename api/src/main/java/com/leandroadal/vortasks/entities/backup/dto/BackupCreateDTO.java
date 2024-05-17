@@ -12,8 +12,8 @@ import com.leandroadal.vortasks.entities.backup.userprogress.Mission;
 import com.leandroadal.vortasks.entities.backup.userprogress.MissionTasks;
 import com.leandroadal.vortasks.entities.backup.userprogress.Skill;
 import com.leandroadal.vortasks.entities.backup.userprogress.Task;
-import com.leandroadal.vortasks.entities.backup.userprogress.dto.create.AbstractMissionCreateDTO;
-import com.leandroadal.vortasks.entities.backup.userprogress.dto.create.AbstractTaskCreateDTO;
+import com.leandroadal.vortasks.entities.backup.userprogress.dto.create.MissionCreateDTO;
+import com.leandroadal.vortasks.entities.backup.userprogress.dto.create.TaskCreateDTO;
 import com.leandroadal.vortasks.entities.backup.userprogress.dto.create.AchievementCreateDTO;
 import com.leandroadal.vortasks.entities.backup.userprogress.dto.create.CheckInDaysCreateDTO;
 import com.leandroadal.vortasks.entities.backup.userprogress.dto.create.GoalsCreateDTO;
@@ -25,8 +25,8 @@ public record BackupCreateDTO(
         GoalsCreateDTO goals,
         Instant lastModified,
         List<AchievementCreateDTO> achievements,
-        List<AbstractTaskCreateDTO> tasks,
-        List<AbstractMissionCreateDTO> missions,
+        List<TaskCreateDTO> tasks,
+        List<MissionCreateDTO> missions,
         List<SkillCreateDTO> skills) {
 
     public Backup toBackup(Backup backup) {
@@ -59,7 +59,7 @@ public record BackupCreateDTO(
                                 achievementDTO.description(), achievementDTO.xp(), backup)));
     }
 
-    private void mapMissions(List<AbstractMissionCreateDTO> missionDTOList, Backup userBackup) {
+    private void mapMissions(List<MissionCreateDTO> missionDTOList, Backup userBackup) {
         userBackup.setMissions(mapList(missionDTOList, missionDTO -> {
             Mission mission = new Mission(null, missionDTO.title(),
                     missionDTO.description(), missionDTO.status(), missionDTO.xp(), missionDTO.coins(),
@@ -76,7 +76,7 @@ public record BackupCreateDTO(
 
     }
 
-    private void mapTasks(List<AbstractTaskCreateDTO> taskDTOList, Backup userBackup) {
+    private void mapTasks(List<TaskCreateDTO> taskDTOList, Backup userBackup) {
         userBackup.setTasks(mapList(taskDTOList,
                 taskDTO -> new Task(null, taskDTO.title(), taskDTO.description(), taskDTO.status(), taskDTO.xp(),
                         taskDTO.coins(), taskDTO.type(), taskDTO.repetition(), taskDTO.reminder(),

@@ -3,8 +3,8 @@ package com.leandroadal.vortasks.entities.backup.dto;
 import java.time.Instant;
 import java.util.List;
 import com.leandroadal.vortasks.entities.backup.Backup;
-import com.leandroadal.vortasks.entities.backup.userprogress.dto.AbstractMissionDTO;
-import com.leandroadal.vortasks.entities.backup.userprogress.dto.AbstractTaskDTO;
+import com.leandroadal.vortasks.entities.backup.userprogress.dto.MissionDTO;
+import com.leandroadal.vortasks.entities.backup.userprogress.dto.TaskDTO;
 import com.leandroadal.vortasks.entities.backup.userprogress.dto.AchievementDTO;
 import com.leandroadal.vortasks.entities.backup.userprogress.dto.CheckInDaysDTO;
 import com.leandroadal.vortasks.entities.backup.userprogress.dto.GoalsDTO;
@@ -17,8 +17,8 @@ public record BackupResponseDTO(
         GoalsDTO goals,
         Instant lastModified,
         List<AchievementDTO> achievements,
-        List<AbstractTaskDTO> tasks,
-        List<AbstractMissionDTO> missions,
+        List<TaskDTO> tasks,
+        List<MissionDTO> missions,
         List<SkillDTO> skills) {
 
     public BackupResponseDTO(Backup userBackup) {
@@ -29,8 +29,8 @@ public record BackupResponseDTO(
             new GoalsDTO(userBackup.getGoals()),
             userBackup.getLastModified(),
             userBackup.getAchievements().stream().map(AchievementDTO::new).toList(),
-            userBackup.getTasks().stream().map(AbstractTaskDTO::new).toList(),
-            userBackup.getMissions().stream().map(AbstractMissionDTO::new).toList(),
+            userBackup.getTasks().stream().map(TaskDTO::new).toList(),
+            userBackup.getMissions().stream().map(MissionDTO::new).toList(),
             userBackup.getSkills().stream().map(SkillDTO::new).toList());
     }
 
