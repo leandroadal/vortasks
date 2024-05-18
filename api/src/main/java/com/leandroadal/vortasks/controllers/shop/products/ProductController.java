@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import com.leandroadal.vortasks.controllers.shop.products.doc.ProductDocSwagger;
 import com.leandroadal.vortasks.entities.shop.dto.ProductRequestDTO;
 import com.leandroadal.vortasks.entities.shop.dto.ProductResponseDTO;
 import com.leandroadal.vortasks.entities.shop.product.Product;
@@ -39,6 +40,7 @@ public class ProductController {
 
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     @PostMapping
+    @ProductDocSwagger.CreateProductSwagger
     public ResponseEntity<ProductResponseDTO> createProduct(@Valid @RequestBody ProductRequestDTO productDTO) {
         Product data = productDTO.toProduct();
         Product newProduct = service.addProduct(data);
@@ -52,6 +54,7 @@ public class ProductController {
 
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     @GetMapping
+    @ProductDocSwagger.GetAllProductsSwagger
     public ResponseEntity<List<ProductResponseDTO>> getAllProducts() {
         List<Product> products = service.getAllProducts();
         return ResponseEntity.ok(products.stream()
@@ -60,6 +63,7 @@ public class ProductController {
     }
 
     @GetMapping("/page")
+    @ProductDocSwagger.FindPageProductSwagger
     public ResponseEntity<Page<ProductResponseDTO>> findPage(
             @RequestParam(value = "name", defaultValue = "") String name,
             @RequestParam(value = "category", defaultValue = "") String category,
@@ -82,12 +86,14 @@ public class ProductController {
     }
 
     @GetMapping("/{id}")
+    @ProductDocSwagger.GetProductSwagger
     public ResponseEntity<ProductResponseDTO> getProduct(@PathVariable @NotNull @Positive Long id) {
         Product product = service.productById(id);
         return ResponseEntity.ok(new ProductResponseDTO(product));
     }
 
     @PutMapping("/{id}")
+    @ProductDocSwagger.EditProductSwagger
     public ResponseEntity<ProductResponseDTO> editProduct(@PathVariable @Positive Long id,
             @Valid @RequestBody ProductRequestDTO productDTO) {
         Product data = productDTO.toProduct();
@@ -97,6 +103,7 @@ public class ProductController {
     }
 
     @PatchMapping("/{id}")
+    @ProductDocSwagger.PartialEditProductSwagger
     public ResponseEntity<String> partialUpdateProduct(@PathVariable @Positive Long id,
             @RequestBody ProductRequestDTO productDTO) {
         Product data = productDTO.toProduct();
@@ -106,18 +113,21 @@ public class ProductController {
     }
 
     @DeleteMapping("/{id}")
+    @ProductDocSwagger.DeleteProductSwagger
     public ResponseEntity<String> deleteProduct(@PathVariable @Positive Long id) {
         service.deleteProduct(id);
         return ResponseEntity.noContent().build();
     }
 
     @DeleteMapping("/{id}/desative")
+    @ProductDocSwagger.DesativeProductSwagger
     public ResponseEntity<String> desativeProduct(@PathVariable @Positive Long id) {
         service.desativeProduct(id);
         return ResponseEntity.noContent().build();
     }
 
     @PostMapping("/{id}/category")
+    @ProductDocSwagger.UpdateProductCategorySwagger
     public ResponseEntity<String> updateProductCategory(@PathVariable @Positive Long id,
             @RequestBody List<Integer> ids) {
         service.addCategoryToProduct(id, ids);
@@ -125,6 +135,7 @@ public class ProductController {
     }
 
     @DeleteMapping("/{id}/category")
+    @ProductDocSwagger.DeleteProductCategorySwagger
     public ResponseEntity<String> deleteProductCategory(@PathVariable @Positive Long id,
             @RequestBody List<Integer> ids) {
         service.removeProductCategory(id, ids);

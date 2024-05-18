@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.leandroadal.vortasks.controllers.user.doc.UserSwagger;
 import com.leandroadal.vortasks.entities.user.dto.UserResponseDTO;
 import com.leandroadal.vortasks.services.user.UserService;
 
@@ -21,6 +22,7 @@ public class UserController {
 
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     @GetMapping
+    @UserSwagger.FindAllUsersSwagger
     public ResponseEntity<List<UserResponseDTO>> findAll() {
         return ResponseEntity.ok(service.findAllUsers().stream().map(UserResponseDTO::new).toList());
     }

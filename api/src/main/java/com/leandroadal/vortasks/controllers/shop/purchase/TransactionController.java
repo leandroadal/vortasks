@@ -1,4 +1,4 @@
-package com.leandroadal.vortasks.controllers.shop;
+package com.leandroadal.vortasks.controllers.shop.purchase;
 
 import java.util.Collections;
 import java.util.List;
@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.leandroadal.vortasks.controllers.shop.purchase.doc.TransactionDocSwagger;
 import com.leandroadal.vortasks.entities.shop.dto.GemsTransactionDTO;
 import com.leandroadal.vortasks.entities.shop.dto.ProductTransactionDTO;
 import com.leandroadal.vortasks.entities.shop.dto.TransactionResponseDTO;
@@ -27,18 +28,21 @@ public class TransactionController {
     private TransactionService service;
 
     @GetMapping("/gems/{id}")
+    @TransactionDocSwagger.GetGemsTransactionSwagger
     public ResponseEntity<GemsTransactionDTO> getGemsTransaction(@PathVariable @UUID String id) {
         GemsTransaction gems = service.findGemsTransaction(id);
         return ResponseEntity.ok().body(new GemsTransactionDTO(gems));
     }
 
     @GetMapping("/product/{id}")
+    @TransactionDocSwagger.GetProductTransactionSwagger
     public ResponseEntity<ProductTransactionDTO> getProductTransaction(@PathVariable @UUID String id) {
         ProductTransaction product = service.findProductTransaction(id);
         return ResponseEntity.ok().body(new ProductTransactionDTO(product));
     }
 
     @GetMapping
+    @TransactionDocSwagger.MyTransactionsSwagger
     public ResponseEntity<TransactionResponseDTO> myTransactions() {
         List<ProductTransaction> productList = service.myProductListTransaction();
         List<GemsTransaction> gemsList = service.myGemsListTransaction();
@@ -57,6 +61,7 @@ public class TransactionController {
     }
 
     @GetMapping("/page")
+    @TransactionDocSwagger.FindPageTransactionSwagger
     public ResponseEntity<TransactionResponseDTO> findPage(
             @RequestParam(value = "type", defaultValue = "all") String type,
             @RequestParam(value = "page", defaultValue = "0") Integer page,

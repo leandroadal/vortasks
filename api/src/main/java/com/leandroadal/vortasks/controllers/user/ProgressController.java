@@ -3,6 +3,7 @@ package com.leandroadal.vortasks.controllers.user;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.leandroadal.vortasks.controllers.user.doc.ProgressSwagger;
 import com.leandroadal.vortasks.entities.user.ProgressData;
 import com.leandroadal.vortasks.entities.user.dto.ProgressDataRequestDTO;
 import com.leandroadal.vortasks.entities.user.dto.ProgressDataResponseDTO;
@@ -29,6 +30,7 @@ public class ProgressController {
     private ProgressDataService service;
     
     @GetMapping("{id}")
+    @ProgressSwagger.GetProgressSwagger
     public ResponseEntity<ProgressDataResponseDTO> getProgress(@PathVariable String id) {
         ProgressData progress = service.findProgressById(id);
         return ResponseEntity.ok(new ProgressDataResponseDTO(progress));
@@ -36,6 +38,7 @@ public class ProgressController {
     
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     @PutMapping("{id}")
+    @ProgressSwagger.UpdateProgressSwagger
     public ResponseEntity<ProgressDataResponseDTO> updateProgress(@PathVariable String id, @Valid @RequestBody ProgressDataRequestDTO data) {
         ProgressData progress = service.editProgress(data.toProgressData(id));
         return ResponseEntity.ok(new ProgressDataResponseDTO(progress));
@@ -43,12 +46,14 @@ public class ProgressController {
 
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     @PatchMapping
+    @ProgressSwagger.UpdatePartialProgressSwagger
     public ResponseEntity<ProgressDataResponseDTO> updatePartialProgress(@PathVariable String id, @RequestBody ProgressDataRequestDTO data) {
         ProgressData progress = service.partialEditProgress(data.toProgressData(id));
         return ResponseEntity.ok(new ProgressDataResponseDTO(progress));
     }
 
     @DeleteMapping
+    @ProgressSwagger.DeleteProgressSwagger
     public ResponseEntity<Object> deleteProgress() {
         service.deleteProgress();
         return ResponseEntity.noContent().build();

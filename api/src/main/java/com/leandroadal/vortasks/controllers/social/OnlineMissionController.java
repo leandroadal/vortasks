@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import com.leandroadal.vortasks.controllers.social.doc.OnlineMissionDocSwagger;
 import com.leandroadal.vortasks.entities.backup.userprogress.Status;
 import com.leandroadal.vortasks.entities.backup.userprogress.Type;
 import com.leandroadal.vortasks.entities.social.tasks.OnlineMission;
@@ -42,12 +43,14 @@ public class OnlineMissionController {
     private OnlineMissionService service;
     
     @GetMapping(value = "/{id}")
+    @OnlineMissionDocSwagger.GetOnlineMissionSwagger
     public ResponseEntity<OnlineMissionResponseDTO> onlineMissions(@PathVariable @UUID String id) {
         OnlineMission mission = service.findOnlineMissionById(id);
         return ResponseEntity.ok(new OnlineMissionResponseDTO(mission));
     }
 
     @GetMapping
+    @OnlineMissionDocSwagger.GetAllOnlineMissionsSwagger
     public ResponseEntity<List<OnlineMissionResponseDTO>> allOnlineMissions() {
         List<OnlineMission> mission = service.findAll();
         return ResponseEntity.ok(mission.stream()
@@ -56,6 +59,7 @@ public class OnlineMissionController {
     }
 
     @GetMapping(value = "/page")
+    @OnlineMissionDocSwagger.FindPageOnlineMissionSwagger
     public ResponseEntity<Page<OnlineMissionResponseDTO>> findPage(
             @RequestParam(value ="title", defaultValue = "") String title,
             @RequestParam(value = "status", defaultValue = "IN_PROGRESS") Status status,
@@ -72,6 +76,7 @@ public class OnlineMissionController {
     }
 
     @PostMapping
+    @OnlineMissionDocSwagger.AddOnlineMissionSwagger
     public ResponseEntity<OnlineMissionResponseDTO> addOnlineMissions(@Valid @RequestBody OnlineMissionCreateDTO onlineMissionDTO) {
         OnlineMission onlineMission = service.addOnlineMission(onlineMissionDTO.toOnlineMission());
 
@@ -83,6 +88,7 @@ public class OnlineMissionController {
     }  
 
     @PutMapping(value = "/{onlineMissionId}")
+    @OnlineMissionDocSwagger.EditOnlineMissionSwagger
     public ResponseEntity<OnlineMissionResponseDTO> edit(@PathVariable @UUID String onlineMissionId, @Valid @RequestBody OnlineMissionRequestDTO onlineMissionDTO) {
         OnlineMission 
         mission = service.edit(onlineMissionDTO.toOnlineMission(onlineMissionId));
@@ -90,6 +96,7 @@ public class OnlineMissionController {
     }
 
     @PatchMapping(value = "/{onlineMissionId}")
+    @OnlineMissionDocSwagger.PartialEditOnlineMissionSwagger
     public ResponseEntity<OnlineMissionResponseDTO> partialEdit(@PathVariable @UUID String onlineMissionId, @Valid @RequestBody OnlineMissionRequestDTO onlineMissionDTO) {
         OnlineMission mission = onlineMissionDTO.toOnlineMission(onlineMissionId);
         mission = service.partialEdit(mission);
@@ -97,12 +104,14 @@ public class OnlineMissionController {
     }
 
     @DeleteMapping(value = "/{onlineMissionId}")
+    @OnlineMissionDocSwagger.DeleteOnlineMissionSwagger
     public ResponseEntity<OnlineMissionResponseDTO> delete(@PathVariable @UUID String onlineMissionId) {
         service.deleteOnlineMission(onlineMissionId);
         return ResponseEntity.noContent().build();
     }
 
     @PostMapping(value = "/{onlineMissionId}/requirements")
+    @OnlineMissionDocSwagger.AddToRequirementsSwagger
     public ResponseEntity<OnlineMissionResponseDTO> addToRequirements(@PathVariable @UUID String onlineMissionId, @Valid @RequestBody List<OnlineMissionTasksCreateDTO> onlineMissionDTO) {
         List<OnlineMissionTasks> missionTasks = onlineMissionDTO.stream().map(dto -> dto.toOnlineMissionTasks()).collect(Collectors.toList());
         OnlineMission mission = service.addToRequirements(onlineMissionId, missionTasks);
@@ -110,6 +119,7 @@ public class OnlineMissionController {
     }
 
     @PutMapping(value = "/{onlineMissionId}/requirements/")
+    @OnlineMissionDocSwagger.EditRequirementsSwagger
     public ResponseEntity<OnlineMissionResponseDTO> editRequirements(@UUID @PathVariable String onlineMissionId, String id, @Valid @RequestBody Set<OnlineMissionTasksRequestDTO> onlineMissionDTO) {
         List<OnlineMissionTasks> data = onlineMissionDTO.stream().map(dto -> dto.toOnlineMissionTasks()).collect(Collectors.toList());
 
@@ -118,12 +128,14 @@ public class OnlineMissionController {
     }
 
     @DeleteMapping(value = "/{onlineMissionId}/requirements/{id}")
+    @OnlineMissionDocSwagger.RemoveFromRequirementsSwagger
     public ResponseEntity<OnlineMissionResponseDTO> removeFromRequirements(@UUID @PathVariable String onlineMissionId, @PathVariable String id) {
         service.removeFromRequirements(onlineMissionId, id);
         return ResponseEntity.noContent().build();
     }
 
     @DeleteMapping(value = "/{onlineMissionId}/requirements/clear")
+    @OnlineMissionDocSwagger.ClearRequirementsSwagger
     public ResponseEntity<OnlineMissionResponseDTO> clearRequirements(@PathVariable @UUID String onlineMissionId) {
         service.clearRequirements(onlineMissionId);
         return ResponseEntity.noContent().build();

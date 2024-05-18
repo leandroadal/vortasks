@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import com.leandroadal.vortasks.controllers.shop.products.doc.GemsDocSwagger;
 import com.leandroadal.vortasks.entities.shop.dto.GemsPackRequestDTO;
 import com.leandroadal.vortasks.entities.shop.dto.GemsPackResponseDTO;
 import com.leandroadal.vortasks.entities.shop.product.GemsPackage;
@@ -36,6 +37,7 @@ public class GemsController {
 
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     @PostMapping
+    @GemsDocSwagger.CreateGemsPackageSwagger
     public ResponseEntity<String> createGemsPackage(@Valid @RequestBody GemsPackRequestDTO gemsDTO) {
         GemsPackage data = gemsDTO.toGemsPackage();
         GemsPackage newPackage = service.addGemsPackage(data);
@@ -49,6 +51,7 @@ public class GemsController {
 
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     @GetMapping
+    @GemsDocSwagger.GetAllGemsPackageSwagger
     public ResponseEntity<List<GemsPackResponseDTO>> getAllGemsPackage() {
         List<GemsPackage> gemsPackage = service.getAllGemsPackages();
         return ResponseEntity.ok(gemsPackage.stream()
@@ -57,6 +60,7 @@ public class GemsController {
     }
 
     @GetMapping("/page")
+    @GemsDocSwagger.FindPageGemsPackageSwagger
     public ResponseEntity<Page<GemsPackResponseDTO>> findPage(
             @RequestParam(value = "page", defaultValue = "0") Integer page,
             @RequestParam(value = "linesPerPage", defaultValue = "10") Integer linesPerPage,
@@ -69,6 +73,7 @@ public class GemsController {
     }
 
     @GetMapping("/{gemsPackageId}")
+    @GemsDocSwagger.GetGemsPackageSwagger
     public ResponseEntity<GemsPackResponseDTO> getGemsPackage(@PathVariable @Positive Long gemsPackageId) {
         GemsPackage gemsPackage = service.getGemsPackageById(gemsPackageId);
         return ResponseEntity.ok(new GemsPackResponseDTO(gemsPackage));
@@ -76,6 +81,7 @@ public class GemsController {
 
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     @PutMapping("/{id}")
+    @GemsDocSwagger.PartialEditGemsPackageSwagger
     public ResponseEntity<GemsPackResponseDTO> editGemsPackage(@PathVariable @Positive Long id,
             @Valid @RequestBody GemsPackRequestDTO gemsDTO) {
 
@@ -87,6 +93,7 @@ public class GemsController {
 
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     @PatchMapping("/{id}")
+    @GemsDocSwagger.PartialEditGemsPackageSwagger
     public ResponseEntity<GemsPackResponseDTO> partialUpdateGemsPackage(@PathVariable @Positive Long id,
             @RequestBody GemsPackRequestDTO gemsDTO) {
 
@@ -98,6 +105,7 @@ public class GemsController {
 
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     @DeleteMapping("/{id}")
+    @GemsDocSwagger.DeleteGemsPackageSwagger
     public ResponseEntity<String> deleteGemsPackage(@PathVariable @Positive Long id) {
         service.deleteGemsPackage(id);
         return ResponseEntity.noContent().build();

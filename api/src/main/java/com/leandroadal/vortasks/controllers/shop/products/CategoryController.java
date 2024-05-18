@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import com.leandroadal.vortasks.controllers.shop.products.doc.CategoryDocSwagger;
 import com.leandroadal.vortasks.entities.shop.dto.CategoryRequestDTO;
 import com.leandroadal.vortasks.entities.shop.dto.CategoryResponseDTO;
 import com.leandroadal.vortasks.entities.shop.product.Category;
@@ -36,6 +37,7 @@ public class CategoryController {
 
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     @PostMapping
+    @CategoryDocSwagger.CreateCategorySwagger
     public ResponseEntity<CategoryResponseDTO> createCategory(@Valid @RequestBody CategoryRequestDTO categoryDTO) {
         Category data = categoryDTO.toCategory();
         Category newCategory = service.addCategory(data);
@@ -48,6 +50,7 @@ public class CategoryController {
     }
 
     @GetMapping("/{id}")
+    @CategoryDocSwagger.GetCategorySwagger
     public ResponseEntity<CategoryResponseDTO> getCategory(@PathVariable @NotNull @Positive Integer id) {
         Category product = service.categoryById(id);
         return ResponseEntity.ok(new CategoryResponseDTO(product));
@@ -55,6 +58,7 @@ public class CategoryController {
 
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     @GetMapping
+    @CategoryDocSwagger.GetAllCategorySwagger
     public ResponseEntity<List<CategoryResponseDTO>> getAllCategory() {
         List<Category> products = service.getAllCategories();
         return ResponseEntity.ok(products.stream()
@@ -64,6 +68,7 @@ public class CategoryController {
 
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     @GetMapping("/page")
+    @CategoryDocSwagger.FindPageCategorySwagger
     public ResponseEntity<Page<CategoryResponseDTO>> findPage(
             @RequestParam(value = "page", defaultValue = "0") Integer page,
             @RequestParam(value = "linesPerPage", defaultValue = "10") Integer linesPerPage,
@@ -77,6 +82,7 @@ public class CategoryController {
 
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     @PutMapping("/{id}")
+    @CategoryDocSwagger.EditCategorySwagger
     public ResponseEntity<CategoryResponseDTO> editCategory(@PathVariable @Positive Integer id, @Valid @RequestBody CategoryRequestDTO productDTO) {
         Category data = productDTO.toCategory();
         data.setId(id);
@@ -86,6 +92,7 @@ public class CategoryController {
 
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     @DeleteMapping("/{id}")
+    @CategoryDocSwagger.DeleteCategorySwagger
     public ResponseEntity<String> deleteCategory(@PathVariable @Positive Integer id) {
         service.deleteCategory(id);
         return ResponseEntity.noContent().build();

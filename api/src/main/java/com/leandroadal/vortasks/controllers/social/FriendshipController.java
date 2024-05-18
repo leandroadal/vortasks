@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.leandroadal.vortasks.controllers.social.doc.FriendshipDocSwagger;
 import com.leandroadal.vortasks.entities.social.friend.Friendship;
 import com.leandroadal.vortasks.entities.social.friend.dto.FriendshipDTO;
 import com.leandroadal.vortasks.entities.user.User;
@@ -28,6 +29,7 @@ public class FriendshipController {
     private FriendshipService friendService;
 
     @GetMapping(value = "/{userId}")
+    @FriendshipDocSwagger.GetFriendsSwagger
     public ResponseEntity<List<FriendshipDTO>> getFriends(@PathVariable @UUID String userId) {
 
         User user = userRepository.findById(userId).orElseThrow(() -> new ObjectNotFoundException(userId));
@@ -38,9 +40,12 @@ public class FriendshipController {
     }
 
     @DeleteMapping("/{friendshipId}")
+    @FriendshipDocSwagger.DeleteFriendshipSwagger
     public ResponseEntity<String> deleteFriendship(@PathVariable @UUID String friendshipId) {
         friendService.deleteFriendship(friendshipId);
-        return ResponseEntity.ok().build();
+        return ResponseEntity.noContent()
+                .header("message", "Friendship deleted")
+                .build();
     }
 
 }

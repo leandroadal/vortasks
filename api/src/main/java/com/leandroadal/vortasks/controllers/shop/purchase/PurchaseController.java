@@ -1,4 +1,4 @@
-package com.leandroadal.vortasks.controllers.shop;
+package com.leandroadal.vortasks.controllers.shop.purchase;
 
 import java.net.URI;
 
@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import com.leandroadal.vortasks.controllers.shop.purchase.doc.PurchaseDocSwagger;
 import com.leandroadal.vortasks.entities.shop.dto.CompletePurchaseRequestDTO;
 import com.leandroadal.vortasks.entities.shop.dto.GemsTransactionDTO;
 import com.leandroadal.vortasks.entities.shop.dto.ProductTransactionDTO;
@@ -35,6 +36,7 @@ public class PurchaseController {
     private ProductPurchaseService productService;
 
     @PostMapping("/gems/start")
+    @PurchaseDocSwagger.StartGemsPurchaseSwagger
     public ResponseEntity<GemsTransactionDTO> startGemsPurchase(@Valid @RequestBody StartPurchaseRequestDTO request) {
         GemsTransaction gemsT = gemsService.startGemsPurchase(request.productOrGemsId());
         URI uri = ServletUriComponentsBuilder.fromCurrentRequest()
@@ -45,12 +47,14 @@ public class PurchaseController {
     }
 
     @PostMapping("/gems/complete")
+    @PurchaseDocSwagger.CompleteGemsPurchaseSwagger
     public ResponseEntity<String> completeGemsPurchase(@Valid @RequestBody CompletePurchaseRequestDTO request) {
         gemsService.completeGemsPurchase(request);
         return ResponseEntity.ok("Compra concluída com sucesso.");
     }
 
     @PatchMapping("/gems/cancel/{transactionId}")
+    @PurchaseDocSwagger.CancelGemsPurchaseSwagger
     public ResponseEntity<String> cancelGemsPurchase(@PathVariable @UUID  String transactionId) {
         gemsService.cancelGemsPurchase(transactionId);
         return ResponseEntity.ok("Compra cancelada com sucesso.");
@@ -58,6 +62,7 @@ public class PurchaseController {
     
 
     @PostMapping("/product/{userId}")
+    @PurchaseDocSwagger.ProductPurchaseSwagger
     public ResponseEntity<ProductTransactionDTO> productPurchase(@Valid @RequestBody StartPurchaseRequestDTO request) {
         ProductTransaction productT = productService.productPurchase(request.productOrGemsId());
         URI uri = ServletUriComponentsBuilder.fromCurrentRequest()

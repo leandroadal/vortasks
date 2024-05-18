@@ -42,7 +42,7 @@ public class ControllerExceptionHandler {
     @ExceptionHandler(InvalidCredentialsException.class)
     public ResponseEntity<StandardError> invalidCredentials(InvalidCredentialsException e, HttpServletRequest request) {
         String error = "Credenciais inválidas";
-        HttpStatus status = HttpStatus.FORBIDDEN;
+        HttpStatus status = HttpStatus.UNAUTHORIZED;
         StandardError err = new StandardError(Instant.now(), status.value(), error, e.getMessage(), request.getRequestURI());
         return ResponseEntity.status(status).body(err);
     }

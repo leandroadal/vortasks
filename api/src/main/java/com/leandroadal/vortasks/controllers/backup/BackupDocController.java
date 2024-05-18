@@ -13,6 +13,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+
+import com.leandroadal.vortasks.controllers.backup.doc.BackupSwagger;
 import com.leandroadal.vortasks.entities.backup.Backup;
 import com.leandroadal.vortasks.entities.backup.dto.BackupCreateDTO;
 import com.leandroadal.vortasks.entities.backup.dto.BackupRequestDTO;
@@ -24,12 +26,13 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @RestController
 @RequestMapping(value = "/user/backup")
-public class BackupController {
+public class BackupDocController {
 
     @Autowired
     private BackupService service;
 
     @PostMapping("/create")
+    @BackupSwagger.CreateBackupSwagger
     public ResponseEntity<BackupResponseDTO> createUserBackup(@RequestBody BackupCreateDTO backupDTO) {
         Backup data = backupDTO.toBackup(new Backup());
         Backup backup = service.createBackup(data);
@@ -38,6 +41,7 @@ public class BackupController {
     }
 
     @GetMapping
+    @BackupSwagger.CreateBackupSwagger
     public ResponseEntity<BackupResponseDTO> latestBackup(@RequestParam Instant lastModified) {
         Backup latestBackup = service.latestBackup(lastModified);
         log.info("Enviando o backup mais recente para o usuário {}", latestBackup.getUser().getId());
@@ -46,6 +50,7 @@ public class BackupController {
 
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     @GetMapping("/page")
+    @BackupSwagger.FindPageBackupSwagger
     public ResponseEntity<Page<BackupResponseDTO>> findPage(
             @RequestParam(value="page", defaultValue="0") Integer page, 
 			@RequestParam(value="linesPerPage", defaultValue="4") Integer linesPerPage, 
@@ -59,6 +64,7 @@ public class BackupController {
     }
 
     @PutMapping("/update")
+    @BackupSwagger.UpdateBackupSwagger
     public ResponseEntity<BackupResponseDTO> updateBackup(@RequestBody BackupRequestDTO backupDTO) {
         Backup data = backupDTO.toBackup(new Backup());
         Backup newBackup = service.updateBackup(data);
@@ -66,6 +72,7 @@ public class BackupController {
     }
 
     @DeleteMapping
+    @BackupSwagger.DeleteBackupSwagger
     public ResponseEntity<Void> deleteBackup() {
         service.deleteUserBackup();
         return ResponseEntity.noContent().build();

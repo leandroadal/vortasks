@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.leandroadal.vortasks.controllers.social.doc.GroupTaskDocSwagger;
 import com.leandroadal.vortasks.entities.backup.userprogress.Status;
 import com.leandroadal.vortasks.entities.backup.userprogress.Type;
 import com.leandroadal.vortasks.entities.social.tasks.GroupTask;
@@ -34,12 +35,14 @@ public class GroupTaskController {
 
 
     @GetMapping("{id}")
+    @GroupTaskDocSwagger.GetGroupTaskSwagger
     public ResponseEntity<GroupTaskResponseDTO> getGroupTask(@PathVariable @UUID String id) {
         GroupTask groupTask = service.finGroupTask(id);
         return ResponseEntity.ok(new GroupTaskResponseDTO(groupTask));
     }
 
     @GetMapping("/search")
+    @GroupTaskDocSwagger.FindPageGroupTaskSwagger
     public ResponseEntity<Page<GroupTaskResponseDTO>> findPage(
         @RequestParam(value = "name", defaultValue = "") String name, @RequestParam(value = "status", defaultValue = "IN_PROGRESS") Status status,
         @RequestParam(value = "page", defaultValue = "0") Integer page,
@@ -55,6 +58,7 @@ public class GroupTaskController {
     }
 
     @PostMapping
+    @GroupTaskDocSwagger.AddGroupTaskSwagger
     public ResponseEntity<GroupTaskResponseDTO> addGroupTasks(@Valid @RequestBody GroupTaskCreateDTO groupTaskDTO) {
         GroupTask groupTask = service.addGroupTask(groupTaskDTO.toGroupTask(), groupTaskDTO.usernames());
 
@@ -62,6 +66,7 @@ public class GroupTaskController {
     }
 
     @PutMapping("/{groupTaskId}")
+    @GroupTaskDocSwagger.EditGroupTaskSwagger
     public ResponseEntity<GroupTaskResponseDTO> editGroupTask(@PathVariable @UUID String groupTaskId, @Valid @RequestBody GroupTaskRequestDTO groupTaskDTO) {
         GroupTask groupTask = service.editGroupTask(groupTaskDTO.toGroupTask(groupTaskId));
 
@@ -69,6 +74,7 @@ public class GroupTaskController {
     }
 
     @PatchMapping("/{groupTaskId}")
+    @GroupTaskDocSwagger.PartialEditGroupTaskSwagger
     public ResponseEntity<GroupTaskResponseDTO> partialEditGroupTask(@PathVariable @UUID String groupTaskId, @RequestBody GroupTaskRequestDTO groupTaskDTO) {
         GroupTask groupTask = service.partialEditGroupTask(groupTaskDTO.toGroupTask(groupTaskId));
 
@@ -76,18 +82,21 @@ public class GroupTaskController {
     }
 
     @DeleteMapping("/{groupTaskId}")
+    @GroupTaskDocSwagger.DeleteGroupTaskSwagger
     public ResponseEntity<String> deleteGroupTask(@PathVariable @UUID String groupTaskId) {
         service.deleteGroupTask(groupTaskId);
         return ResponseEntity.noContent().build();
     }
 
     @PostMapping("/{groupTaskId}/participants/{userId}")
+    @GroupTaskDocSwagger.AddUserToGroupTaskSwagger
     public ResponseEntity<String> addUserToGroupTask(@PathVariable @UUID String groupTaskId, @PathVariable @UUID String userId) {
         service.addUser(groupTaskId, userId);
         return ResponseEntity.noContent().build();
     }
 
     @DeleteMapping("/{groupTaskId}/participants/{userId}")
+    @GroupTaskDocSwagger.RemoveUserFromGroupTaskSwagger
     public ResponseEntity<String> removeUserFromGroupTask(@PathVariable @UUID String groupTaskId, @PathVariable @UUID String userId) {
         service.deleteUser(groupTaskId, userId);
         return ResponseEntity.noContent().build();
