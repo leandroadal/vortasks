@@ -1,10 +1,13 @@
 package com.leandroadal.vortasks.entities.backup.userprogress.dto;
 
-import com.leandroadal.vortasks.entities.backup.userprogress.Skill;
+import java.util.List;
 
-public record SkillDTO(String id, String name, float xp, int level) {
+import com.leandroadal.vortasks.entities.backup.userprogress.Skill;
+import com.leandroadal.vortasks.entities.social.tasks.enumerators.Theme;
+
+public record SkillDTO(String id, String name, float xp, int level, List<Theme> themes) {
 
     public SkillDTO(Skill skill) {
-        this(skill.getId(), skill.getName(), skill.getXp(), skill.getLevel());
+        this(skill.getId(), skill.getName(), skill.getXp(), skill.getLevel(), skill.getThemes());
     }
 }

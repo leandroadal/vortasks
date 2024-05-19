@@ -89,7 +89,7 @@ public record BackupRequestDTO(
 
     private void mapSkills(List<SkillDTO> dataList, Backup userBackup) {
         userBackup.setSkills(mapList(dataList,
-                skillDTO -> new Skill(null, skillDTO.name(), skillDTO.xp(), skillDTO.level(), userBackup)));
+                skillDTO -> new Skill(null, skillDTO.name(), skillDTO.xp(), skillDTO.level(), skillDTO.themes(), userBackup)));
     }
 
     private <T, U> List<U> mapList(List<T> sourceList, Function<T, U> mapper) {
