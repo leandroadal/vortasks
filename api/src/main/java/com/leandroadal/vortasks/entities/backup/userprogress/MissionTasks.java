@@ -21,13 +21,14 @@ import lombok.Setter;
 public class MissionTasks extends AbstractTask{
 
     @ManyToOne(cascade = CascadeType.ALL)
-    private Mission mission; // Precisa de um referencia a missão
+    private Mission mission; // Precisa de uma referencia a missão
 
     public MissionTasks(String id, String title, String description, Status status, Integer xp, Integer coins,
             Type type, Integer repetition, Instant reminder, Integer skillIncrease, Integer skillDecrease,
-            Instant startDate, Instant endDate, Theme theme, Difficulty difficulty, Mission mission) {
+            Instant startDate, Instant endDate, Theme theme, Difficulty difficulty, boolean finish, Instant dateFinish,
+            Mission mission) {
         super(id, title, description, status, xp, coins, type, repetition, reminder, skillIncrease, skillDecrease,
-                startDate, endDate, theme, difficulty);
+                startDate, endDate, theme, difficulty, finish, dateFinish);
         this.mission = mission;
     }
 

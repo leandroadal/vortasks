@@ -23,7 +23,9 @@ public record MissionDTO(
         Instant startDate,
         Instant endDate,
         Theme theme,
-        Difficulty difficulty, 
+        Difficulty difficulty,
+        boolean finish, 
+        Instant dateFinish,
         List<MissionTaskDTO> requirements) {
 
     public MissionDTO(Mission mission) {
@@ -43,6 +45,8 @@ public record MissionDTO(
         mission.getEndDate(),
         mission.getTheme(),
         mission.getDifficulty(),
+        mission.isFinish(),
+        mission.getDateFinish(),
         mission.getRequirements().stream().map(MissionTaskDTO::new).toList());
     }
 }

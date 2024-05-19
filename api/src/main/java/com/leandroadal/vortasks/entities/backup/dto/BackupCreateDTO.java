@@ -64,13 +64,13 @@ public record BackupCreateDTO(
             Mission mission = new Mission(null, missionDTO.title(),
                     missionDTO.description(), missionDTO.status(), missionDTO.xp(), missionDTO.coins(),
                     missionDTO.type(), missionDTO.repetition(), missionDTO.reminder(), missionDTO.skillIncrease(),
-                    missionDTO.skillDecrease(), missionDTO.startDate(), missionDTO.endDate(), missionDTO.theme(), missionDTO.difficulty(), userBackup, null);
+                    missionDTO.skillDecrease(), missionDTO.startDate(), missionDTO.endDate(), missionDTO.theme(), missionDTO.difficulty(), missionDTO.finish(), missionDTO.dateFinish(), userBackup, null);
             mission.setRequirements(
                     mapList(missionDTO.requirements(),
                             taskDTO -> new MissionTasks(null, taskDTO.title(),
                                     taskDTO.description(), taskDTO.status(), taskDTO.xp(), taskDTO.coins(),
                                     taskDTO.type(), taskDTO.repetition(), taskDTO.reminder(), taskDTO.skillIncrease(),
-                                    taskDTO.skillDecrease(), taskDTO.startDate(), taskDTO.endDate(), taskDTO.theme(), taskDTO.difficulty(), mission)));
+                                    taskDTO.skillDecrease(), taskDTO.startDate(), taskDTO.endDate(), taskDTO.theme(), taskDTO.difficulty(), taskDTO.finish(), taskDTO.dateFinish(), mission)));
             return mission;
         }));
 
@@ -80,7 +80,7 @@ public record BackupCreateDTO(
         userBackup.setTasks(mapList(taskDTOList,
                 taskDTO -> new Task(null, taskDTO.title(), taskDTO.description(), taskDTO.status(), taskDTO.xp(),
                         taskDTO.coins(), taskDTO.type(), taskDTO.repetition(), taskDTO.reminder(),
-                        taskDTO.skillIncrease(), taskDTO.skillDecrease(), taskDTO.startDate(), taskDTO.endDate(), taskDTO.theme(), taskDTO.difficulty(),
+                        taskDTO.skillIncrease(), taskDTO.skillDecrease(), taskDTO.startDate(), taskDTO.endDate(), taskDTO.theme(), taskDTO.difficulty(), taskDTO.finish(), taskDTO.dateFinish(),
                         userBackup)));
     }
 

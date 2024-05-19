@@ -54,4 +54,7 @@ public abstract class AbstractTask {
 
     @Enumerated(EnumType.STRING)
     private Difficulty difficulty;
+
+    private boolean finish;
+    private Instant dateFinish;
 }

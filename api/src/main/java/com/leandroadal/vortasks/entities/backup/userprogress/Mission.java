@@ -32,12 +32,15 @@ public class Mission extends AbstractTask{
     private List<MissionTasks> requirements; // tarefas necessárias para concluir a missão
 
     public Mission(String id, String title, String description, Status status, Integer xp, Integer coins, Type type,
-    Integer repetition, Instant reminder, Integer skillIncrease, Integer skillDecrease, Instant startDate,
-            Instant endDate, Theme theme, Difficulty difficulty, Backup userBackup, List<MissionTasks> requirements) {
+            Integer repetition, Instant reminder, Integer skillIncrease, Integer skillDecrease, Instant startDate,
+            Instant endDate, Theme theme, Difficulty difficulty, boolean finish, Instant dateFinish, Backup userBackup,
+            List<MissionTasks> requirements) {
         super(id, title, description, status, xp, coins, type, repetition, reminder, skillIncrease, skillDecrease,
-                startDate, endDate, theme, difficulty);
+                startDate, endDate, theme, difficulty, finish, dateFinish);
         this.userBackup = userBackup;
         this.requirements = requirements;
     }
+
+    
 
 }

@@ -27,13 +27,13 @@ public class OnlineMissionTasks extends AbstractTask {
     @ManyToOne(cascade = CascadeType.ALL)
     private OnlineMission onlineMission;
 
-
     // ------------------ Construtores ------------------
     public OnlineMissionTasks(String id, String title, String description, Status status, Integer xp, Integer coins,
             Type type, Integer repetition, Instant reminder, Integer skillIncrease, Integer skillDecrease,
-            Instant startDate, Instant endDate, Theme theme, Difficulty difficulty, OnlineMission onlineMission) {
+            Instant startDate, Instant endDate, Theme theme, Difficulty difficulty, boolean finish, Instant dateFinish,
+            OnlineMission onlineMission) {
         super(id, title, description, status, xp, coins, type, repetition, reminder, skillIncrease, skillDecrease,
-                startDate, endDate, theme, difficulty);
+                startDate, endDate, theme, difficulty, finish, dateFinish);
         this.onlineMission = onlineMission;
     }
 

@@ -26,14 +26,12 @@ public class Task extends AbstractTask {
     @JoinColumn(name = "backup_id")
     private Backup userBackup;
 
-
-
-
-    public Task(String id, String name, String description, Status status, Integer xp, Integer coins, Type type,
+    public Task(String id, String title, String description, Status status, Integer xp, Integer coins, Type type,
             Integer repetition, Instant reminder, Integer skillIncrease, Integer skillDecrease, Instant startDate,
-            Instant endDate, Theme theme, Difficulty difficulty, Backup userBackup) {
-        super(id, name, description, status, xp, coins, type, repetition, reminder, skillIncrease, skillDecrease,
-                startDate, endDate, theme, difficulty);
+            Instant endDate, Theme theme, Difficulty difficulty, boolean finish, Instant dateFinish,
+            Backup userBackup) {
+        super(id, title, description, status, xp, coins, type, repetition, reminder, skillIncrease, skillDecrease,
+                startDate, endDate, theme, difficulty, finish, dateFinish);
         this.userBackup = userBackup;
     }
     

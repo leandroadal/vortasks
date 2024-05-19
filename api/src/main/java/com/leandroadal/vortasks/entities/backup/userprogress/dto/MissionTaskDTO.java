@@ -24,7 +24,9 @@ public record MissionTaskDTO(
     Instant startDate,
     Instant endDate,
     Theme theme,
-    Difficulty difficulty
+    Difficulty difficulty,
+    boolean finish, 
+    Instant dateFinish
 ) {
     public MissionTaskDTO(MissionTasks missionTask) {
         this(
@@ -42,7 +44,9 @@ public record MissionTaskDTO(
             missionTask.getStartDate(),
             missionTask.getEndDate(),
             missionTask.getTheme(),
-            missionTask.getDifficulty()
+            missionTask.getDifficulty(),
+            missionTask.isFinish(),
+            missionTask.getDateFinish()
         );
     }
 

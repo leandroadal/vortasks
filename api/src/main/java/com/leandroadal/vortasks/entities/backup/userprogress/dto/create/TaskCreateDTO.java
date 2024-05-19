@@ -21,7 +21,9 @@ public record TaskCreateDTO(
         Instant startDate,
         Instant endDate,
         Theme theme,
-        Difficulty difficulty) {
+        Difficulty difficulty,
+        boolean finish, 
+        Instant dateFinish) {
 
                 
 }

@@ -23,7 +23,9 @@ public record TaskDTO(
         Instant startDate,
         Instant endDate,
         Theme theme,
-        Difficulty difficulty) {
+        Difficulty difficulty,
+        boolean finish, 
+        Instant dateFinish) {
 
     public TaskDTO(Task task) {
         this(
@@ -41,7 +43,9 @@ public record TaskDTO(
             task.getStartDate(),
             task.getEndDate(),
             task.getTheme(),
-            task.getDifficulty());
+            task.getDifficulty(),
+            task.isFinish(),
+            task.getDateFinish());
     }
 
 }

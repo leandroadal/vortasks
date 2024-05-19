@@ -67,13 +67,13 @@ public record BackupRequestDTO(
             Mission mission = new Mission(missionDTO.id(), missionDTO.title(),
                     missionDTO.description(), missionDTO.status(), missionDTO.xp(), missionDTO.coins(),
                     missionDTO.type(), missionDTO.repetition(), missionDTO.reminder(), missionDTO.skillIncrease(),
-                    missionDTO.skillDecrease(), missionDTO.startDate(), missionDTO.endDate(), missionDTO.theme(), missionDTO.difficulty(), userBackup, null);
+                    missionDTO.skillDecrease(), missionDTO.startDate(), missionDTO.endDate(), missionDTO.theme(), missionDTO.difficulty(), missionDTO.finish(), missionDTO.dateFinish(), userBackup, null);
             mission.setRequirements(
                     mapList(missionDTO.requirements(),
                             taskDTO -> new MissionTasks(taskDTO.id(), taskDTO.title(),
                                     taskDTO.description(), taskDTO.status(), taskDTO.xp(), taskDTO.coins(),
                                     taskDTO.type(), taskDTO.repetition(), taskDTO.reminder(), taskDTO.skillIncrease(),
-                                    taskDTO.skillDecrease(), taskDTO.startDate(), taskDTO.endDate(), taskDTO.theme(), taskDTO.difficulty(),
+                                    taskDTO.skillDecrease(), taskDTO.startDate(), taskDTO.endDate(), taskDTO.theme(), taskDTO.difficulty(), missionDTO.finish(), missionDTO.dateFinish(),
                                     mission)));
             return mission;
         }));
@@ -84,7 +84,7 @@ public record BackupRequestDTO(
         userBackup.setTasks(mapList(dataList,
                 taskDTO -> new Task(taskDTO.id(), taskDTO.title(), taskDTO.description(), taskDTO.status(), taskDTO.xp(),
                         taskDTO.coins(), taskDTO.type(), taskDTO.repetition(), taskDTO.reminder(),
-                        taskDTO.skillIncrease(), taskDTO.skillDecrease(), taskDTO.startDate(), taskDTO.endDate(), taskDTO.theme(), taskDTO.difficulty(), userBackup)));
+                        taskDTO.skillIncrease(), taskDTO.skillDecrease(), taskDTO.startDate(), taskDTO.endDate(), taskDTO.theme(), taskDTO.difficulty(), taskDTO.finish(), taskDTO.dateFinish(), userBackup)));
     }
 
     private void mapSkills(List<SkillDTO> dataList, Backup userBackup) {

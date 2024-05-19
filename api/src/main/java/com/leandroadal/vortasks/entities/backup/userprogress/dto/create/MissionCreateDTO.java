@@ -23,6 +23,8 @@ public record MissionCreateDTO(
         Instant endDate,
         Theme theme,
         Difficulty difficulty,
+        boolean finish, 
+        Instant dateFinish,
         List<MissionTaskCreateDTO> requirements) {
 
 }
