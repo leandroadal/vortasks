@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:vortasks/screens/home/widgets/goals/goal_section.dart';
 import 'package:vortasks/screens/home/widgets/header_tab.dart';
 import 'package:vortasks/screens/home/widgets/profile_card.dart';
-import 'package:vortasks/screens/home/widgets/tasks/tasks_section.dart';
+import 'package:vortasks/screens/home/widgets/tasks/task_list.dart';
 import 'package:vortasks/screens/widgets/my_navigation_rail.dart';
 
 class ResumeTab extends StatelessWidget {
@@ -43,9 +43,7 @@ class ResumeTab extends StatelessWidget {
             SizedBox(height: 16),
             GoalSection(),
             SizedBox(height: 16),
-            TasksSection('Tarefas do dia', tasksData),
-            SizedBox(height: 16),
-            TasksSection('Lazer do dia', leisureData),
+            TaskList(),
           ],
         ),
       ),
@@ -79,9 +77,7 @@ class ResumeTab extends StatelessWidget {
                     SizedBox(
                       height: 10,
                     ),
-                    TasksSection('Tarefas do dia', tasksData),
-                    SizedBox(height: 16),
-                    TasksSection('Lazer do dia', leisureData),
+                    TaskList(),
                   ],
                 ),
               ),

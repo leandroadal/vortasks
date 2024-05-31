@@ -4,6 +4,7 @@ import 'package:vortasks/core/storage/local_storage.dart';
 import 'package:vortasks/core/themes/app_theme.dart';
 import 'package:vortasks/screens/home/home_screen.dart';
 import 'package:vortasks/stores/page_store.dart';
+import 'package:vortasks/stores/task_store.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -15,6 +16,8 @@ Future<void> main() async {
 void setupGetIt() {
   GetIt.I.registerSingleton<LocalStorage>(LocalStorage());
   GetIt.I.registerSingleton<PageStore>(PageStore());
+  GetIt.I.registerSingleton<TaskStore>(
+      TaskStore()); // level e foals precisam ser iniciados antes
 }
 
 class MyApp extends StatelessWidget {
