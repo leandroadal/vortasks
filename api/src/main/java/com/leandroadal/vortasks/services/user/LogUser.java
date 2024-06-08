@@ -20,6 +20,8 @@ public class LogUser {
         log.error("Usuário com E-mail: {} não foi encontrado!", email);;
     }
 
+    protected void userByUsernameOrEmail(String username) {
+        log.error("Usuário com o Username ou E-mail: {} não foi encontrado!", username);
+    }
 
-    
 }

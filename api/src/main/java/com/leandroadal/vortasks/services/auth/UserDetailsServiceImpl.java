@@ -25,7 +25,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     private UserDetails buildUserDetails(String login) {
         try {
             if (!login.isEmpty()) {
-                User user = service.findUserByUsername(login);
+                User user = service.findUserByUsernameOrEmail(login);
 
                 return new UserSS(user.getId(), user.getUsername(), user.getPassword(), user.getRole());
             }

@@ -29,4 +29,7 @@ public class LogAuth {
         log.info("O usuário com o Username: '"+id+"' já existe!");
     }
 
+    protected void emailAlreadyExists(String email) {
+        log.info("O usuário com o Email: '"+email+"' já existe!");
+    }
 }

@@ -35,12 +35,12 @@ public class AuthService {
     @Autowired
     private TokenCache tokenCache;
    
-    public String login(String username, String password){
+    public String login(String login, String password){
         try {
-            var usernamePassword = new UsernamePasswordAuthenticationToken(username, password);
+            var usernamePassword = new UsernamePasswordAuthenticationToken(login, password);
             var auth = authenticationManager.authenticate(usernamePassword);
             String token = tokenService.generateToken((UserSS) auth.getPrincipal());
-            log.login(username);
+            log.login(login);
             return token;
         } catch (BadCredentialsException e) {
             throw new InvalidCredentialsException("Senha incorreta");
@@ -55,12 +55,12 @@ public class AuthService {
     }
 
     public User register(User data) {
-        validateUsername(data);
+        validateUsernameAndEmail(data);
 
         String encryptedPassword = new BCryptPasswordEncoder().encode(data.getPassword());
         data.setPassword(encryptedPassword);
         data.setRole(UserRole.USER);
-        ProgressData newProgressData = new ProgressData(null, 0, 0, 1, 0.0f, data);
+        ProgressData newProgressData = new ProgressData(null, 0, 0, 1, 0.0f, null, data);
         data.setProgressData(newProgressData);
         service.save(data);
 
@@ -68,20 +68,24 @@ public class AuthService {
         return data;
     }
     
-    private void validateUsername(User data) {
+    private void validateUsernameAndEmail(User data) {
         if(service.existsByUsername(data.getUsername())) {
             log.usernameAlreadyExists(data.getUsername());
             throw new ValidateException("O username '" + data.getUsername() + "' já existe!");
         }
+        if (service.existsByEmail(data.getEmail())) {
+            log.emailAlreadyExists(data.getEmail());
+            throw new ValidateException("O email '" + data.getEmail() + "' já existe!");
+        }
     }
 
     public User createAdmin(User data) {
-        validateUsername(data);
+        validateUsernameAndEmail(data);
 
         String encryptedPassword = new BCryptPasswordEncoder().encode(data.getPassword());
         data.setPassword(encryptedPassword);
         data.setRole(UserRole.ADMIN);
-        ProgressData newProgressData = new ProgressData(null, 0, 0, 1, 0.0f, data);
+        ProgressData newProgressData = new ProgressData(null, 0, 0, 1, 0.0f, null, data);
         data.setProgressData(newProgressData);
         service.save(data);
 
