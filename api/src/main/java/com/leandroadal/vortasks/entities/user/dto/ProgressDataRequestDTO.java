@@ -1,5 +1,7 @@
 package com.leandroadal.vortasks.entities.user.dto;
 
+import java.time.Instant;
+
 import com.leandroadal.vortasks.entities.user.ProgressData;
 
 import jakarta.validation.constraints.Min;
@@ -15,10 +17,12 @@ public record ProgressDataRequestDTO(
     Integer level,
     
     @Min(value = 0, message = "A experiência deve ser um número maior ou igual a zero")
-    Float xp
+    Float xp,
+
+    String lastModified
 ) {
     public ProgressData toProgressData(String id) {
-        return new ProgressData(id, coins, gems, level, xp, null);
+        return new ProgressData(id, coins, gems, level, xp, Instant.parse(lastModified), null);
     }
     
 }
