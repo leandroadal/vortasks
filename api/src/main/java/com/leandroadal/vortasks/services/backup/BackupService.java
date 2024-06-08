@@ -14,7 +14,7 @@ import com.leandroadal.vortasks.entities.user.User;
 import com.leandroadal.vortasks.repositories.backup.BackupRepository;
 import com.leandroadal.vortasks.security.UserSS;
 import com.leandroadal.vortasks.services.backup.exceptions.BackupCreationException;
-import com.leandroadal.vortasks.services.backup.exceptions.BackupNotModifiedException;
+import com.leandroadal.vortasks.services.backup.exceptions.ObjectNotModifiedException;
 import com.leandroadal.vortasks.services.exception.ObjectNotFoundException;
 import com.leandroadal.vortasks.services.user.UserService;
 
@@ -92,7 +92,7 @@ public class BackupService {
             return backup;
         } else {
             logService.logBackupNotModified(backup.getId());
-            throw new BackupNotModifiedException("Backup não modificado para o usuário", backup.getId());
+            throw new ObjectNotModifiedException("Backup não modificado para o usuário", backup.getId());
         }
     }
 

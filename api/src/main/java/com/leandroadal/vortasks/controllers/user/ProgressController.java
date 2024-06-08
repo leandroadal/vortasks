@@ -1,6 +1,7 @@
 package com.leandroadal.vortasks.controllers.user;
 
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.leandroadal.vortasks.controllers.user.doc.ProgressSwagger;
@@ -28,27 +29,32 @@ public class ProgressController {
 
     @Autowired
     private ProgressDataService service;
-    
-    @GetMapping("{id}")
+
+    @GetMapping
     @ProgressSwagger.GetProgressSwagger
-    public ResponseEntity<ProgressDataResponseDTO> getProgress(@PathVariable String id) {
-        ProgressData progress = service.findProgressById(id);
+    public ResponseEntity<ProgressDataResponseDTO> getProgress() {
+        ProgressData progress = service.getProgress();
         return ResponseEntity.ok(new ProgressDataResponseDTO(progress));
     }
     
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
-    @PutMapping("{id}")
-    @ProgressSwagger.UpdateProgressSwagger
-    public ResponseEntity<ProgressDataResponseDTO> updateProgress(@PathVariable String id, @Valid @RequestBody ProgressDataRequestDTO data) {
-        ProgressData progress = service.editProgress(data.toProgressData(id));
+    @GetMapping("/latest")
+    @ProgressSwagger.GetLatestProgressSwagger
+    public ResponseEntity<ProgressDataResponseDTO> moreRecentProgress(@RequestParam String lastModified) {
+        ProgressData progress = service.latestProgress(lastModified);
         return ResponseEntity.ok(new ProgressDataResponseDTO(progress));
     }
 
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PutMapping
+    @ProgressSwagger.UpdateProgressSwagger
+    public ResponseEntity<ProgressDataResponseDTO> updateProgress(@Valid @RequestBody ProgressDataRequestDTO data) {
+        ProgressData progress = service.editProgress(data.toProgressData(null));
+        return ResponseEntity.ok(new ProgressDataResponseDTO(progress));
+    }
+
     @PatchMapping
     @ProgressSwagger.UpdatePartialProgressSwagger
-    public ResponseEntity<ProgressDataResponseDTO> updatePartialProgress(@PathVariable String id, @RequestBody ProgressDataRequestDTO data) {
-        ProgressData progress = service.partialEditProgress(data.toProgressData(id));
+    public ResponseEntity<ProgressDataResponseDTO> updatePartialProgress(@RequestBody ProgressDataRequestDTO data) {
+        ProgressData progress = service.partialEditProgress(data.toProgressData(null));
         return ResponseEntity.ok(new ProgressDataResponseDTO(progress));
     }
 
@@ -57,5 +63,13 @@ public class ProgressController {
     public ResponseEntity<Object> deleteProgress() {
         service.deleteProgress();
         return ResponseEntity.noContent().build();
+    }
+
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PutMapping("/{id}")
+    @ProgressSwagger.UpdateProgressSwagger
+    public ResponseEntity<ProgressDataResponseDTO> adminUpdateProgress(@PathVariable String id, @Valid @RequestBody ProgressDataRequestDTO data) {
+        ProgressData progress = service.adminEditProgress(data.toProgressData(id));
+        return ResponseEntity.ok(new ProgressDataResponseDTO(progress));
     }
 }

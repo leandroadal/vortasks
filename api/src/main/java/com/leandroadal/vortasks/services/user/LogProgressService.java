@@ -32,5 +32,11 @@ public class LogProgressService {
         log.info("O apagamento dos dados de progresso com ID: '" + id + "' falhou!");
     }
 
+    protected void progressNotModified(String userId) {
+        log.info("Dados de progresso mais recentes não encontrado para o usuário {}", userId);
+    }
 
+    protected void progressRetrievalSuccess(String userId) {
+        log.info("Dados mais recentes de progresso do usuário {} retornado com sucesso", userId);
+    }
 }

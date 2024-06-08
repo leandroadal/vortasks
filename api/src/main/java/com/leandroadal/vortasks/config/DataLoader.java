@@ -24,16 +24,16 @@ public class DataLoader implements CommandLineRunner {
     public void run(String... args) throws Exception {
         if (initialLoad) {
             User user = new User("admin", "admin", "admin@gmail.com", "admin");
-        encryptedPassword(user);
-        progressData(100000000, 100000000, 90, 25200f, user);
-        userRepository.save(user);
+            encryptedPassword(user);
+            progressData(100000000, 100000000, 90, 25200f, user);
+            userRepository.save(user);
 
-        user = new User("user", "user", "user@gmail.com", "user");
-        encryptedPassword(user);
-        progressData(2548, 1549203, 10, 20, user);
-        userRepository.save(user);
+            user = new User("user", "user", "user@gmail.com", "user");
+            encryptedPassword(user);
+            progressData(2548, 1549203, 10, 20, user);
+            userRepository.save(user);
 
-        initialLoad = false;
+            initialLoad = false;
         }
         
     }
@@ -45,7 +45,7 @@ public class DataLoader implements CommandLineRunner {
     }
 
     private void progressData(int coins, int gems, int level, float xp, User user) {
-        ProgressData progressData = new ProgressData(null, coins, gems, level, 25200f, user);
+        ProgressData progressData = new ProgressData(null, coins, gems, level, 25200f, null, user);
         user.setProgressData(progressData);
     }
 

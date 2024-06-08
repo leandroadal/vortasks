@@ -18,4 +18,9 @@ public class ObjectNotFoundException extends RuntimeException {
         super(message, cause);
     }
 
+    public ObjectNotFoundException(String message, boolean changeMessage) {
+        // Mensagem personalizada
+        super(message);
+    }
+
 }

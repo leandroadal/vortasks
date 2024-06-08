@@ -1,5 +1,6 @@
 package com.leandroadal.vortasks.services.user;
 
+import java.time.Instant;
 import java.util.function.Consumer;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,8 +42,28 @@ public class ProgressDataService {
         }
     }
 
+    public ProgressData getProgress() {
+        UserSS userSS = UserService.authenticated();
+        return getProgressDataByUserId(userSS.getId());
+    }
+
+    public ProgressData latestProgress(String lastModified) {
+        UserSS userSS = UserService.authenticated();
+        ProgressData progress = getProgressDataByUserId(userSS.getId());
+
+        if (progress.getLastModified() != null && (lastModified.isEmpty() || progress.getLastModified().isAfter(Instant.parse(lastModified)))) {
+            log.progressRetrievalSuccess(progress.getId());
+            return progress;            
+        } else {
+            log.progressNotModified(progress.getId());
+            throw new ObjectNotFoundException("Progresso mais recente nãp encontrado para o usuário: " + progress.getId(), true);
+        }
+    }
+
     public ProgressData editProgress(ProgressData data) {
-        ProgressData progress = findProgressById(data.getId());
+        UserSS userSS = UserService.authenticated();
+        ProgressData progress = getProgressDataByUserId(userSS.getId());
+        data.setId(progress.getId());
         applyEdit(progress, data);
         save(progress);
         log.editProgress(progress.getId());
@@ -50,7 +71,9 @@ public class ProgressDataService {
     }
 
     public ProgressData partialEditProgress(ProgressData data) {
-        ProgressData progress = findProgressById(data.getId());
+        UserSS userSS = UserService.authenticated();
+        ProgressData progress = getProgressDataByUserId(userSS.getId());
+        data.setId(progress.getId());
         applyPartialEdit(progress, data);
         save(progress);
         log.partialEditProgress(progress.getId());
@@ -69,6 +92,14 @@ public class ProgressDataService {
         }
     }
 
+    public ProgressData adminEditProgress(ProgressData data) {
+        ProgressData progress = findProgressById(data.getId());
+        applyEdit(progress, data);
+        save(progress);
+        log.editProgress(progress.getId());
+        return progress;
+    }
+    
     protected ProgressData save(ProgressData progressData) {
         return repository.save(progressData);
     }
@@ -82,6 +113,7 @@ public class ProgressDataService {
         progress.setGems(data.getGems());
         progress.setLevel(data.getLevel());
         progress.setXp(data.getXp());
+        progress.setLastModified(data.getLastModified());
     }
 
     private void applyPartialEdit(ProgressData progress, ProgressData data) {

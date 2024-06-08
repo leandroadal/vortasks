@@ -5,6 +5,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -87,6 +89,7 @@ public class ProductController {
 
     @GetMapping("/{id}")
     @ProductDocSwagger.GetProductSwagger
+    @Cacheable(value = "products", key = "#id")
     public ResponseEntity<ProductResponseDTO> getProduct(@PathVariable @NotNull @Positive Long id) {
         Product product = service.productById(id);
         return ResponseEntity.ok(new ProductResponseDTO(product));
@@ -94,6 +97,7 @@ public class ProductController {
 
     @PutMapping("/{id}")
     @ProductDocSwagger.EditProductSwagger
+    @CachePut(value = "products", key = "#id")
     public ResponseEntity<ProductResponseDTO> editProduct(@PathVariable @Positive Long id,
             @Valid @RequestBody ProductRequestDTO productDTO) {
         Product data = productDTO.toProduct();

@@ -25,7 +25,7 @@ public @interface ProgressSwagger {
     @ApiResponses(value = {
         @ApiResponse(responseCode = "200", description = "Dados de progresso encontrados com sucesso", content = { @Content(mediaType = "application/json", 
         schema = @Schema(implementation = ProgressDataResponseDTO.class)) }),
-        @ApiResponse(responseCode = "400", description = "ID de progresso inválido",
+        @ApiResponse(responseCode = "400", description = "Dados inválidos",
                 content = {@Content(mediaType = "application/json", schema = @Schema(implementation = StandardError.class))}),
         @ApiResponse(responseCode = "403", description = "Acesso negado", 
                 content = @Content(schema = @Schema(implementation = StandardError.class))),
@@ -36,6 +36,25 @@ public @interface ProgressSwagger {
     })
     @SecurityRequirement(name = "bearerAuth")
     @interface GetProgressSwagger {
+    }
+
+    @Target({ElementType.METHOD})
+    @Retention(RetentionPolicy.RUNTIME)
+    @Operation(summary = "Últimos dados de progresso", description = "Retorna os dados se forem mais recentes que os dados locais do usuário")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Dados de progresso encontrados com sucesso", content = { @Content(mediaType = "application/json", 
+        schema = @Schema(implementation = ProgressDataResponseDTO.class)) }),
+        @ApiResponse(responseCode = "400", description = "Dados inválidos",
+                content = {@Content(mediaType = "application/json", schema = @Schema(implementation = StandardError.class))}),
+        @ApiResponse(responseCode = "403", description = "Acesso negado", 
+                content = @Content(schema = @Schema(implementation = StandardError.class))),
+        @ApiResponse(responseCode = "404", description = "Dados de progresso mais recentes não encontrados",
+                content = {@Content(mediaType = "application/json", schema = @Schema(implementation = StandardError.class))}),
+        @ApiResponse(responseCode = "500", description = "Erro interno no servidor",
+                content = @Content(mediaType = "application/json", schema = @Schema(implementation = StandardError.class)))
+    })
+    @SecurityRequirement(name = "bearerAuth")
+    @interface GetLatestProgressSwagger {
     }
 
     @Target({ElementType.METHOD})

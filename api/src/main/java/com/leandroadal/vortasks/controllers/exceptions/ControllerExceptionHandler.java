@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
 import com.leandroadal.vortasks.services.backup.exceptions.BackupCreationException;
-import com.leandroadal.vortasks.services.backup.exceptions.BackupNotModifiedException;
+import com.leandroadal.vortasks.services.backup.exceptions.ObjectNotModifiedException;
 import com.leandroadal.vortasks.services.exception.DatabaseException;
 import com.leandroadal.vortasks.services.exception.ForbiddenAccessException;
 import com.leandroadal.vortasks.services.exception.InvalidCredentialsException;
@@ -67,7 +67,7 @@ public class ControllerExceptionHandler {
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<StandardError> validation(MethodArgumentNotValidException e, HttpServletRequest request) {
-        String error = "Erro ao validar";
+        String error = "Erro ao validar o argumento";
         HttpStatus status = HttpStatus.BAD_REQUEST;
         ValidationError err = new ValidationError(Instant.now(), status.value(), error, e.getMessage(), request.getRequestURI());
         for (FieldError fieldError : e.getBindingResult().getFieldErrors()) {
@@ -86,10 +86,10 @@ public class ControllerExceptionHandler {
         return ResponseEntity.status(status).body(err);
     }
 
-    @ExceptionHandler(BackupNotModifiedException.class)
-    public ResponseEntity<StandardError> backupNotModified(BackupNotModifiedException e, HttpServletRequest request) {
-        String error = "Erro ao recuperar backup";
-        HttpStatus status = HttpStatus.CONFLICT;
+    @ExceptionHandler(ObjectNotModifiedException.class)
+    public ResponseEntity<StandardError> backupNotModified(ObjectNotModifiedException e, HttpServletRequest request) {
+        String error = "Dados nao modificados";
+        HttpStatus status = HttpStatus.NOT_MODIFIED;
         StandardError err = new StandardError(Instant.now(), status.value(), error, e.getMessage(), request.getRequestURI());
         return ResponseEntity.status(status).body(err);
     }
