@@ -20,8 +20,13 @@ public class UserController {
     @Autowired
     private UserService service;
 
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @GetMapping
+    public ResponseEntity<UserResponseDTO> findUser() {
+        return ResponseEntity.ok(new UserResponseDTO(service.findUser()));
+    }
+
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @GetMapping("/admin")
     @UserSwagger.FindAllUsersSwagger
     public ResponseEntity<List<UserResponseDTO>> findAll() {
         return ResponseEntity.ok(service.findAllUsers().stream().map(UserResponseDTO::new).toList());

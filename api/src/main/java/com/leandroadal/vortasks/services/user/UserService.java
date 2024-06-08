@@ -23,6 +23,11 @@ public class UserService {
     public List<User> findAllUsers() {
         return repository.findAll();
     }
+
+    public User findUser() {
+        UserSS userSS = authenticated();
+        return findUserById(userSS.getId());
+    }
     
     public User findUserById(String id) {
         try {
@@ -51,8 +56,21 @@ public class UserService {
         }   
     }
 
+    public User findUserByUsernameOrEmail(String usernameOrEmail) {
+        try {
+            return repository.findByUsernameOrEmail(usernameOrEmail, usernameOrEmail);
+        } catch (Exception e) {
+            log.userByUsernameOrEmail(usernameOrEmail);
+            throw e;
+        }   
+    }
+
     public boolean existsByUsername(String username) {
         return repository.existsByUsername(username);
+    }
+
+    public boolean existsByEmail(String email) {
+        return repository.existsByEmail(email);
     }
 
     public static UserSS authenticated() {
