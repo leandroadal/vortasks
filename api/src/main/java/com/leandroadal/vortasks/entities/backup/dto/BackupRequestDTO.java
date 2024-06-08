@@ -52,7 +52,7 @@ public record BackupRequestDTO(
     }
 
     private void mapGoals(GoalsDTO data, Backup backup) {
-        backup.setGoals(new Goals(data.id(), data.daily(), data.monthly(), data.dailyGoalProgress(), data.monthlyGoalProgress(), backup));
+        backup.setGoals(new Goals(data.id(), data.daily(), data.weekly(), data.monthly(), data.dailyGoalProgress(), data.monthlyGoalProgress(), backup));
     }
 
     private void mapAchievements(List<AchievementDTO> dataList, Backup backup) {

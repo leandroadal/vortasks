@@ -1,8 +1,9 @@
 package com.leandroadal.vortasks.entities.backup.userprogress.dto.create;
 
 public record GoalsCreateDTO(
-        float daily,
-        float monthly,
+        int daily,
+        int weekly,
+        int monthly,
         int dailyGoalProgress,
         int monthlyGoalProgress) {
 

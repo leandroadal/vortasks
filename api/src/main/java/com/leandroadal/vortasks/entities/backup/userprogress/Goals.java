@@ -1,9 +1,6 @@
 package com.leandroadal.vortasks.entities.backup.userprogress;
 
 import com.leandroadal.vortasks.entities.backup.Backup;
-import com.leandroadal.vortasks.entities.backup.userprogress.dto.GoalsDTO;
-import com.leandroadal.vortasks.entities.backup.userprogress.dto.create.GoalsCreateDTO;
-
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -29,8 +26,9 @@ public class Goals {
     @Setter(AccessLevel.NONE)
     private String id;
 
-    private float daily;
-    private float monthly;
+    private Integer daily;
+    private Integer weekly;
+    private Integer monthly;
     private Integer dailyGoalProgress;
     private Integer monthlyGoalProgress;
 
@@ -38,24 +36,10 @@ public class Goals {
     @JoinColumn(name = "backup_id")
     private Backup userBackup;
 
-
-    
-    public Goals(GoalsCreateDTO goalsDTO, Backup backup) {
-        this.daily = goalsDTO.daily();
-        this.monthly = goalsDTO.monthly();
-        this.dailyGoalProgress = goalsDTO.dailyGoalProgress();
-        this.monthlyGoalProgress = goalsDTO.monthlyGoalProgress();
-        this.userBackup = backup;
-    }
-
-    public void edit(GoalsDTO goalsDTO) {
-        this.daily = goalsDTO.daily();
-        this.monthly = goalsDTO.monthly();
-    }
-
-    public Goals(float daily, float monthly, int dailyGoalProgress,
+    public Goals(int daily, int weekly, int monthly, int dailyGoalProgress,
     int monthlyGoalProgress, Backup userBackup) {
         this.daily = daily;
+        this.weekly = weekly;
         this.monthly = monthly;
         this.dailyGoalProgress = dailyGoalProgress;
         this.monthlyGoalProgress = monthlyGoalProgress;
