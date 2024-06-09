@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:vortasks/screens/auth/login/login_screen.dart';
+import 'package:vortasks/screens/home/widgets/account_icon.dart';
 
 class MyAppBar extends StatelessWidget implements PreferredSizeWidget {
   const MyAppBar({super.key, required this.title});
@@ -22,8 +24,14 @@ class MyAppBar extends StatelessWidget implements PreferredSizeWidget {
         ),
         IconButton(
           icon: const Icon(Icons.account_circle),
-          onPressed: () {},
+          onPressed: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => const LoginScreen()),
+            );
+          },
         ),
+        const AccountIcon(),
       ],
       //backgroundColor: const Color(0xFF2c00a2), // Color(0xFF2c00a2)
       flexibleSpace: FlexibleSpaceBar(

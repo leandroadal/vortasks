@@ -95,7 +95,10 @@ class DatePickerField extends StatelessWidget {
       } else if (maximumDate != null && picked.isAfter(maximumDate!)) {
         _showSnackBar(context, 'A data não pode ser posterior a $maximumDate');
       } else {
-        onDateChanged(picked);
+        onDateChanged(picked.add(Duration(
+          hours: initialDate.hour,
+          minutes: initialDate.minute,
+        )));
       }
     }
   }

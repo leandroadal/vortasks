@@ -48,6 +48,14 @@ mixin _$TaskStore on TaskStoreBase, Store {
     });
   }
 
+  late final _$completeTaskAsyncAction =
+      AsyncAction('TaskStoreBase.completeTask', context: context);
+
+  @override
+  Future<void> completeTask(Task task) {
+    return _$completeTaskAsyncAction.run(() => super.completeTask(task));
+  }
+
   late final _$TaskStoreBaseActionController =
       ActionController(name: 'TaskStoreBase', context: context);
 
@@ -90,17 +98,6 @@ mixin _$TaskStore on TaskStoreBase, Store {
         name: 'TaskStoreBase._updateTodayTasks');
     try {
       return super._updateTodayTasks();
-    } finally {
-      _$TaskStoreBaseActionController.endAction(_$actionInfo);
-    }
-  }
-
-  @override
-  void completeTask(Task task) {
-    final _$actionInfo = _$TaskStoreBaseActionController.startAction(
-        name: 'TaskStoreBase.completeTask');
-    try {
-      return super.completeTask(task);
     } finally {
       _$TaskStoreBaseActionController.endAction(_$actionInfo);
     }

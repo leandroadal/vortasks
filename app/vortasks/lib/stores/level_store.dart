@@ -13,11 +13,23 @@ abstract class LevelStoreBase with Store {
   @observable
   int currentLevel = 1;
 
+  @action
+  void setCurrentLevel(int level) {
+    currentLevel = level;
+    _saveCurrentLevel();
+  }
+
   @observable
   int xp = 0;
 
-  @observable
-  int xpToNextLevel = 1000;
+  @action
+  void setXP(int xp) {
+    this.xp = xp;
+    _saveXp();
+  }
+
+  @computed
+  int get xpToNextLevel => 500 + (currentLevel * 500);
 
   @computed
   double get xpPercentage => (xp / xpToNextLevel) * 100;
@@ -44,7 +56,6 @@ abstract class LevelStoreBase with Store {
   void levelUp() {
     currentLevel++;
     xp = 0;
-    xpToNextLevel += 500;
     _saveLevelData();
   }
 
@@ -56,15 +67,24 @@ abstract class LevelStoreBase with Store {
     xp = LocalStorage.getString('xp') != null
         ? int.parse(LocalStorage.getString('xp')!)
         : 0;
-    xpToNextLevel = LocalStorage.getString('xpToNextLevel') != null
-        ? int.parse(LocalStorage.getString('xpToNextLevel')!)
-        : 1000;
   }
 
   // Salvar dados de nível no armazenamento local
   void _saveLevelData() {
+    _saveCurrentLevel();
+    _saveXp();
+    _saveXpToNextLevel();
+  }
+
+  void _saveCurrentLevel() {
     LocalStorage.saveData('currentLevel', currentLevel.toString());
+  }
+
+  void _saveXp() {
     LocalStorage.saveData('xp', xp.toString());
+  }
+
+  void _saveXpToNextLevel() {
     LocalStorage.saveData('xpToNextLevel', xpToNextLevel.toString());
   }
 }

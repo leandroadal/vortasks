@@ -8,6 +8,9 @@ import 'package:vortasks/stores/goals_store.dart';
 import 'dart:convert';
 
 import 'package:vortasks/stores/level_store.dart';
+import 'package:vortasks/stores/progress_store.dart';
+import 'package:vortasks/stores/sell_store.dart';
+import 'package:vortasks/stores/user_store.dart';
 
 part 'task_store.g.dart';
 
@@ -18,6 +21,7 @@ abstract class TaskStoreBase with Store {
     _loadTasks();
   }
   final LevelStore _levelStore = GetIt.I<LevelStore>();
+  final SellStore _sellStore = GetIt.I<SellStore>();
   final GoalsStore goalsStore = GetIt.I<GoalsStore>();
 
   @observable
@@ -80,13 +84,19 @@ abstract class TaskStoreBase with Store {
 
   // Quando completa a tarefa
   @action
-  void completeTask(Task task) {
+  Future<void> completeTask(Task task) async {
     task.status = Status.COMPLETED;
     task.dateFinish = DateTime.now().toUtc();
     task.finish = true;
     updateTask(task);
     _earnXP(task);
     goalsStore.incrementGoalsCompleted();
+    _sellStore.incrementCoins(task.coins);
+
+    GetIt.I<ProgressStore>().setLastModified(DateTime.now().toUtc());
+    if (GetIt.I<UserStore>().isLoggedIn) {
+      GetIt.I<ProgressStore>().toRemote();
+    }
     //_saveTasks();
   }
 
@@ -103,6 +113,12 @@ abstract class TaskStoreBase with Store {
     task.finish = true;
     updateTask(task);
     loseXP(task);
+    _sellStore.decrementCoins(task.coins);
+
+    GetIt.I<ProgressStore>().setLastModified(DateTime.now().toUtc());
+    if (GetIt.I<UserStore>().isLoggedIn) {
+      GetIt.I<ProgressStore>().toRemote();
+    }
   }
 
   void loseXP(Task task) {
@@ -112,7 +128,7 @@ abstract class TaskStoreBase with Store {
 
   @computed
   List<Task> get getSortedTasks {
-    final today = DateTime.now();
+    final today = DateTime.now().toUtc();
     final filteredTasks = todayTasks;
 
     // Ordenar tarefas por proximidade da data de término

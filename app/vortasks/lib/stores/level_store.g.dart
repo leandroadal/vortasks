@@ -9,6 +9,13 @@ part of 'level_store.dart';
 // ignore_for_file: non_constant_identifier_names, unnecessary_brace_in_string_interps, unnecessary_lambdas, prefer_expression_function_bodies, lines_longer_than_80_chars, avoid_as, avoid_annotating_with_dynamic, no_leading_underscores_for_local_identifiers
 
 mixin _$LevelStore on LevelStoreBase, Store {
+  Computed<int>? _$xpToNextLevelComputed;
+
+  @override
+  int get xpToNextLevel =>
+      (_$xpToNextLevelComputed ??= Computed<int>(() => super.xpToNextLevel,
+              name: 'LevelStoreBase.xpToNextLevel'))
+          .value;
   Computed<double>? _$xpPercentageComputed;
 
   @override
@@ -48,24 +55,30 @@ mixin _$LevelStore on LevelStoreBase, Store {
     });
   }
 
-  late final _$xpToNextLevelAtom =
-      Atom(name: 'LevelStoreBase.xpToNextLevel', context: context);
-
-  @override
-  int get xpToNextLevel {
-    _$xpToNextLevelAtom.reportRead();
-    return super.xpToNextLevel;
-  }
-
-  @override
-  set xpToNextLevel(int value) {
-    _$xpToNextLevelAtom.reportWrite(value, super.xpToNextLevel, () {
-      super.xpToNextLevel = value;
-    });
-  }
-
   late final _$LevelStoreBaseActionController =
       ActionController(name: 'LevelStoreBase', context: context);
+
+  @override
+  void setCurrentLevel(int level) {
+    final _$actionInfo = _$LevelStoreBaseActionController.startAction(
+        name: 'LevelStoreBase.setCurrentLevel');
+    try {
+      return super.setCurrentLevel(level);
+    } finally {
+      _$LevelStoreBaseActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
+  void setXP(int xp) {
+    final _$actionInfo = _$LevelStoreBaseActionController.startAction(
+        name: 'LevelStoreBase.setXP');
+    try {
+      return super.setXP(xp);
+    } finally {
+      _$LevelStoreBaseActionController.endAction(_$actionInfo);
+    }
+  }
 
   @override
   void addXP(int gainedXP) {
