@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import com.leandroadal.vortasks.entities.user.ProgressData;
 import com.leandroadal.vortasks.repositories.user.ProgressDataRepository;
 import com.leandroadal.vortasks.security.UserSS;
+import com.leandroadal.vortasks.services.backup.exceptions.ObjectNotModifiedException;
 import com.leandroadal.vortasks.services.exception.DatabaseException;
 import com.leandroadal.vortasks.services.exception.ObjectNotFoundException;
 
@@ -56,7 +57,7 @@ public class ProgressDataService {
             return progress;            
         } else {
             log.progressNotModified(progress.getId());
-            throw new ObjectNotFoundException("Progresso mais recente nãp encontrado para o usuário: " + progress.getId(), true);
+            throw new ObjectNotModifiedException("Progresso não modificado para o usuário", progress.getId());
         }
     }
 

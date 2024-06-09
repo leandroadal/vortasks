@@ -41,7 +41,7 @@ public class ControllerExceptionHandler {
 
     @ExceptionHandler(InvalidCredentialsException.class)
     public ResponseEntity<StandardError> invalidCredentials(InvalidCredentialsException e, HttpServletRequest request) {
-        String error = "Credenciais inválidas";
+        String error = "Credenciais invalidas";
         HttpStatus status = HttpStatus.UNAUTHORIZED;
         StandardError err = new StandardError(Instant.now(), status.value(), error, e.getMessage(), request.getRequestURI());
         return ResponseEntity.status(status).body(err);
@@ -87,8 +87,8 @@ public class ControllerExceptionHandler {
     }
 
     @ExceptionHandler(ObjectNotModifiedException.class)
-    public ResponseEntity<StandardError> backupNotModified(ObjectNotModifiedException e, HttpServletRequest request) {
-        String error = "Dados nao modificados";
+    public ResponseEntity<StandardError> notModified(ObjectNotModifiedException e, HttpServletRequest request) {
+        String error = "Nao ha dados mais recentes";
         HttpStatus status = HttpStatus.NOT_MODIFIED;
         StandardError err = new StandardError(Instant.now(), status.value(), error, e.getMessage(), request.getRequestURI());
         return ResponseEntity.status(status).body(err);
