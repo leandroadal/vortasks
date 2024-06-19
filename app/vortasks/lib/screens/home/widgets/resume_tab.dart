@@ -1,12 +1,60 @@
+import 'dart:async';
+
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
+import 'package:get_it/get_it.dart';
 import 'package:vortasks/screens/home/widgets/goals/goal_section.dart';
 import 'package:vortasks/screens/home/widgets/header_tab.dart';
 import 'package:vortasks/screens/home/widgets/profile_card.dart';
 import 'package:vortasks/screens/home/widgets/tasks/task_list.dart';
 import 'package:vortasks/screens/widgets/my_navigation_rail.dart';
+import 'package:vortasks/stores/progress_store.dart';
+import 'package:vortasks/stores/user_store.dart';
 
-class ResumeTab extends StatelessWidget {
+class ResumeTab extends StatefulWidget {
   const ResumeTab({super.key});
+
+  @override
+  State<ResumeTab> createState() => _ResumeTabState();
+}
+
+class _ResumeTabState extends State<ResumeTab> {
+  Timer? _syncTimer;
+  StreamSubscription<List<ConnectivityResult>>? _connectivitySubscription;
+  final UserStore userStore = GetIt.I<UserStore>();
+
+  @override
+  void initState() {
+    super.initState();
+    _connectivitySubscription =
+        Connectivity().onConnectivityChanged.listen(_handleConnectivityChange);
+  }
+
+  @override
+  void dispose() {
+    _syncTimer?.cancel();
+    _connectivitySubscription?.cancel();
+    super.dispose();
+  }
+
+  void _handleConnectivityChange(List<ConnectivityResult> results) {
+    // Verifica se a conexão está disponível
+    if (results.any((result) => result != ConnectivityResult.none)) {
+      _startSync(); // Inicia a sincronização se a conexão estiver disponível
+    }
+  }
+
+  void _startSync() {
+    if (userStore.isLoggedIn) {
+      _syncTimer = Timer.periodic(const Duration(seconds: 30), (timer) async {
+        try {
+          await GetIt.I<ProgressStore>().fromRemote();
+        } catch (e) {
+          print('Erro de sincronização: $e');
+        }
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -88,14 +136,3 @@ class ResumeTab extends StatelessWidget {
     );
   }
 }
-
-const tasksData = [
-  {'icon': Icons.image, 'label': 'Tarefa 1'},
-  {'icon': Icons.image, 'label': 'Tarefa 2'},
-  {'icon': Icons.image, 'label': 'Tarefa 3'},
-];
-
-const leisureData = [
-  {'icon': Icons.image, 'label': 'Lazer 1'},
-  {'icon': Icons.image, 'label': 'Lazer 2'},
-];
