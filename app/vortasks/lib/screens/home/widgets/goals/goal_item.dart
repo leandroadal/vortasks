@@ -4,8 +4,10 @@ class GoalItem extends StatelessWidget {
   final String label;
   final double progress;
   final Color color;
+  final int goal;
 
-  const GoalItem(this.label, this.progress, this.color, {super.key});
+  const GoalItem(this.label, this.progress, this.color,
+      {super.key, required this.goal});
 
   @override
   Widget build(BuildContext context) {
@@ -21,7 +23,13 @@ class GoalItem extends StatelessWidget {
           minHeight: 8.0,
         ),
         const SizedBox(height: 4.0),
-        Text('${(progress * 100).toStringAsFixed(1)} %'),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text('${(progress * 100).toStringAsFixed(1)} %'),
+            Text('${(progress * goal).toStringAsFixed(0)} / $goal'),
+          ],
+        ),
       ],
     );
   }

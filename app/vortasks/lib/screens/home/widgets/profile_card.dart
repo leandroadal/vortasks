@@ -1,4 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_mobx/flutter_mobx.dart';
+import 'package:get_it/get_it.dart';
+import 'package:vortasks/stores/backup/achievement_store.dart';
+import 'package:vortasks/stores/progress_store.dart';
 
 class ProfileCard extends StatelessWidget {
   const ProfileCard({super.key});
@@ -6,18 +10,23 @@ class ProfileCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     double screenWidthSize = MediaQuery.of(context).size.width;
+    final ProgressStore progressStore = GetIt.I<ProgressStore>();
+
     return Card(
       color: Theme.of(context).colorScheme.secondary,
       child: Padding(
         padding: const EdgeInsets.all(16.0),
         child: screenWidthSize > 600
-            ? largeScreen(screenWidthSize, context)
-            : verticalScreen(context),
+            ? largeScreen(screenWidthSize, context, progressStore)
+            : verticalScreen(context, progressStore),
       ),
     );
   }
 
-  Row largeScreen(double screenWidthSize, BuildContext context) {
+  Row largeScreen(double screenWidthSize, BuildContext context,
+      ProgressStore progressStore) {
+    final AchievementStore achievementStore = GetIt.I<AchievementStore>();
+
     return Row(
       crossAxisAlignment: CrossAxisAlignment.center,
       mainAxisAlignment: MainAxisAlignment.center,
@@ -28,28 +37,37 @@ class ProfileCard extends StatelessWidget {
             Row(
               children: [
                 screenWidthSize > 800
-                    ? CircleAvatar(
+                    ? const CircleAvatar(
                         radius: 30.0,
                         backgroundColor: Colors.grey,
                         child: Icon(Icons.person, size: 40.0),
                       )
                     : Container(),
-                SizedBox(width: 16.0),
+                const SizedBox(width: 16.0),
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text('Nível: 1',
-                        style: TextStyle(
-                            color: Theme.of(context).colorScheme.onSecondary)),
-                    Text('Moedas: 0',
-                        style: TextStyle(
-                            color: Theme.of(context).colorScheme.onSecondary)),
-                    screenWidthSize > 800
-                        ? Text('Conquistas: 0/100',
+                    Observer(builder: (_) {
+                      return Text(
+                          'Nível: ${progressStore.levelStore.currentLevel}',
+                          style: TextStyle(
+                              color:
+                                  Theme.of(context).colorScheme.onSecondary));
+                    }),
+                    Observer(builder: (_) {
+                      return Text('Moedas: ${progressStore.sellStore.coins}',
+                          style: TextStyle(
+                              color:
+                                  Theme.of(context).colorScheme.onSecondary));
+                    }),
+                    screenWidthSize > 810
+                        ? Text(
+                            'Conquistas: ${achievementStore.achievements.length}/${achievementStore.existingAchievements.length}',
                             style: TextStyle(
                                 color:
                                     Theme.of(context).colorScheme.onSecondary))
-                        : Text('Conquistas:\n 0/100',
+                        : Text(
+                            'Conquistas:\n ${achievementStore.achievements.length}/${achievementStore.existingAchievements.length}',
                             style: TextStyle(
                                 color:
                                     Theme.of(context).colorScheme.onSecondary)),
@@ -57,85 +75,100 @@ class ProfileCard extends StatelessWidget {
                 ),
               ],
             ),
-            SizedBox(
+            const SizedBox(
               height: 16,
             ),
-            Stack(
-              alignment: Alignment.center,
-              children: [
-                SizedBox(
-                  height: 50,
-                  width: 50,
-                  child: CircularProgressIndicator(
-                    value: 0.61,
-                    color: Theme.of(context).colorScheme.secondary,
-                    backgroundColor: Theme.of(context).colorScheme.onSecondary,
-                    strokeWidth: 8.0,
+            Observer(builder: (_) {
+              return Stack(
+                alignment: Alignment.center,
+                children: [
+                  SizedBox(
+                    height: 50,
+                    width: 50,
+                    child: CircularProgressIndicator(
+                      value: progressStore.levelStore.xpPercentage / 100,
+                      color: Theme.of(context).colorScheme.secondary,
+                      backgroundColor:
+                          Theme.of(context).colorScheme.onSecondary,
+                      strokeWidth: 8.0,
+                    ),
                   ),
-                ),
-                Text(
-                  '100%',
-                  style: TextStyle(
-                    color: Theme.of(context).colorScheme.onSecondary,
-                    fontSize: 12.0,
-                    fontWeight: FontWeight.bold,
+                  Text(
+                    '${progressStore.levelStore.xpPercentage.toString().substring(0, 4)}%',
+                    style: TextStyle(
+                      color: Theme.of(context).colorScheme.onSecondary,
+                      fontSize: 12.0,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
-                ),
-              ],
-            ),
+                ],
+              );
+            }),
           ],
         ),
       ],
     );
   }
 
-  Row verticalScreen(BuildContext context) {
+  Row verticalScreen(BuildContext context, ProgressStore progressStore) {
+    final AchievementStore achievementStore = GetIt.I<AchievementStore>();
+
     return Row(
       children: [
-        CircleAvatar(
+        const CircleAvatar(
           radius: 30.0,
           backgroundColor: Colors.grey,
           child: Icon(Icons.person, size: 40.0),
         ), // Para evitar overflow da tela
-        SizedBox(width: 16.0),
+        const SizedBox(width: 16.0),
         Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text('Nível: 1',
-                style: TextStyle(
-                    color: Theme.of(context).colorScheme.onSecondary)),
-            Text('Moedas: 0',
-                style: TextStyle(
-                    color: Theme.of(context).colorScheme.onSecondary)),
-            Text('Conquistas: 0/100',
-                style: TextStyle(
-                    color: Theme.of(context).colorScheme.onSecondary)),
-          ],
-        ),
-        Spacer(),
-        Stack(
-          alignment: Alignment.center,
-          children: [
-            SizedBox(
-              height: 50,
-              width: 50,
-              child: CircularProgressIndicator(
-                value: 0.61,
-                color: Theme.of(context).colorScheme.secondary,
-                backgroundColor: Theme.of(context).colorScheme.onSecondary,
-                strokeWidth: 8.0,
-              ),
-            ),
+            Observer(builder: (_) {
+              return Text('Nível: ${progressStore.levelStore.currentLevel}',
+                  style: TextStyle(
+                      color: Theme.of(context).colorScheme.onSecondary));
+            }),
+            Observer(builder: (_) {
+              return Text('Moedas: ${progressStore.sellStore.coins}',
+                  style: TextStyle(
+                      color: Theme.of(context).colorScheme.onSecondary));
+            }),
             Text(
-              '100%',
-              style: TextStyle(
-                color: Theme.of(context).colorScheme.onSecondary,
-                fontSize: 12.0,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
+                'Conquistas: ${achievementStore.achievements.length}/${achievementStore.existingAchievements.length}',
+                style: TextStyle(
+                    color: Theme.of(context).colorScheme.onSecondary)),
           ],
         ),
+        const Spacer(),
+        Observer(builder: (_) {
+          return Stack(
+            alignment: Alignment.center,
+            children: [
+              SizedBox(
+                height: 50,
+                width: 50,
+                child: CircularProgressIndicator(
+                  value: progressStore.levelStore.xpPercentage / 100,
+                  color: Theme.of(context).colorScheme.onSecondary,
+                  backgroundColor: Theme.of(context)
+                      .colorScheme
+                      .onSecondary
+                      .withOpacity(0.2),
+                  strokeWidth: 8.0,
+                ),
+              ),
+              Text(
+                '${progressStore.levelStore.xpPercentage.toStringAsFixed(1)}%',
+                style: TextStyle(
+                  color: Theme.of(context).colorScheme.onSecondary,
+                  fontSize: 12.0,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ],
+          );
+        }),
       ],
     );
   }
