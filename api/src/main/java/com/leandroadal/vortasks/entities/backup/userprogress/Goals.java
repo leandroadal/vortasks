@@ -30,18 +30,20 @@ public class Goals {
     private Integer weekly;
     private Integer monthly;
     private Integer dailyGoalProgress;
+    private Integer weeklyGoalProgress;
     private Integer monthlyGoalProgress;
 
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "backup_id")
     private Backup userBackup;
 
-    public Goals(int daily, int weekly, int monthly, int dailyGoalProgress,
+    public Goals(int daily, int weekly, int monthly, int dailyGoalProgress, int weeklyGoalProgress,
     int monthlyGoalProgress, Backup userBackup) {
         this.daily = daily;
         this.weekly = weekly;
         this.monthly = monthly;
         this.dailyGoalProgress = dailyGoalProgress;
+        this.weeklyGoalProgress = weeklyGoalProgress;
         this.monthlyGoalProgress = monthlyGoalProgress;
         this.userBackup = userBackup;
     }
