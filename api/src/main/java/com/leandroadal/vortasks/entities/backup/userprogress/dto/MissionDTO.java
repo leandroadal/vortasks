@@ -2,6 +2,8 @@ package com.leandroadal.vortasks.entities.backup.userprogress.dto;
 
 import java.time.Instant;
 import java.util.List;
+
+import com.leandroadal.vortasks.entities.backup.Backup;
 import com.leandroadal.vortasks.entities.backup.userprogress.Mission;
 import com.leandroadal.vortasks.entities.backup.userprogress.Status;
 import com.leandroadal.vortasks.entities.backup.userprogress.Type;
@@ -26,6 +28,7 @@ public record MissionDTO(
         Difficulty difficulty,
         boolean finish, 
         Instant dateFinish,
+        List<SkillDTO> skills,
         List<MissionTaskDTO> requirements) {
 
     public MissionDTO(Mission mission) {
@@ -47,6 +50,32 @@ public record MissionDTO(
         mission.getDifficulty(),
         mission.isFinish(),
         mission.getDateFinish(),
+        mission.getSkills().stream().map(SkillDTO::new).toList(),
         mission.getRequirements().stream().map(MissionTaskDTO::new).toList());
+    }
+
+    public Mission toMission(Backup backup) {
+        return new Mission(
+            id,
+            title,
+            description,
+            status,
+            xp,
+            coins,
+            type,
+            repetition,
+            reminder,
+            skillIncrease,
+            skillDecrease,
+            startDate,
+            endDate,
+            theme,
+            difficulty,
+            finish,
+            dateFinish,
+            skills.stream().map(skillDTO -> skillDTO.toSkill(backup)).toList(),
+            backup,
+            requirements.stream().map(missionTaskDTO -> missionTaskDTO.toMissionTasks(backup)).toList()
+        );
     }
 }

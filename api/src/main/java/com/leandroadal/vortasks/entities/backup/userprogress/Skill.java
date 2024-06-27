@@ -1,5 +1,6 @@
 package com.leandroadal.vortasks.entities.backup.userprogress;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import com.leandroadal.vortasks.entities.backup.Backup;
@@ -35,7 +36,7 @@ public class Skill {
     private Integer level;
     
     @Enumerated(EnumType.STRING)
-    private List<Theme> themes; 
+    private List<Theme> themes = new ArrayList<>(); 
 
 
     @ManyToOne(cascade = CascadeType.ALL)

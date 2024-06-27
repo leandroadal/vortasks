@@ -1,11 +1,13 @@
 package com.leandroadal.vortasks.entities.social.tasks.dto.onlinemission.create;
 
 import java.time.Instant;
+import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
 import com.leandroadal.vortasks.entities.backup.userprogress.Status;
 import com.leandroadal.vortasks.entities.backup.userprogress.Type;
+import com.leandroadal.vortasks.entities.backup.userprogress.dto.SkillDTO;
 import com.leandroadal.vortasks.entities.social.tasks.OnlineMission;
 import com.leandroadal.vortasks.entities.social.tasks.enumerators.Difficulty;
 import com.leandroadal.vortasks.entities.social.tasks.enumerators.Theme;
@@ -64,7 +66,9 @@ public record OnlineMissionCreateDTO(
         Difficulty difficulty,
 
         @PositiveOrZero(message = "O número de curtidas deve ser um número maior ou igual a zero")
-        Integer likes) {
+        Integer likes,
+
+        List<SkillDTO> skills) {
 
     public OnlineMission toOnlineMission() {
         OnlineMission mission = new OnlineMission();
@@ -84,6 +88,7 @@ public record OnlineMissionCreateDTO(
         mission.setDifficulty(difficulty);
         mission.getRequirements().addAll(requirements.stream().map(requirement -> requirement.toOnlineMissionTasks()).collect(Collectors.toSet()));
         mission.setLikes(likes);
+        mission.getSkills().stream().map(SkillDTO::new).toList();
         return mission;
     }
 }

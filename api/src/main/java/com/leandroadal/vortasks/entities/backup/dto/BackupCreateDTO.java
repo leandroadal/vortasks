@@ -2,16 +2,8 @@ package com.leandroadal.vortasks.entities.backup.dto;
 
 import java.time.Instant;
 import java.util.List;
-import java.util.function.Function;
-
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.leandroadal.vortasks.entities.backup.Backup;
-import com.leandroadal.vortasks.entities.backup.userprogress.Achievement;
-import com.leandroadal.vortasks.entities.backup.userprogress.CheckInDays;
-import com.leandroadal.vortasks.entities.backup.userprogress.Goals;
-import com.leandroadal.vortasks.entities.backup.userprogress.Mission;
-import com.leandroadal.vortasks.entities.backup.userprogress.MissionTasks;
-import com.leandroadal.vortasks.entities.backup.userprogress.Skill;
-import com.leandroadal.vortasks.entities.backup.userprogress.Task;
 import com.leandroadal.vortasks.entities.backup.userprogress.dto.create.MissionCreateDTO;
 import com.leandroadal.vortasks.entities.backup.userprogress.dto.create.TaskCreateDTO;
 import com.leandroadal.vortasks.entities.backup.userprogress.dto.create.AchievementCreateDTO;
@@ -23,7 +15,10 @@ import com.leandroadal.vortasks.entities.user.User;
 public record BackupCreateDTO(
         CheckInDaysCreateDTO checkInDays,
         GoalsCreateDTO goals,
+
+        @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss'Z'", timezone = "UTC")
         Instant lastModified,
+        
         List<AchievementCreateDTO> achievements,
         List<TaskCreateDTO> tasks,
         List<MissionCreateDTO> missions,
@@ -33,63 +28,36 @@ public record BackupCreateDTO(
         User user = new User();
         backup.setUser(user);
         backup.setLastModified(this.lastModified);
-        mapCheckInDays(this.checkInDays, backup);
+        mapCheckInDays(checkInDays, backup);;
         mapGoals(goals, backup);
         mapAchievements(this.achievements, backup);
-        mapMissions(missions, backup);
-        mapTasks(tasks, backup);
-        mapSkills(skills, backup);
+        mapMissions(this.missions, backup);
+        mapTasks(this.tasks, backup);
+        mapSkills(this.skills, backup);
         return backup;
     }
 
     private void mapCheckInDays(CheckInDaysCreateDTO checkInDaysDTO, Backup backup) {
-        backup.setCheckInDays(
-                new CheckInDays(checkInDaysDTO.days(), checkInDaysDTO.month(),
-                        backup));
+        backup.setCheckInDays(checkInDaysDTO.toCheckInDays(backup));
     }
 
     private void mapGoals(GoalsCreateDTO goalsDTO, Backup backup) {
-        backup.setGoals(new Goals(goalsDTO.daily(), goalsDTO.weekly(), goalsDTO.monthly(), goalsDTO.dailyGoalProgress(), goalsDTO.monthlyGoalProgress(), backup));
+        backup.setGoals(goalsDTO.toGoals(backup));
     }
 
     private void mapAchievements(List<AchievementCreateDTO> achievementDTOList, Backup backup) {
-        backup.setAchievements(
-                mapList(achievementDTOList,
-                        achievementDTO -> new Achievement(achievementDTO.title(),
-                                achievementDTO.description(), achievementDTO.xp(), backup)));
+        backup.setAchievements(this.achievements.stream().map(achCreateDTO -> achCreateDTO.toAchievement(backup)).toList());                        
     }
 
-    private void mapMissions(List<MissionCreateDTO> missionDTOList, Backup userBackup) {
-        userBackup.setMissions(mapList(missionDTOList, missionDTO -> {
-            Mission mission = new Mission(null, missionDTO.title(),
-                    missionDTO.description(), missionDTO.status(), missionDTO.xp(), missionDTO.coins(),
-                    missionDTO.type(), missionDTO.repetition(), missionDTO.reminder(), missionDTO.skillIncrease(),
-                    missionDTO.skillDecrease(), missionDTO.startDate(), missionDTO.endDate(), missionDTO.theme(), missionDTO.difficulty(), missionDTO.finish(), missionDTO.dateFinish(), userBackup, null);
-            mission.setRequirements(
-                    mapList(missionDTO.requirements(),
-                            taskDTO -> new MissionTasks(null, taskDTO.title(),
-                                    taskDTO.description(), taskDTO.status(), taskDTO.xp(), taskDTO.coins(),
-                                    taskDTO.type(), taskDTO.repetition(), taskDTO.reminder(), taskDTO.skillIncrease(),
-                                    taskDTO.skillDecrease(), taskDTO.startDate(), taskDTO.endDate(), taskDTO.theme(), taskDTO.difficulty(), taskDTO.finish(), taskDTO.dateFinish(), mission)));
-            return mission;
-        }));
-
+    private void mapMissions(List<MissionCreateDTO> dataList, Backup backup) {
+        backup.setMissions(this.missions.stream().map(missionDTO -> missionDTO.toMission(backup)).toList());
     }
 
-    private void mapTasks(List<TaskCreateDTO> taskDTOList, Backup userBackup) {
-        userBackup.setTasks(mapList(taskDTOList,
-                taskDTO -> new Task(null, taskDTO.title(), taskDTO.description(), taskDTO.status(), taskDTO.xp(),
-                        taskDTO.coins(), taskDTO.type(), taskDTO.repetition(), taskDTO.reminder(),
-                        taskDTO.skillIncrease(), taskDTO.skillDecrease(), taskDTO.startDate(), taskDTO.endDate(), taskDTO.theme(), taskDTO.difficulty(), taskDTO.finish(), taskDTO.dateFinish(),
-                        userBackup)));
+    private void mapTasks(List<TaskCreateDTO> taskDTOList, Backup backup) {
+        backup.setTasks(this.tasks.stream().map(taskDTO -> taskDTO.toTask(backup)).toList());
     }
 
-    private void mapSkills(List<SkillCreateDTO> skillDTOList, Backup userBackup) {
-        userBackup.setSkills(mapList(skillDTOList,
-                skillDTO -> new Skill(null, skillDTO.name(), skillDTO.xp(), skillDTO.level(), skillDTO.themes(), userBackup)));
-    }
-
-    private <T, U> List<U> mapList(List<T> sourceList, Function<T, U> mapper) {
-        return sourceList.stream().map(mapper).toList();
+    private void mapSkills(List<SkillCreateDTO> skillDTOList, Backup backup) {
+        backup.setSkills(this.skills.stream().map(skillDTO -> skillDTO.toSkill(backup)).toList());
     }
 }

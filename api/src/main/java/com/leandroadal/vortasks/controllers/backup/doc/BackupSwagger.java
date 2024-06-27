@@ -27,6 +27,8 @@ public @interface BackupSwagger {
         schema = @Schema(implementation = BackupResponseDTO.class)) }),
         @ApiResponse(responseCode = "400", description = "Dados de backup inválidos",
                 content = {@Content(mediaType = "application/json", schema = @Schema(implementation = StandardError.class))}),
+        @ApiResponse(responseCode = "403", description = "Acesso negado", 
+                content = @Content(schema = @Schema(implementation = StandardError.class))),
         @ApiResponse(responseCode = "500", description = "Erro interno no servidor",
                 content = @Content(mediaType = "application/json", schema = @Schema(implementation = StandardError.class)))
     })
@@ -36,11 +38,34 @@ public @interface BackupSwagger {
 
     @Target({ElementType.METHOD})
     @Retention(RetentionPolicy.RUNTIME)
+    @Operation(summary = "Recuperar backup", description = "Recupera o último backup do usuário")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Backup retornado com sucesso", content = { @Content(mediaType = "application/json", 
+        schema = @Schema(implementation = BackupResponseDTO.class)) }),
+        @ApiResponse(responseCode = "400", description = "Dados de backup inválidos",
+                content = {@Content(mediaType = "application/json", schema = @Schema(implementation = StandardError.class))}),
+        @ApiResponse(responseCode = "403", description = "Acesso negado", 
+                content = @Content(schema = @Schema(implementation = StandardError.class))),
+        @ApiResponse(responseCode = "404", description = "Backup não encontrado",
+                content = {@Content(mediaType = "application/json", schema = @Schema(implementation = StandardError.class))}),
+        @ApiResponse(responseCode = "500", description = "Erro interno no servidor",
+                content = @Content(mediaType = "application/json", schema = @Schema(implementation = StandardError.class)))
+    })
+    @SecurityRequirement(name = "bearerAuth")
+    @interface GetBackupSwagger {
+    }
+
+    @Target({ElementType.METHOD})
+    @Retention(RetentionPolicy.RUNTIME)
     @Operation(summary = "Recuperar último backup", description = "Recupera o último backup do usuário")
     @ApiResponses(value = {
         @ApiResponse(responseCode = "200", description = "Último backup retornado com sucesso", content = { @Content(mediaType = "application/json", 
         schema = @Schema(implementation = BackupResponseDTO.class)) }),
         @ApiResponse(responseCode = "400", description = "Dados de backup inválidos",
+                content = {@Content(mediaType = "application/json", schema = @Schema(implementation = StandardError.class))}),
+        @ApiResponse(responseCode = "403", description = "Acesso negado", 
+                content = @Content(schema = @Schema(implementation = StandardError.class))),
+        @ApiResponse(responseCode = "404", description = "Backup não encontrado",
                 content = {@Content(mediaType = "application/json", schema = @Schema(implementation = StandardError.class))}),
         @ApiResponse(responseCode = "500", description = "Erro interno no servidor",
                 content = @Content(mediaType = "application/json", schema = @Schema(implementation = StandardError.class)))
@@ -57,6 +82,10 @@ public @interface BackupSwagger {
         schema = @Schema(implementation = BackupResponseDTO.class)) }),
         @ApiResponse(responseCode = "400", description = "Dados de backup inválidos",
                 content = {@Content(mediaType = "application/json", schema = @Schema(implementation = StandardError.class))}),
+        @ApiResponse(responseCode = "403", description = "Acesso negado", 
+                content = @Content(schema = @Schema(implementation = StandardError.class))),
+        @ApiResponse(responseCode = "404", description = "Backup não encontrado",
+                content = {@Content(mediaType = "application/json", schema = @Schema(implementation = StandardError.class))}),
         @ApiResponse(responseCode = "500", description = "Erro interno no servidor",
                 content = @Content(mediaType = "application/json", schema = @Schema(implementation = StandardError.class)))
     })
@@ -70,6 +99,10 @@ public @interface BackupSwagger {
     @ApiResponses(value = {
         @ApiResponse(responseCode = "204", description = "Backup excluído com sucesso"),
         @ApiResponse(responseCode = "400", description = "Dados de backup inválidos",
+                content = {@Content(mediaType = "application/json", schema = @Schema(implementation = StandardError.class))}),
+        @ApiResponse(responseCode = "403", description = "Acesso negado", 
+                content = @Content(schema = @Schema(implementation = StandardError.class))),
+        @ApiResponse(responseCode = "404", description = "Backup não encontrado",
                 content = {@Content(mediaType = "application/json", schema = @Schema(implementation = StandardError.class))}),
         @ApiResponse(responseCode = "500", description = "Erro interno no servidor",
                 content = @Content(mediaType = "application/json", schema = @Schema(implementation = StandardError.class)))
@@ -86,6 +119,8 @@ public @interface BackupSwagger {
         schema = @Schema(implementation = BackupResponseDTO.class)) }),
         @ApiResponse(responseCode = "400", description = "Dados de backup inválidos",
                 content = {@Content(mediaType = "application/json", schema = @Schema(implementation = StandardError.class))}),
+        @ApiResponse(responseCode = "403", description = "Acesso negado", 
+                content = @Content(schema = @Schema(implementation = StandardError.class))),
         @ApiResponse(responseCode = "500", description = "Erro interno no servidor",
                 content = @Content(mediaType = "application/json", schema = @Schema(implementation = StandardError.class)))
     })

@@ -1,6 +1,5 @@
 package com.leandroadal.vortasks.controllers.backup;
 
-import java.time.Instant;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
@@ -26,10 +25,26 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @RestController
 @RequestMapping(value = "/user/backup")
-public class BackupDocController {
+public class BackupController {
 
     @Autowired
     private BackupService service;
+
+    @GetMapping
+    @BackupSwagger.GetBackupSwagger
+    public ResponseEntity<BackupResponseDTO> getBackup() {
+        Backup latestBackup = service.getBackup();
+        log.info("Enviando o backup mais recente para o usuário {}", latestBackup.getUser().getId());
+        return ResponseEntity.ok(new BackupResponseDTO(latestBackup));
+    }
+
+    @GetMapping("/latest")
+    @BackupSwagger.LatestBackupSwagger
+    public ResponseEntity<BackupResponseDTO> latestBackup(@RequestParam String lastModified) {
+        Backup latestBackup = service.latestBackup(lastModified);
+        log.info("Enviando o backup mais recente para o usuário {}", latestBackup.getUser().getId());
+        return ResponseEntity.ok(new BackupResponseDTO(latestBackup));
+    }
 
     @PostMapping("/create")
     @BackupSwagger.CreateBackupSwagger
@@ -38,14 +53,6 @@ public class BackupDocController {
         Backup backup = service.createBackup(data);
         log.info("Enviado o Backup {} do Usuário com ID: {}", backup.getId(), backup.getUser().getId());
         return ResponseEntity.ok(new BackupResponseDTO(backup));
-    }
-
-    @GetMapping
-    @BackupSwagger.CreateBackupSwagger
-    public ResponseEntity<BackupResponseDTO> latestBackup(@RequestParam Instant lastModified) {
-        Backup latestBackup = service.latestBackup(lastModified);
-        log.info("Enviando o backup mais recente para o usuário {}", latestBackup.getUser().getId());
-        return ResponseEntity.ok(new BackupResponseDTO(latestBackup));
     }
 
     @PreAuthorize("hasRole('ROLE_ADMIN')")
@@ -63,7 +70,7 @@ public class BackupDocController {
         return ResponseEntity.ok(pageDTO);
     }
 
-    @PutMapping("/update")
+    @PutMapping
     @BackupSwagger.UpdateBackupSwagger
     public ResponseEntity<BackupResponseDTO> updateBackup(@RequestBody BackupRequestDTO backupDTO) {
         Backup data = backupDTO.toBackup(new Backup());

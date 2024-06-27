@@ -1,8 +1,9 @@
 package com.leandroadal.vortasks.entities.social.tasks.dto.onlinemission.create;
 
 import java.time.Instant;
-
+import java.util.List;
 import com.leandroadal.vortasks.entities.backup.userprogress.Type;
+import com.leandroadal.vortasks.entities.backup.userprogress.dto.SkillDTO;
 import com.leandroadal.vortasks.entities.social.tasks.OnlineMissionTasks;
 import com.leandroadal.vortasks.entities.social.tasks.enumerators.Difficulty;
 import com.leandroadal.vortasks.entities.social.tasks.enumerators.Theme;
@@ -49,7 +50,9 @@ public record OnlineMissionTasksCreateDTO(
     Theme theme,
 
     @NotNull(message = "O difficulty não pode ser nulo")
-    Difficulty difficulty
+    Difficulty difficulty,
+
+    List<SkillDTO> skills
 ) {
     public OnlineMissionTasks toOnlineMissionTasks() {
         OnlineMissionTasks missionTasks = new OnlineMissionTasks();
@@ -66,6 +69,7 @@ public record OnlineMissionTasksCreateDTO(
         missionTasks.setEndDate(endDate);
         missionTasks.setTheme(theme);
         missionTasks.setDifficulty(difficulty);
+        missionTasks.getSkills().stream().map(SkillDTO::new).toList();
         return missionTasks;
     }
 

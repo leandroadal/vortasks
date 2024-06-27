@@ -36,16 +36,5 @@ public class Goals {
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "backup_id")
     private Backup userBackup;
-
-    public Goals(int daily, int weekly, int monthly, int dailyGoalProgress, int weeklyGoalProgress,
-    int monthlyGoalProgress, Backup userBackup) {
-        this.daily = daily;
-        this.weekly = weekly;
-        this.monthly = monthly;
-        this.dailyGoalProgress = dailyGoalProgress;
-        this.weeklyGoalProgress = weeklyGoalProgress;
-        this.monthlyGoalProgress = monthlyGoalProgress;
-        this.userBackup = userBackup;
-    }
     
 }

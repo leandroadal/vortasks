@@ -19,10 +19,10 @@ public record ProgressDataRequestDTO(
     @Min(value = 0, message = "A experiência deve ser um número maior ou igual a zero")
     Float xp,
 
-    String lastModified
+    Instant lastModified
 ) {
     public ProgressData toProgressData(String id) {
-        return new ProgressData(id, coins, gems, level, xp, Instant.parse(lastModified), null);
+        return new ProgressData(id, coins, gems, level, xp, lastModified, null);
     }
     
 }

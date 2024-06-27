@@ -14,7 +14,7 @@ public record UserCreateDTO(
         String name,
 
         @NotEmpty(message="Preenchimento obrigatório")
-        @Size(min = 6, max = 16, message = "A senha deve ter entre 6 e 16 caracteres")
+        @Size(min = 6, max = 16, message = "O username deve ter entre 6 e 16 caracteres")
         String username,
 
         @NotEmpty(message="Preenchimento obrigatório")

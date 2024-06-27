@@ -1,9 +1,10 @@
 package com.leandroadal.vortasks.entities.social.tasks;
 
 import java.time.Instant;
-
+import java.util.List;
 
 import com.leandroadal.vortasks.entities.backup.userprogress.AbstractTask;
+import com.leandroadal.vortasks.entities.backup.userprogress.Skill;
 import com.leandroadal.vortasks.entities.backup.userprogress.Status;
 import com.leandroadal.vortasks.entities.backup.userprogress.Type;
 import com.leandroadal.vortasks.entities.social.tasks.enumerators.Difficulty;
@@ -30,10 +31,10 @@ public class OnlineMissionTasks extends AbstractTask {
     // ------------------ Construtores ------------------
     public OnlineMissionTasks(String id, String title, String description, Status status, Integer xp, Integer coins,
             Type type, Integer repetition, Instant reminder, Integer skillIncrease, Integer skillDecrease,
-            Instant startDate, Instant endDate, Theme theme, Difficulty difficulty, boolean finish, Instant dateFinish,
+            Instant startDate, Instant endDate, Theme theme, Difficulty difficulty, boolean finish, Instant dateFinish, List<Skill> skills,
             OnlineMission onlineMission) {
         super(id, title, description, status, xp, coins, type, repetition, reminder, skillIncrease, skillDecrease,
-                startDate, endDate, theme, difficulty, finish, dateFinish);
+                startDate, endDate, theme, difficulty, finish, dateFinish, skills);
         this.onlineMission = onlineMission;
     }
 

@@ -1,6 +1,7 @@
 package com.leandroadal.vortasks.entities.backup.userprogress;
 
 import java.time.Instant;
+import java.util.ArrayList;
 import java.util.List;
 
 import com.leandroadal.vortasks.entities.backup.Backup;
@@ -29,18 +30,16 @@ public class Mission extends AbstractTask{
     private Backup userBackup;
 
     @OneToMany(mappedBy = "mission", cascade = CascadeType.ALL)
-    private List<MissionTasks> requirements; // tarefas necessárias para concluir a missão
+    private List<MissionTasks> requirements = new  ArrayList<>(); // tarefas necessárias para concluir a missão
 
     public Mission(String id, String title, String description, Status status, Integer xp, Integer coins, Type type,
             Integer repetition, Instant reminder, Integer skillIncrease, Integer skillDecrease, Instant startDate,
-            Instant endDate, Theme theme, Difficulty difficulty, boolean finish, Instant dateFinish, Backup userBackup,
+            Instant endDate, Theme theme, Difficulty difficulty, boolean finish, Instant dateFinish, List<Skill> skills, Backup userBackup,
             List<MissionTasks> requirements) {
         super(id, title, description, status, xp, coins, type, repetition, reminder, skillIncrease, skillDecrease,
-                startDate, endDate, theme, difficulty, finish, dateFinish);
+                startDate, endDate, theme, difficulty, finish, dateFinish, skills);
         this.userBackup = userBackup;
         this.requirements = requirements;
     }
-
-    
 
 }

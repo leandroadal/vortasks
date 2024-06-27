@@ -23,15 +23,15 @@ public record BackupResponseDTO(
 
     public BackupResponseDTO(Backup userBackup) {
         this(
-            userBackup.getId(),
-            userBackup.getUser().getId(),
-            new CheckInDaysDTO(userBackup.getCheckInDays()),
-            new GoalsDTO(userBackup.getGoals()),
-            userBackup.getLastModified(),
-            userBackup.getAchievements().stream().map(AchievementDTO::new).toList(),
-            userBackup.getTasks().stream().map(TaskDTO::new).toList(),
-            userBackup.getMissions().stream().map(MissionDTO::new).toList(),
-            userBackup.getSkills().stream().map(SkillDTO::new).toList());
+                userBackup.getId(),
+                userBackup.getUser().getId(),
+                new CheckInDaysDTO(userBackup.getCheckInDays()),
+                new GoalsDTO(userBackup.getGoals()),
+                userBackup.getLastModified(),
+                userBackup.getAchievements().stream().map(AchievementDTO::new).toList(),
+                userBackup.getTasks().stream().map(TaskDTO::new).toList(),
+                userBackup.getMissions().stream().map(MissionDTO::new).toList(),
+                userBackup.getSkills().stream().map(SkillDTO::new).toList());
     }
 
 }
