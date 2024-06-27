@@ -19,6 +19,13 @@ abstract class SkillStoreBase with Store {
   ObservableList<Skill> skills = ObservableList<Skill>();
 
   @action
+  void setSkills(List<Skill> skills) {
+    this.skills.clear();
+    this.skills.addAll(skills);
+    _saveSkills();
+  }
+
+  @action
   void addSkill(Skill skill) {
     skills.add(skill);
     _saveSkills();

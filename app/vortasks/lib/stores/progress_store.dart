@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:get_it/get_it.dart';
 import 'package:mobx/mobx.dart';
 import 'package:vortasks/controllers/progress_data_controller.dart';
@@ -108,10 +110,10 @@ abstract class ProgressStoreBase with Store {
       if (_userStore.isLoggedIn && lastModified != null) {
         await ProgressDataController().latestProgress(lastModified);
       } else {
-        await ProgressDataController().getRemote(lastModified);
+        await ProgressDataController().getLatestRemote(lastModified);
       }
     } catch (e) {
-      print('Erro na sincronização: $e');
+      log('Erro na sincronização: $e');
       if (e is ConflictException) {
         setHasConflict(true);
       } else {
@@ -119,6 +121,16 @@ abstract class ProgressStoreBase with Store {
       }
     } finally {
       setLoading(false);
+    }
+  }
+
+  @action
+  Future<void> syncAfterRegister() async {
+    try {
+      lastModified ??= DateTime.now().toUtc();
+      await GetIt.I<ProgressStore>().toRemote();
+    } catch (e) {
+      log(e.toString());
     }
   }
 
@@ -132,7 +144,7 @@ abstract class ProgressStoreBase with Store {
         throw NotSignException('Não é possível sincronizar sem fazer login');
       }
     } catch (e) {
-      print(e);
+      log(e.toString());
     } finally {
       setLoading(false);
     }
@@ -142,7 +154,7 @@ abstract class ProgressStoreBase with Store {
     setLoading(true);
     try {
       if (_userStore.isLoggedIn) {
-        await ProgressDataController().getRemote(lastModified);
+        await ProgressDataController().getLatestRemote(lastModified);
       } else {
         throw NotSignException('Não é possível sincronizar sem fazer login');
       }

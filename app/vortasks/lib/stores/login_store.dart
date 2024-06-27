@@ -3,6 +3,7 @@ import 'package:mobx/mobx.dart';
 import 'package:vortasks/controllers/auth_controller.dart';
 import 'package:vortasks/controllers/user_controller.dart';
 import 'package:vortasks/exceptions/user_info_exception.dart';
+import 'package:vortasks/stores/backup_store.dart';
 import 'package:vortasks/stores/progress_store.dart';
 part 'login_store.g.dart';
 
@@ -77,12 +78,15 @@ abstract class LoginStoreBase with Store {
     error = null;
 
     try {
-      await AuthController().login({
+      bool isLoginSuccessful = await AuthController().login({
         'username': loginField!,
         'password': password,
       });
-      await UserController().userInfo();
-      await GetIt.I<ProgressStore>().syncAfterLogin();
+      if (isLoginSuccessful) {
+        await UserController().userInfo();
+        await GetIt.I<ProgressStore>().syncAfterLogin();
+        await GetIt.I<BackupStore>().syncAferLogin();
+      }
     } catch (e) {
       if (e is UserInfoException) {
         error = e.message;

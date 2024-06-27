@@ -125,6 +125,14 @@ mixin _$ProgressStore on ProgressStoreBase, Store {
     return _$syncAfterLoginAsyncAction.run(() => super.syncAfterLogin());
   }
 
+  late final _$syncAfterRegisterAsyncAction =
+      AsyncAction('ProgressStoreBase.syncAfterRegister', context: context);
+
+  @override
+  Future<void> syncAfterRegister() {
+    return _$syncAfterRegisterAsyncAction.run(() => super.syncAfterRegister());
+  }
+
   late final _$ProgressStoreBaseActionController =
       ActionController(name: 'ProgressStoreBase', context: context);
 

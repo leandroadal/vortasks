@@ -28,24 +28,24 @@ mixin _$GoalsStore on GoalsStoreBase, Store {
       ActionController(name: 'GoalsStoreBase', context: context);
 
   @override
-  void incrementGoalsCompleted() {
+  void setGoals(Goals goals) {
     final _$actionInfo = _$GoalsStoreBaseActionController.startAction(
-        name: 'GoalsStoreBase.incrementGoalsCompleted');
+        name: 'GoalsStoreBase.setGoals');
     try {
-      return super.incrementGoalsCompleted();
+      return super.setGoals(goals);
     } finally {
       _$GoalsStoreBaseActionController.endAction(_$actionInfo);
     }
   }
 
   @override
-  void updateGoals(double daily, double monthly, int dailyGoalProgress,
-      int monthlyGoalProgress) {
+  void updateGoals(
+      int daily, int weekly, int dailyGoalProgress, int weeklyGoalProgress) {
     final _$actionInfo = _$GoalsStoreBaseActionController.startAction(
         name: 'GoalsStoreBase.updateGoals');
     try {
       return super
-          .updateGoals(daily, monthly, dailyGoalProgress, monthlyGoalProgress);
+          .updateGoals(daily, weekly, dailyGoalProgress, weeklyGoalProgress);
     } finally {
       _$GoalsStoreBaseActionController.endAction(_$actionInfo);
     }
@@ -63,11 +63,22 @@ mixin _$GoalsStore on GoalsStoreBase, Store {
   }
 
   @override
-  void resetMonthlyProgress() {
+  void resetWeeklyProgress() {
     final _$actionInfo = _$GoalsStoreBaseActionController.startAction(
-        name: 'GoalsStoreBase.resetMonthlyProgress');
+        name: 'GoalsStoreBase.resetWeeklyProgress');
     try {
-      return super.resetMonthlyProgress();
+      return super.resetWeeklyProgress();
+    } finally {
+      _$GoalsStoreBaseActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
+  void incrementGoalsCompleted() {
+    final _$actionInfo = _$GoalsStoreBaseActionController.startAction(
+        name: 'GoalsStoreBase.incrementGoalsCompleted');
+    try {
+      return super.incrementGoalsCompleted();
     } finally {
       _$GoalsStoreBaseActionController.endAction(_$actionInfo);
     }

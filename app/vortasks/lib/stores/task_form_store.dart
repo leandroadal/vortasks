@@ -84,17 +84,24 @@ abstract class TaskFormStoreBase with Store {
   @observable
   bool allDayEnabled = true;
 
+  DateTime? oldEndDate;
+
   @action
   void switchAllDayEnabled(bool value) {
     allDayEnabled = value;
-    final oldEndDate = endDate;
 
     if (allDayEnabled) {
+      oldEndDate = endDate;
+      DateTime newEndDate = endDate.subtract(Duration(
+        hours: endDate.hour, // Zera as horas
+        minutes: endDate.minute, // Zera os minutos
+        seconds: endDate.second, // Zera os segundos
+      ));
       endDate =
-          endDate.add(const Duration(hours: 23, minutes: 59, seconds: 59));
+          newEndDate.add(const Duration(hours: 23, minutes: 59, seconds: 59));
     } else {
       // Se "dia inteiro" for desativado, restaura a hora de término original
-      endDate = oldEndDate;
+      endDate = oldEndDate ?? endDate;
     }
   }
 

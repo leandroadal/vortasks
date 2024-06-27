@@ -1,52 +1,36 @@
-// ignore_for_file: constant_identifier_names
-
-import 'package:vortasks/models/enums/status.dart';
-import 'package:vortasks/models/enums/type.dart';
+import 'package:intl/intl.dart';
 import 'package:vortasks/models/enums/difficulty.dart';
+import 'package:vortasks/models/enums/status.dart';
 import 'package:vortasks/models/enums/task_theme.dart';
 import 'package:vortasks/models/skill/skill.dart';
-import 'package:intl/intl.dart';
+import 'package:vortasks/models/tasks/task.dart';
+import 'package:vortasks/models/enums/type.dart';
 
-class Task {
-  String id;
-  String title;
-  String description;
-  Status status;
-  int xp;
-  int coins;
-  TaskType type;
-  int repetition;
-  DateTime reminder;
-  List<Skill> skills;
-  int skillIncrease;
-  int skillDecrease;
-  DateTime startDate;
-  DateTime endDate;
-  TaskTheme theme;
-  Difficulty difficulty;
-  bool? finish;
-  DateTime? dateFinish;
+class Mission extends Task {
+  Mission(
+      {required super.id,
+      required super.title,
+      required super.description,
+      required super.status,
+      required super.xp,
+      required super.coins,
+      required super.type,
+      required super.repetition,
+      required super.reminder,
+      required super.skillIncrease,
+      required super.skillDecrease,
+      required super.startDate,
+      required super.endDate,
+      required super.theme,
+      required super.difficulty,
+      required super.finish,
+      required super.dateFinish,
+      required super.skills,
+      required this.requirements});
 
-  Task(
-      {required this.id,
-      required this.title,
-      required this.description,
-      required this.status,
-      required this.xp,
-      required this.coins,
-      required this.type,
-      required this.repetition,
-      required this.reminder,
-      required this.skills,
-      required this.skillIncrease,
-      required this.skillDecrease,
-      required this.startDate,
-      required this.endDate,
-      required this.theme,
-      required this.difficulty,
-      this.finish,
-      this.dateFinish});
+  List<Task> requirements = [];
 
+  @override
   Map<String, dynamic> toJson() {
     return {
       'id': id,
@@ -70,11 +54,12 @@ class Task {
       'skills': skills
           .map((skill) => skill.toJson())
           .toList(), // Converte a lista de skills para JSON
+      'requirements': requirements.map((req) => req.toJson()).toList(),
     };
   }
 
-  factory Task.fromJson(Map<String, dynamic> json) {
-    return Task(
+  factory Mission.fromJson(Map<String, dynamic> json) {
+    return Mission(
       id: json['id'],
       title: json['title'],
       description: json['description'],
@@ -83,7 +68,7 @@ class Task {
       coins: json['coins'],
       type: _getTypeFromString(json['type']),
       repetition: json['repetition'],
-      reminder: DateTime.parse(json['reminder']),
+      reminder: json['reminder'],
       skillIncrease: json['skillIncrease'],
       skillDecrease: json['skillDecrease'],
       startDate: DateTime.parse(json['startDate']),
@@ -97,6 +82,9 @@ class Task {
       skills: (json['skills'] as List)
           .map((skillJson) => Skill.fromJson(skillJson))
           .toList(), // Converte a lista de skills do JSON
+      requirements: (json['requirements'] as List)
+          .map((req) => Task.fromJson(req))
+          .toList(),
     );
   }
 
@@ -125,48 +113,6 @@ class Task {
     return Difficulty.values.firstWhere(
       (element) => element.toString().split('.').last == difficulty,
       orElse: () => Difficulty.EASY,
-    );
-  }
-
-  Task copyWith({
-    String? id,
-    String? title,
-    String? description,
-    Status? status,
-    int? xp,
-    int? coins,
-    TaskType? type,
-    int? repetition,
-    DateTime? reminder,
-    List<Skill>? skills,
-    int? skillIncrease,
-    int? skillDecrease,
-    DateTime? startDate,
-    DateTime? endDate,
-    TaskTheme? theme,
-    Difficulty? difficulty,
-    bool? finish,
-    DateTime? dateFinish,
-  }) {
-    return Task(
-      id: id ?? this.id,
-      title: title ?? this.title,
-      description: description ?? this.description,
-      status: status ?? this.status,
-      xp: xp ?? this.xp,
-      coins: coins ?? this.coins,
-      type: type ?? this.type,
-      repetition: repetition ?? this.repetition,
-      reminder: reminder ?? this.reminder,
-      skills: skills ?? this.skills,
-      skillIncrease: skillIncrease ?? this.skillIncrease,
-      skillDecrease: skillDecrease ?? this.skillDecrease,
-      startDate: startDate ?? this.startDate,
-      endDate: endDate ?? this.endDate,
-      theme: theme ?? this.theme,
-      difficulty: difficulty ?? this.difficulty,
-      finish: finish ?? this.finish,
-      dateFinish: dateFinish ?? this.dateFinish,
     );
   }
 }

@@ -39,7 +39,7 @@ class ProgressDataController {
     }
   }
 
-  Future<void> getRemote(DateTime? lastModified) async {
+  Future<void> getLatestRemote(DateTime? lastModified) async {
     try {
       final response = await ApiService().get('$baseEndpoint/latest', {
         'lastModified': lastModified?.toIso8601String() ?? '',
@@ -49,8 +49,6 @@ class ProgressDataController {
         if (await _handleApiResponse(response, json)) {
           _updateProgressFromResponse(json);
         }
-      } else {
-        await _handle304Conflict();
       }
     } catch (e) {
       rethrow;

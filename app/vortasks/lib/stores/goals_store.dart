@@ -1,10 +1,7 @@
 import 'dart:async';
-
+import 'dart:convert';
 import 'package:mobx/mobx.dart';
 import 'package:vortasks/core/storage/local_storage.dart';
-
-import 'dart:convert';
-
 import 'package:vortasks/models/goals/goals.dart';
 
 part 'goals_store.g.dart';
@@ -14,58 +11,62 @@ class GoalsStore = GoalsStoreBase with _$GoalsStore;
 abstract class GoalsStoreBase with Store {
   GoalsStoreBase() {
     _loadGoals();
-    //_initializeResetChecks();
+    _initializeResetChecks();
   }
 
   @observable
   Goals goals = Goals(
     id: '...',
     daily: 5,
-    monthly: 150,
+    weekly: 50,
     dailyGoalProgress: 0,
-    monthlyGoalProgress: 0,
+    weeklyGoalProgress: 0,
   );
 
-
   @action
-  void incrementGoalsCompleted() {
-    goals = Goals(
-      id: goals.id,
-      daily: goals.daily,
-      monthly: goals.monthly,
-      dailyGoalProgress: goals.dailyGoalProgress + 1,
-      monthlyGoalProgress: goals.monthlyGoalProgress + 1,
-    );
-    _saveGoals();
+  void setGoals(Goals goals) {
+    this.goals = goals;
   }
 
   @action
-  void updateGoals(double daily, double monthly, int dailyGoalProgress, int monthlyGoalProgress) {
+  void updateGoals(
+      int daily, int weekly, int dailyGoalProgress, int weeklyGoalProgress) {
     goals = Goals(
       id: goals.id,
       daily: daily,
-      monthly: monthly,
+      weekly: weekly,
       dailyGoalProgress: dailyGoalProgress,
-      monthlyGoalProgress: monthlyGoalProgress,
+      weeklyGoalProgress: weeklyGoalProgress,
     );
     _saveGoals();
   }
 
+  // ----- Funções para reiniciar o progresso das metas -----
+
   @action
   void resetDailyProgress() {
-    updateGoals(goals.daily, goals.monthly, 0, goals.monthlyGoalProgress);
+    goals = goals.copyWith(dailyGoalProgress: 0);
+    _saveGoals();
     _saveLastDailyReset();
   }
 
   @action
-  void resetMonthlyProgress() {
-    updateGoals(goals.daily, goals.monthly, goals.dailyGoalProgress, 0);
-    _saveLastMonthlyReset();
+  void resetWeeklyProgress() {
+    goals = goals.copyWith(weeklyGoalProgress: 0);
+    _saveGoals();
+  }
+
+  @action
+  void incrementGoalsCompleted() {
+    goals = goals.copyWith(
+      dailyGoalProgress: goals.dailyGoalProgress + 1,
+      weeklyGoalProgress: goals.weeklyGoalProgress + 1,
+    );
+    _saveGoals();
   }
 
   void _initializeResetChecks() {
     _checkAndResetDailyProgress();
-    _checkAndResetMonthlyProgress();
     _initializeTimers();
   }
 
@@ -75,73 +76,39 @@ abstract class GoalsStoreBase with Store {
     if (lastDailyReset == null || !isSameDay(now, lastDailyReset)) {
       resetDailyProgress();
     }
+    if (now.weekday == DateTime.monday) {
+      resetWeeklyProgress();
+    }
   }
 
-  void _checkAndResetMonthlyProgress() {
-    final now = DateTime.now();
-    final lastMonthlyReset = _loadLastMonthlyReset();
-    if (lastMonthlyReset == null || !isSameMonth(now, lastMonthlyReset)) {
-      resetMonthlyProgress();
-    }
+  bool isSameDay(DateTime date1, DateTime date2) {
+    return date1.year == date2.year &&
+        date1.month == date2.month &&
+        date1.day == date2.day;
   }
 
   void _initializeTimers() {
     final now = DateTime.now();
-    final nextMidnight = DateTime(now.year, now.month, now.day + 1, 0, 0).subtract(const Duration(minutes: 1));
-    final nextMonth = DateTime(now.year, now.month + 1, 1);
-    final lastDayOfMonth = nextMonth.subtract(const Duration(days: 1)).day;
-    final nextMonthReset = DateTime(now.year, now.month, lastDayOfMonth, 23, 59);
+    final nextMidnight = DateTime(now.year, now.month, now.day + 1, 0, 0);
 
     Timer(nextMidnight.difference(now), () {
       resetDailyProgress();
-      Timer.periodic(const Duration(days: 1), (timer) => resetDailyProgress());
-    });
-
-    Timer(nextMonthReset.difference(now), () {
-      resetMonthlyProgress();
-      Timer.periodic(const Duration(days: 30), (timer) {
-        final now = DateTime.now();
-        if (now.day == DateTime(now.year, now.month + 1, 1).subtract(const Duration(days: 1)).day) {
-          resetMonthlyProgress();
-        }
-      });
+      if (DateTime.now().weekday == DateTime.monday) {
+        resetWeeklyProgress();
+      }
+      _initializeTimers(); // Re-agendar o timer para o próximo dia
     });
   }
 
-  // Helpers to load and save last reset dates
+  // ----- Funções para salvar no Armazenamento local -----
+
   DateTime? _loadLastDailyReset() {
     final lastReset = LocalStorage.getString('lastDailyReset');
-    if (lastReset != null) {
-      return DateTime.parse(lastReset);
-    }
-    return null;
+    return lastReset != null ? DateTime.parse(lastReset) : null;
   }
 
   void _saveLastDailyReset() {
-    final now = DateTime.now();
-    LocalStorage.saveData('lastDailyReset', now.toIso8601String());
-  }
-
-  DateTime? _loadLastMonthlyReset() {
-    final lastReset = LocalStorage.getString('lastMonthlyReset');
-    if (lastReset != null) {
-      return DateTime.parse(lastReset);
-    }
-    return null;
-  }
-
-  void _saveLastMonthlyReset() {
-    final now = DateTime.now();
-    LocalStorage.saveData('lastMonthlyReset', now.toIso8601String());
-  }
-
-  // Utility functions to compare dates
-  bool isSameDay(DateTime date1, DateTime date2) {
-    return date1.year == date2.year && date1.month == date2.month && date1.day == date2.day;
-  }
-
-  bool isSameMonth(DateTime date1, DateTime date2) {
-    return date1.year == date2.year && date1.month == date2.month;
+    LocalStorage.saveData('lastDailyReset', DateTime.now().toIso8601String());
   }
 
   // Carregar goals do armazenamento local

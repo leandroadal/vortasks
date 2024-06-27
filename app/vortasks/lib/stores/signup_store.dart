@@ -1,6 +1,7 @@
 import 'package:get_it/get_it.dart';
 import 'package:mobx/mobx.dart';
 import 'package:vortasks/controllers/auth_controller.dart';
+import 'package:vortasks/controllers/user_controller.dart';
 import 'package:vortasks/models/user/dto/register_dto.dart';
 import 'package:vortasks/stores/progress_store.dart';
 part 'signup_store.g.dart';
@@ -142,8 +143,17 @@ abstract class SignUpStoreBase with Store {
     try {
       AuthController authController = AuthController();
       await authController.register(user.toJson());
-      // Envia logo pro remote pois ao criar conta com certeza não terá dados mais atuais que o local
-      await GetIt.I<ProgressStore>().toRemote();
+      bool isLoginSuccessful = await authController.login({
+        'username': nickName,
+        'password': pass1,
+      });
+
+      if (isLoginSuccessful) {
+        await UserController().userInfo();
+        // Envia logo pro remote pois ao criar conta com certeza não terá dados mais atuais que o local
+
+        await GetIt.I<ProgressStore>().syncAfterRegister();
+      }
     } finally {
       loading = false; // Reverte o carregamento, mesmo em caso de erro
     }

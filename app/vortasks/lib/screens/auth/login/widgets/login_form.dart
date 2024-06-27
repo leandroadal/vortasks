@@ -1,11 +1,15 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:get_it/get_it.dart';
-import 'package:vortasks/exceptions/sync_exception.dart';
 import 'package:vortasks/screens/auth/widgets/error_box.dart';
+import 'package:vortasks/screens/backup/backup_conflict_screen.dart';
 import 'package:vortasks/screens/sync/progress_conflict_screen.dart';
 import 'package:vortasks/screens/widgets/custom_textfield.dart';
 import 'package:vortasks/screens/auth/register/signup_screen.dart';
+import 'package:vortasks/stores/backup_store.dart';
 import 'package:vortasks/stores/login_store.dart';
 import 'package:vortasks/stores/progress_store.dart';
 
@@ -110,26 +114,47 @@ class _LoginFormState extends State<LoginForm> {
 
           onPressed: () async {
             try {
+              final backupStore = GetIt.I<BackupStore>();
+              final progressStore = GetIt.I<ProgressStore>();
+
               await widget.loginStore.loginPressed!() as Future<void>
                   Function()?;
 
-              if (GetIt.I<ProgressStore>().hasConflict) {
-                Navigator.of(context).pushReplacement(
-                  MaterialPageRoute(
-                      builder: (context) => ProgressConflictScreen()),
-                );
-              } else if (widget.loginStore.error == null) {
-                Navigator.of(context).pop();
-              }
+              SchedulerBinding.instance.addPostFrameCallback((_) async {
+                if (progressStore.hasConflict) {
+                  await Navigator.of(context).push(
+                    MaterialPageRoute(
+                        builder: (context) => ProgressConflictScreen()),
+                  );
+                }
+
+                if (backupStore.hasConflict) {
+                  await Navigator.of(context).push(
+                    MaterialPageRoute(
+                        builder: (context) => BackupConflictScreen()),
+                  );
+                }
+
+                if (widget.loginStore.error == null &&
+                    !progressStore.hasConflict &&
+                    !backupStore.hasConflict) {
+                  if (backupStore.error != null) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                        content: Text(
+                          'Erro ao sincronizar o Backup.',
+                          style: TextStyle(color: Colors.white),
+                        ),
+                        backgroundColor: Colors.red,
+                      ),
+                    );
+                  }
+                  Navigator.of(context)
+                      .pop(); // Fecha a tela de login apenas se não houver conflitos
+                }
+              });
             } catch (e) {
-              if (e is SyncException) {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(
-                    content: Text('Erro ao sincronizar.'),
-                  ),
-                );
-              }
-              print(e);
+              log('Erro no login: $e', level: 1000);
             }
           },
           child: widget.loginStore.loading

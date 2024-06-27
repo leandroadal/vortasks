@@ -60,6 +60,17 @@ mixin _$TaskStore on TaskStoreBase, Store {
       ActionController(name: 'TaskStoreBase', context: context);
 
   @override
+  void setTasks(List<Task> tasks) {
+    final _$actionInfo = _$TaskStoreBaseActionController.startAction(
+        name: 'TaskStoreBase.setTasks');
+    try {
+      return super.setTasks(tasks);
+    } finally {
+      _$TaskStoreBaseActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
   void addTask(Task task) {
     final _$actionInfo = _$TaskStoreBaseActionController.startAction(
         name: 'TaskStoreBase.addTask');

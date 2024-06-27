@@ -3,6 +3,10 @@ import 'package:get_it/get_it.dart';
 import 'package:vortasks/core/storage/local_storage.dart';
 import 'package:vortasks/core/themes/app_theme.dart';
 import 'package:vortasks/screens/home/home_screen.dart';
+import 'package:vortasks/stores/user_data/achievement_store.dart';
+import 'package:vortasks/stores/user_data/checkin_store.dart';
+import 'package:vortasks/stores/user_data/mission_store.dart';
+import 'package:vortasks/stores/backup_store.dart';
 import 'package:vortasks/stores/logout_store.dart';
 import 'package:vortasks/stores/progress_store.dart';
 import 'package:vortasks/stores/sell_store.dart';
@@ -24,6 +28,10 @@ Future<void> main() async {
 }
 
 void setupGetIt() {
+  GetIt.I.registerSingleton<CheckInStore>(CheckInStore());
+  GetIt.I.registerSingleton<AchievementStore>(AchievementStore());
+  GetIt.I.registerSingleton<MissionStore>(MissionStore());
+
   GetIt.I.registerSingleton<LocalStorage>(LocalStorage());
   GetIt.I.registerSingleton<TaskFormStore>(TaskFormStore());
   GetIt.I.registerSingleton<UserStore>(UserStore());
@@ -40,6 +48,7 @@ void setupGetIt() {
 
   GetIt.I.registerSingleton<TaskStore>(
       TaskStore()); // level e foals precisam ser iniciados antes
+  GetIt.I.registerSingleton<BackupStore>(BackupStore());
 }
 
 class MyApp extends StatelessWidget {

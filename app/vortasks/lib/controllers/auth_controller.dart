@@ -2,7 +2,6 @@ import 'dart:convert';
 
 import 'package:get_it/get_it.dart';
 import 'package:vortasks/exceptions/invalid_credentials_exception.dart';
-import 'package:vortasks/models/user/user.dart';
 import 'package:vortasks/services/api_service.dart';
 import 'package:vortasks/stores/login_store.dart';
 import 'package:vortasks/stores/logout_store.dart';
@@ -20,13 +19,7 @@ class AuthController {
       final response = await ApiService().post('$baseEndpoint/register', data);
       final Map<String, dynamic> json = jsonDecode(response.body);
 
-      if (_handleApiResponse(response, json, store: _signUpStore)) {
-        _userStore.setUser(User.fromJson(json));
-        await login({
-          'username': data['username'],
-          'password': data['password'],
-        });
-      }
+      _handleApiResponse(response, json, store: _signUpStore);
     } on BadCredentialsException catch (_) {
       rethrow;
     } catch (e) {
@@ -34,18 +27,26 @@ class AuthController {
     }
   }
 
-  Future<void> login(Map<String, dynamic> data) async {
+  Future<bool> login(Map<String, dynamic> data) async {
     try {
       final response = await ApiService().post('$baseEndpoint/login', data);
-      final Map<String, dynamic> json = jsonDecode(response.body);
+      if (response.body.isNotEmpty) {
+        final Map<String, dynamic> json = jsonDecode(response.body);
 
-      if (_handleApiResponse(response, json, store: _loginStore)) {
-        _userStore.setToken(json['token']);
+        if (_handleApiResponse(response, json, store: _loginStore)) {
+          _userStore.setToken(json['token']);
+          return true;
+        }
+      } else if (response.statusCode == 403) {
+        _loginStore.setError('Usuário invalido');
+        return false;
       }
+      return false;
     } on BadCredentialsException catch (_) {
       rethrow;
     } catch (e) {
       _loginStore.setError('Erro ao fazer login');
+      return false;
     }
   }
 
@@ -53,12 +54,12 @@ class AuthController {
     final response = await ApiService().post('$baseEndpoint/logout', {});
 
     if (response.statusCode == 403) {
-      final Map<String, dynamic> json = jsonDecode(response.body);
-      if (json['error'] == 'Token inválido') {
-        // Se o token expirou então não precisa fazer mais nada no servidor
-        _userStore.setToken(null);
-        _userStore.setUser(null);
-      }
+      //final Map<String, dynamic> json = jsonDecode(response.body);
+      //if (json['error'] == 'Token inválido') {
+      // Se o token expirou então não precisa fazer mais nada no servidor
+      _userStore.setToken(null);
+      _userStore.setUser(null);
+      //}
     } else if (response.statusCode != 200) {
       GetIt.I<LogoutStore>().setLogoutError('Erro ao fazer logout');
     }
@@ -81,7 +82,7 @@ class AuthController {
           _userStore.setToken(null);
           _userStore.setUser(null);
           store.setError('Erro ao processar a requisição');
-        }
+        } else {}
       case 404:
         store.setError(json['message']);
         break;

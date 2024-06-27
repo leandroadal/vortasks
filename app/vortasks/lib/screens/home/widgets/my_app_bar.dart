@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:get_it/get_it.dart';
 import 'package:vortasks/screens/auth/login/login_screen.dart';
+import 'package:vortasks/screens/backup/backup_screen.dart';
 import 'package:vortasks/screens/home/widgets/account_icon.dart';
+import 'package:vortasks/stores/user_store.dart';
 
 class MyAppBar extends StatelessWidget implements PreferredSizeWidget {
   const MyAppBar({super.key, required this.title});
@@ -16,20 +19,31 @@ class MyAppBar extends StatelessWidget implements PreferredSizeWidget {
       actions: <Widget>[
         IconButton(
           icon: const Icon(Icons.sync),
-          onPressed: () async {},
+          onPressed: () async {
+            if (GetIt.I<UserStore>().isLoggedIn) {
+              Navigator.of(context).push(
+                MaterialPageRoute(builder: (context) => const BackupScreen()),
+              );
+            } else {
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(
+                  content: Text(
+                    "Efetue login para realizar a operação de backup",
+                    style: TextStyle(color: Colors.white),
+                  ),
+                  backgroundColor: Colors.red,
+                  duration: Duration(seconds: 3),
+                ),
+              );
+              Navigator.of(context).push(
+                MaterialPageRoute(builder: (context) => const LoginScreen()),
+              );
+            }
+          },
         ),
         IconButton(
           icon: const Icon(Icons.people),
           onPressed: () {},
-        ),
-        IconButton(
-          icon: const Icon(Icons.account_circle),
-          onPressed: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => const LoginScreen()),
-            );
-          },
         ),
         const AccountIcon(),
       ],

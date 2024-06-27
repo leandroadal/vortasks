@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:get_it/get_it.dart';
-import 'package:vortasks/stores/backup/achievement_store.dart';
+import 'package:vortasks/stores/user_data/achievement_store.dart';
 import 'package:vortasks/stores/progress_store.dart';
 
 class ProfileCard extends StatelessWidget {

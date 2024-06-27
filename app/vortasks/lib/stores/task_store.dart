@@ -27,6 +27,13 @@ abstract class TaskStoreBase with Store {
   @observable
   ObservableList<Task> tasks = ObservableList<Task>();
 
+  @action
+  void setTasks(List<Task> tasks) {
+    this.tasks.clear();
+    this.tasks.addAll(tasks);
+    _saveTasks();
+  }
+
   @observable
   List<Task> todayTasks = [];
 
@@ -136,9 +143,5 @@ abstract class TaskStoreBase with Store {
         a.endDate.difference(today).compareTo(b.endDate.difference(today)));
 
     return filteredTasks;
-    // Limitar a 6 tarefas
-    // return filteredTasks.length <= 6
-    //    ? filteredTasks
-    //     : filteredTasks.sublist(0, 6);
   }
 }

@@ -29,6 +29,17 @@ mixin _$SkillStore on SkillStoreBase, Store {
       ActionController(name: 'SkillStoreBase', context: context);
 
   @override
+  void setSkills(List<Skill> skills) {
+    final _$actionInfo = _$SkillStoreBaseActionController.startAction(
+        name: 'SkillStoreBase.setSkills');
+    try {
+      return super.setSkills(skills);
+    } finally {
+      _$SkillStoreBaseActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
   void addSkill(Skill skill) {
     final _$actionInfo = _$SkillStoreBaseActionController.startAction(
         name: 'SkillStoreBase.addSkill');

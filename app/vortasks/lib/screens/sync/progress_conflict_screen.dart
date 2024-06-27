@@ -55,6 +55,7 @@ class ProgressConflictScreen extends StatelessWidget {
                       _progressStore.setLoading(true);
                       await _progressStore.resolveConflictWithLocal();
                       _progressStore.setLoading(false);
+                      _progressStore.setHasConflict(false);
                       ScaffoldMessenger.of(context).showSnackBar(
                         const SnackBar(
                           content: Text('Dados locais mantidos.'),
@@ -82,6 +83,7 @@ class ProgressConflictScreen extends StatelessWidget {
                       _progressStore.setLoading(true);
                       await _progressStore.resolveConflictWithRemote();
                       _progressStore.setLoading(false);
+                      _progressStore.setHasConflict(false);
                       ScaffoldMessenger.of(context).showSnackBar(
                         const SnackBar(
                           content: Text('Dados do servidor mantidos.'),
